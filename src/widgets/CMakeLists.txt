@@ -1,23 +1,22 @@
 # Declare the screens library
-add_library(screens STATIC
-  battle_screen.cpp
+add_library(widgets STATIC
+  combat_log.cpp
 )
 
 # Set include path for other targets
-target_include_directories(screens PUBLIC
+target_include_directories(widgets PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(screens PUBLIC widgets)
-
 # Link FTXUI (required by battle_screen.cpp)
-target_link_libraries(screens PUBLIC
+target_link_libraries(widgets PUBLIC
   ftxui::screen
   ftxui::dom
   ftxui::component
 )
 
 # Optional: compile flags
-target_compile_options(screens PRIVATE
+target_compile_options(widgets PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
+
