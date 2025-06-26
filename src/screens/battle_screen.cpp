@@ -4,33 +4,44 @@
 
 #include <battle_screen.hpp>
 #include <combat_log.hpp>  // the new widget
+#include <entity_types.hpp>
+#include <combatant.hpp>
 
 using namespace ftxui;
 
-BattleScreen::BattleScreen()
+BattleScreen::BattleScreen(entt::registry &combatants_)
     : screen(ScreenInteractive::Fullscreen()),
-      log(std::make_shared<CombatLog>(log_height))
+      combatants(combatants_),
+      log(std::make_shared<CombatLog>(log_height)),
+      combatant_list(Container::Vertical({}))
 {
-  // Append test data to the log
   log->Append("[info](Battle begins)");
   log->Append("[warn](Enemies approaching)");
   log->Append("[name](Snail) uses [error](Slime Blast)");
 
-  screen.SetCursor(ftxui::ScreenInteractive::CursorShape::Hidden);
-
-  // Optional top content
-  auto main_view = Renderer([] {
-    return text("Battle UI") | bold | center | border;
+  // Generate combatant views
+  combatants.view<Name, Health, Level>().each([&](entt::entity e, Name&, Health&, Level&) {
+      auto comp = Make<Combatant>(combatants, e);
+      combatant_components.push_back(comp);
+      combatant_list->Add(comp);
   });
 
-  // Combine into root layout
+  // Final layout
   root = Renderer([=, this] {
     return vbox({
-      main_view->Render() | flex_grow,
-      log->Render() | size(HEIGHT, EQUAL, log_height),
+      text("Battle UI") | bold | center | border,
+      hbox({
+        combatant_list->Render()
+        | size(WIDTH, LESS_THAN, 40)
+        | border,
+          }),
+      vbox({
+        log->Render() | size(HEIGHT, EQUAL, log_height),
+      }) | flex,
     });
   });
 }
+
 
 void BattleScreen::Run() {
   screen.Loop(root);

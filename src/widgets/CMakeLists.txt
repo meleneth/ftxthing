@@ -20,3 +20,7 @@ target_compile_options(widgets PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
 
+target_include_directories(widgets PRIVATE
+  ${entt_SOURCE_DIR}/single_include
+)
+

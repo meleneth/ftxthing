@@ -15,5 +15,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(ftxui)
 
+FetchContent_Declare(
+  entt
+  GIT_REPOSITORY https://github.com/skypjack/entt
+  GIT_TAG        master
+)
+FetchContent_MakeAvailable(entt)
+
 # Add source tree
 add_subdirectory(src)
