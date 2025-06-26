@@ -1,5 +1,6 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/screen.hpp>
 
 #include <battle_screen.hpp>
 #include <combat_log.hpp>  // the new widget
@@ -13,7 +14,9 @@ BattleScreen::BattleScreen()
   // Append test data to the log
   log->Append("[info](Battle begins)");
   log->Append("[warn](Enemies approaching)");
-  log->Append("[error](Snail uses slime blast)");
+  log->Append("[name](Snail) uses [error](Slime Blast)");
+
+  screen.SetCursor(ftxui::ScreenInteractive::CursorShape::Hidden);
 
   // Optional top content
   auto main_view = Renderer([] {

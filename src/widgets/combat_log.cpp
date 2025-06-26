@@ -14,6 +14,7 @@ const StyleMap STYLE_MAP = {
   {"error", color(Color::Red) | bold},
   {"hp", color(Color::Red)},
   {"mp", color(Color::Blue)},
+  {"name", color(Color::BlueLight)},
   {"xp", color(Color::LightGreen)},
   {"bold", bold},
   {"dim", dim},
