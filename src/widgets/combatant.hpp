@@ -6,15 +6,15 @@
 
 class Combatant : public ftxui::ComponentBase {
  public:
-  Combatant(entt::registry& reg, entt::entity e)
-      : reg_(reg), entity_(e) {}
+  Combatant(entt::registry& reg_, entt::entity entity_)
+      : reg(reg_), entity(entity_) {}
 
   ftxui::Element Render() override {
     using namespace ftxui;
 
-    auto& name = reg_.get<Name>(entity_);
-    auto& hp = reg_.get<Health>(entity_);
-    auto& level = reg_.get<Level>(entity_);
+    auto& name = reg.get<Name>(entity);
+    auto& hp = reg.get<Health>(entity);
+    auto& level = reg.get<Level>(entity);
 
     float percent = static_cast<float>(hp.current) / hp.max;
     int bar_width = 20;
@@ -31,7 +31,7 @@ class Combatant : public ftxui::ComponentBase {
     // Add top border labels
     Element border = window(
       hbox({
-        text(name.value) | bold,
+        text(name.value) | ftxui::color(ftxui::Color::BlueLight),
         filler(),
         text("[" + std::to_string(level.value) + "]") | bold,
       }),
@@ -42,6 +42,6 @@ class Combatant : public ftxui::ComponentBase {
   }
 
  private:
-  entt::registry& reg_;
-  entt::entity entity_;
+  entt::registry& reg;
+  entt::entity entity;
 };
