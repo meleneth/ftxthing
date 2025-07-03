@@ -7,10 +7,12 @@
 #include <entt/entt.hpp>
 
 #include <widget_types.hpp>
+#include <animator.hpp>
 
 class BattleScreen {
 public:
   BattleScreen(entt::registry &combatants_);
+  void StartDropInAnimations();
   void Run();
 
 private:
@@ -20,6 +22,7 @@ private:
   ftxui::Component combatant_list = ftxui::Container::Vertical({});
   ftxui::Component root;
   std::vector<ftxui::Component> combatant_components;
+  Animator animator;
 
   int log_height = 10;
 };

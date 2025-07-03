@@ -10,6 +10,7 @@ target_include_directories(screens PUBLIC
 
 target_link_libraries(screens PUBLIC widgets)
 target_link_libraries(screens PUBLIC entities)
+target_link_libraries(screens PUBLIC animation)
 
 # Link FTXUI (required by battle_screen.cpp)
 target_link_libraries(screens PUBLIC

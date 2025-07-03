@@ -28,21 +28,46 @@ BattleScreen::BattleScreen(entt::registry &combatants_)
 
   // Final layout
   root = Renderer([=, this] {
-    return vbox({
-      text("Battle UI") | bold | center | border,
+    auto title = text("Battle UI") | bold | center | border;
+
+    auto combatant_box = 
       hbox({
+        filler(),
         combatant_list->Render()
         | size(WIDTH, LESS_THAN, 40)
         | border,
-          }),
-      vbox({
-        log->Render() | size(HEIGHT, EQUAL, log_height),
-      }) | flex,
-    });
+        filler(),
+      }) | flex;
+
+    auto log_box = log->Render() | size(HEIGHT, EQUAL, log_height);
+
+    return vbox({
+      title,
+      combatant_box,
+      filler(),
+      log_box
+    }) | flex;
   });
 }
 
 
 void BattleScreen::Run() {
   screen.Loop(root);
+}
+
+void BattleScreen::StartDropInAnimations() {
+  /*
+  using namespace std::chrono;
+
+  for (size_t i = 0; i < player_offsets_x.size(); ++i) {
+    animator.Add(Animation{
+      .duration = 500ms,
+      .tick_interval = 16ms,
+      .on_tick = [this, i](float t) {
+        player_offsets_x[i] = static_cast<int>(Lerp(-20, 0, t));
+        PostEvent(ftxui::Event::Custom);
+      }
+    });
+  }
+*/
 }
