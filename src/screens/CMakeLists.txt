@@ -1,30 +1,31 @@
-# Declare the screens library
+# screens/CMakeLists.txt (or wherever this lives)
+
 add_library(screens STATIC
   battle_screen.cpp
 )
 
-# Set include path for other targets
+# Headers for this target (lets dependents do: #include "screens/…")
 target_include_directories(screens PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(screens PUBLIC widgets)
-target_link_libraries(screens PUBLIC entities)
-target_link_libraries(screens PUBLIC animation)
-
-# Link FTXUI (required by battle_screen.cpp)
+# Link deps; PUBLIC so downstream users get the usage requirements
 target_link_libraries(screens PUBLIC
+  widgets
+  entities
+  animation
   ftxui::screen
   ftxui::dom
   ftxui::component
+  EnTT::EnTT
+  Boost::sml
 )
 
-# Optional: compile flags
-target_compile_options(screens PRIVATE
-  -Wall -Wextra -Wpedantic -Werror
-)
-
-target_include_directories(screens PRIVATE
-  ${entt_SOURCE_DIR}/single_include
-)
-
+# Portable warnings
+if(MSVC)
+  target_compile_options(screens PRIVATE /W4)
+else()
+  target_compile_options(screens PRIVATE -Wall -Wextra -Wpedantic)
+  # Add -Werror only if you really want to fail on warnings:
+  # target_compile_options(screens PRIVATE -Werror)
+endif()
