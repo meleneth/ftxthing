@@ -18,6 +18,10 @@ BattleScreen::BattleScreen(entt::registry &combatants_)
   log->Append("[info](Battle begins)");
   log->Append("[warn](Enemies approaching)");
   log->Append("[name](Snail) uses [error](Slime Blast)");
+  log->Append(L"[name](𐓙)");
+  auto unicode_element = ftxui::text("😊");
+  log->Append(unicode_element);
+
 
   // Generate combatant views
   combatants.view<Name, Health, Level>().each([&](entt::entity e, Name&, Health&, Level&) {

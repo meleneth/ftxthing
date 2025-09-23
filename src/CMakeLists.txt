@@ -1,3 +1,12 @@
+# Make narrow string literals compiled as UTF-8 everywhere.
+if(MSVC)
+  add_compile_options(/utf-8)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
+endif()
+
 add_subdirectory(widgets)
 add_subdirectory(screens)
 add_subdirectory(entities)
