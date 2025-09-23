@@ -3,6 +3,7 @@
 #include <ftxui/dom/elements.hpp>
 #include <deque>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 
 class CombatLog : public ftxui::ComponentBase {
@@ -11,27 +12,27 @@ public:
 
   explicit CombatLog(int max_height = 10, size_t max_log_size = 512);
 
-  // Append UTF-8 text with markup like: [name](Snail) uses [error](Slime Blast)
-  void Append(const std::string& line_utf8);
+  // UTF-8 markup: "[name](Snail) uses [error](Slime Blast) 🔥"
+  void Append(std::string_view line_utf8);
 
-  // Append a prebuilt FTXUI element (icons, bars, etc.)
+  // Prebuilt element:
   void Append(ftxui::Element el);
 
-  void Append(std::wstring_view w);
+  // Direct text + decorators (no markup parsing):
+  template <typename... Ds>
+  void AppendText(std::string_view utf8, Ds... ds);
 
   void Clear();
-
-  // Optional: customize or replace the style map at runtime
   void SetStyle(std::string tag, ftxui::Decorator deco);
   void SetStyleMap(StyleMap map);
 
   ftxui::Element Render() override;
 
 private:
-  ftxui::Element ParseStyledLine(const std::string& line_utf8) const;
+  ftxui::Element ParseStyledLine(std::string_view line_utf8) const;
   void Push(ftxui::Element el);
 
-  std::deque<ftxui::Element> log_;  // already-parsed, render-ready
+  std::deque<ftxui::Element> log_;
   int max_height_;
   size_t max_log_size_;
   StyleMap style_map_;
