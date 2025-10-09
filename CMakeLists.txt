@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(ftxthing VERSION 0.1.0 LANGUAGES CXX)
 
+
 option(FTXTHING_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
 option(FTXTHING_ENABLE_LTO          "Enable link-time optimization" OFF)
 option(BUILD_SHARED_LIBS            "Build shared libs (if any)" OFF)
@@ -10,6 +11,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+include(cmake/CPM.cmake)
+
+CPMAddPackage("gh:catchorg/Catch2@3.5.2")
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type" FORCE)
@@ -103,6 +108,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(ftxui)
 # targets: ftxui::screen ftxui::dom ftxui::component
 
+list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
+
+
 # --- Your code ---------------------------------------------------------------
 add_subdirectory(src)
+add_subdirectory(tests)
 # add_subdirectory(external)  # only if you actually have it

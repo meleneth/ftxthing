@@ -75,13 +75,12 @@ struct Health { int current, max; };
 struct PlayerControlled {};
 struct EnemyControlled {};
 struct Level { int value; };
+struct Experience { int value; int next_level_at };
+struct WorthExperience { int value; };
 
 # Areas
 
-## Starting Village
-
-## Modern City
-
-## Magic City
-
-## Cyber City
+## Cycle I: Origin
+## Cycle II: Resonance
+## Cycle III: Conflict
+## Cycle IV: Singularity
