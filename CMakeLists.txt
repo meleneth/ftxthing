@@ -115,3 +115,14 @@ list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
 add_subdirectory(src)
 add_subdirectory(tests)
 # add_subdirectory(external)  # only if you actually have it
+
+if (EMSCRIPTEN)
+  target_compile_definitions(ftxthing PRIVATE __EMSCRIPTEN__)
+  target_link_options(ftxthing PRIVATE
+    "-sALLOW_MEMORY_GROWTH=1"
+    "-sASSERTIONS=1"
+    # "--preload-file" "assets@/assets"   # if you have assets
+  )
+  set_target_properties(ftxthing PROPERTIES OUTPUT_NAME "ftxthing")
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif()
