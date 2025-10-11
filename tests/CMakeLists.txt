@@ -6,6 +6,16 @@ file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS *.cpp)
 # Test executable (uses Catch2WithMain)
 add_executable(ftxthing_tests ${TEST_SOURCES})
 
+target_compile_options(ftxthing_tests PRIVATE -O0 -g -Wa,-mbig-obj)
+# If you’re globally using LTO, explicitly disable it for tests:
+set_property(TARGET ftxthing_tests PROPERTY INTERPROCEDURAL_OPTIMIZATION FALSE)
+
+target_precompile_headers(ftxthing_tests PRIVATE
+  <exprtk.hpp>
+  <catch2/catch_test_macros.hpp>
+  <catch2/matchers/catch_matchers_floating_point.hpp>
+)
+
 target_link_libraries(ftxthing_tests PRIVATE entities)
 target_link_libraries(ftxthing_tests PRIVATE animation)
 target_link_libraries(ftxthing_tests PRIVATE widgets)
