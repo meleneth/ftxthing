@@ -12,6 +12,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(NOT CPM_SOURCE_CACHE)
+  set(CPM_SOURCE_CACHE "${CMAKE_BINARY_DIR}/cpm-cache")
+endif()
+
 include(cmake/CPM.cmake)
 
 CPMAddPackage("gh:catchorg/Catch2@3.5.2")
@@ -110,6 +114,28 @@ FetchContent_MakeAvailable(ftxui)
 
 list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
 
+# --- ExprTk via CPM ----------------------------------------------------------
+# Pin to a specific commit for reproducibility (Jan 1, 2024)
+# See: https://github.com/ArashPartow/exprtk/commits/master
+CPMAddPackage(
+  NAME exprtk
+  GITHUB_REPOSITORY ArashPartow/exprtk
+  GIT_TAG cc1b800c2bd1ac3ac260478c915d2aec6f4eb41c   # replace with the full SHA if you prefer
+  DOWNLOAD_ONLY YES
+)
+
+# ExprTk is just a single header (exprtk.hpp). Create an INTERFACE target.
+if(exprtk_ADDED)
+  add_library(exprtk INTERFACE)
+  target_include_directories(exprtk INTERFACE "${exprtk_SOURCE_DIR}")
+  add_library(ExprTk::exprtk ALIAS exprtk)
+endif()
+
+CPMAddPackage(
+  NAME nlohmann_json
+  GITHUB_REPOSITORY nlohmann/json
+  GIT_TAG v3.11.3
+)
 
 # --- Your code ---------------------------------------------------------------
 add_subdirectory(src)

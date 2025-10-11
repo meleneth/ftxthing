@@ -33,6 +33,7 @@ target_link_libraries(ftxthing PRIVATE
   ftxui::component
   Boost::sml::system
   EnTT::EnTT::system
+  ExprTk::exprtk
 )
 
 ftxthing_set_warnings(ftxthing)

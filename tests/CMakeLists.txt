@@ -17,6 +17,8 @@ target_link_libraries(ftxthing_tests PRIVATE content)
 target_link_libraries(ftxthing_tests
     PRIVATE
         Catch2::Catch2WithMain
+        ExprTk::exprtk
+        nlohmann_json::nlohmann_json
 )
 
 target_include_directories(ftxthing_tests
