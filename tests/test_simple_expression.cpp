@@ -1,8 +1,9 @@
 #include <cmath>                                 // std::sqrt
-#include <exprtk.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
+
+#include "systems/expr_engine.hpp"
 
 TEST_CASE("ExprTk basic arithmetic works") {
   using T = double;
@@ -19,7 +20,7 @@ TEST_CASE("ExprTk basic arithmetic works") {
   exprtk::parser<T> p;
   REQUIRE(p.compile("x * y + sqrt(x)", e));
 
-  REQUIRE_THAT( e.value(), Catch::Matchers::WithinRel(9.0 * 5.0 + std::sqrt(2.0), 0.001));
+  REQUIRE_THAT( e.value(), Catch::Matchers::WithinRel(2.0 * 5.0 + std::sqrt(2.0), 0.001));
   x = 9.0;
   REQUIRE_THAT( e.value(), Catch::Matchers::WithinRel(9.0 * 5.0 + 3.0, 0.001));
 }

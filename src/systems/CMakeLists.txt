@@ -1,6 +1,7 @@
 # Declare the library
 add_library(systems STATIC
   systems.cpp
+  expr_engine.cpp
 )
 
 # Headers live in the source dir
@@ -9,7 +10,13 @@ target_include_directories(systems PUBLIC
 )
 
 # Link against SML (header-only target)
-target_link_libraries(systems PUBLIC Boost::sml::system)
+target_link_libraries(systems
+PUBLIC
+Boost::sml::system
+ExprTk::exprtk
+)
+
+target_compile_options(systems PRIVATE -O0 -g -Wa,-mbig-obj)
 
 # Warnings (portable)
 if(MSVC)
