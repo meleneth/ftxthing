@@ -11,7 +11,6 @@ target_compile_options(ftxthing_tests PRIVATE -O0 -g -Wa,-mbig-obj)
 set_property(TARGET ftxthing_tests PROPERTY INTERPROCEDURAL_OPTIMIZATION FALSE)
 
 target_precompile_headers(ftxthing_tests PRIVATE
-  <exprtk.hpp>
   <catch2/catch_test_macros.hpp>
   <catch2/matchers/catch_matchers_floating_point.hpp>
 )
