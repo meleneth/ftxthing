@@ -13,6 +13,7 @@ add_subdirectory(entities)
 add_subdirectory(animation)
 add_subdirectory(systems)
 add_subdirectory(content)
+add_subdirectory(app)
 
 add_executable(ftxthing ftxthing.cpp)
 
@@ -21,6 +22,7 @@ target_link_libraries(ftxthing PRIVATE animation)
 target_link_libraries(ftxthing PRIVATE widgets)
 target_link_libraries(ftxthing PRIVATE screens)
 target_link_libraries(ftxthing PRIVATE systems)
+target_link_libraries(ftxthing PRIVATE app)
 target_link_libraries(ftxthing PRIVATE content)
 
 target_include_directories(ftxthing PRIVATE
@@ -34,6 +36,8 @@ target_link_libraries(ftxthing PRIVATE
   Boost::sml::system
   EnTT::EnTT::system
   ExprTk::exprtk
+  CLI11::CLI11
+  spdlog::spdlog
 )
 
 ftxthing_set_warnings(ftxthing)

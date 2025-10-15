@@ -137,6 +137,15 @@ CPMAddPackage(
   GIT_TAG v3.11.3
 )
 
+CPMAddPackage(
+  NAME pcg-cpp
+  GITHUB_REPOSITORY imneme/pcg-cpp
+  GIT_TAG master
+)
+
+CPMAddPackage("gh:CLIUtils/CLI11@2.4.2")
+CPMAddPackage("gh:gabime/spdlog@1.13.0")
+
 # --- Your code ---------------------------------------------------------------
 add_subdirectory(src)
 add_subdirectory(tests)
