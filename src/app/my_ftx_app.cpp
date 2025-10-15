@@ -3,8 +3,8 @@
 #include <chrono>
 #include <spdlog/spdlog.h>
 
-#include <ftxui/component/component.hpp>
 #include <ftxui/component/captured_mouse.hpp>
+#include <ftxui/component/component.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
 
@@ -12,10 +12,10 @@
 using namespace ftxui;
 
 MyFTXApp::MyFTXApp()
-  : logs_(std::make_shared<LogBuffer>(4000)),
-    sm_{UiMachine{ctx_}} // pass context into FSM
+    : logs_(std::make_shared<LogBuffer>(4000)),
+      sm_{UiMachine{ctx_}} // pass context into FSM
 {
-//  auto logger = make_ftx_logger(logs_, &screen_);
+  //  auto logger = make_ftx_logger(logs_, &screen_);
 
   // Build base screens
   auto account_monitor = BuildAccountMonitor();
@@ -24,18 +24,20 @@ MyFTXApp::MyFTXApp()
   screens_.push_back(party_placeholder);
 
   // Console overlay
-  console_ = std::make_shared<ConsoleOverlay>(logs_, [this](const std::string& line) {
-    spdlog::info(line);
-    //commands_.execute_line(line);
-    screen_.PostEvent(Event::Custom); // wake UI
-  });
+  console_ =
+      std::make_shared<ConsoleOverlay>(logs_, [this](const std::string &line) {
+        spdlog::info(line);
+        // commands_.execute_line(line);
+        screen_.PostEvent(Event::Custom); // wake UI
+      });
 
   // Wire UiCtx actions / state
   ctx_.screen_count = (int)screens_.size();
   ctx_.current_index = 0;
 
   ctx_.show_screen = [this](int idx) {
-    if (idx < 0 || idx >= (int)screens_.size()) return;
+    if (idx < 0 || idx >= (int)screens_.size())
+      return;
     root_current_ = screens_[idx];
     screen_.PostEvent(Event::Custom);
   };
@@ -49,7 +51,8 @@ MyFTXApp::MyFTXApp()
     screen_.PostEvent(Event::Custom);
   };
   ctx_.pop_override = [this]() {
-    if (!override_stack_.empty()) override_stack_.pop_back();
+    if (!override_stack_.empty())
+      override_stack_.pop_back();
     screen_.PostEvent(Event::Custom);
   };
 
@@ -77,13 +80,14 @@ int MyFTXApp::run() {
     now = new_now;
 
     // base
-    Element base = root_current_ ? root_current_->Render() : text("no screen") | center;
+    Element base =
+        root_current_ ? root_current_->Render() : text("no screen") | center;
 
     // overlays (topmost last)
     std::vector<Element> layers;
     layers.push_back(base);
 
-    for (auto& o : override_stack_) {
+    for (auto &o : override_stack_) {
       layers.push_back(o->Render());
     }
     if (console_->IsOpen()) {
@@ -96,10 +100,24 @@ int MyFTXApp::run() {
 
   // keybindings at the edge of the app
   auto keymap = CatchEvent(root, [&](Event e) {
-    if (e == Event::Character('`'))   { sm_.process_event(ev_toggle_console{}); return true; }
-    if (e == Event::Tab)              { if (!ctx_.is_console_open()) sm_.process_event(ev_tab_next{}); return true; }
-    if (e == Event::TabReverse)       { if (!ctx_.is_console_open()) sm_.process_event(ev_tab_prev{}); return true; }
-    if (e == Event::Escape)           { sm_.process_event(ev_esc{}); return true; }
+    if (e == Event::Character('`')) {
+      sm_.process_event(ev_toggle_console{});
+      return true;
+    }
+    if (e == Event::Tab) {
+      if (!ctx_.is_console_open())
+        sm_.process_event(ev_tab_next{});
+      return true;
+    }
+    if (e == Event::TabReverse) {
+      if (!ctx_.is_console_open())
+        sm_.process_event(ev_tab_prev{});
+      return true;
+    }
+    if (e == Event::Escape) {
+      sm_.process_event(ev_esc{});
+      return true;
+    }
     return false;
   });
 
@@ -110,11 +128,9 @@ int MyFTXApp::run() {
 ftxui::Component MyFTXApp::BuildAccountMonitor() {
   using namespace ftxui;
   static int cursor = 0;
-  static std::vector<std::string> parties = {
-    "Party 0 — Adventuring (Forest)",
-    "Party 1 — In Town (Healer)",
-    "Party 2 — Idle"
-  };
+  static std::vector<std::string> parties = {"Party 0 — Adventuring (Forest)",
+                                             "Party 1 — In Town (Healer)",
+                                             "Party 2 — Idle"};
 
   auto c = Renderer([&] {
     std::vector<Element> rows;
@@ -127,9 +143,18 @@ ftxui::Component MyFTXApp::BuildAccountMonitor() {
   });
 
   c = CatchEvent(c, [&](Event e) {
-    if (e == Event::ArrowUp)   { cursor = (cursor + (int)parties.size() - 1) % (int)parties.size(); return true; }
-    if (e == Event::ArrowDown) { cursor = (cursor + 1) % (int)parties.size(); return true; }
-    if (e == Event::Return)    { sm_.process_event(ev_open_party{cursor}); return true; }
+    if (e == Event::ArrowUp) {
+      cursor = (cursor + (int)parties.size() - 1) % (int)parties.size();
+      return true;
+    }
+    if (e == Event::ArrowDown) {
+      cursor = (cursor + 1) % (int)parties.size();
+      return true;
+    }
+    if (e == Event::Return) {
+      sm_.process_event(ev_open_party{cursor});
+      return true;
+    }
     return false;
   });
 
@@ -139,7 +164,7 @@ ftxui::Component MyFTXApp::BuildAccountMonitor() {
 ftxui::Component MyFTXApp::BuildPartyPlaceholder() {
   using namespace ftxui;
   return Renderer([] {
-    return window(text(" Party "), vbox({ text("Party Details Here") })) | flex;
+    return window(text(" Party "), vbox({text("Party Details Here")})) | flex;
   });
 }
 
@@ -148,10 +173,8 @@ ftxui::Component MyFTXApp::BuildOverride(int kind) {
   return Renderer([kind] {
     // Make it look modal by dimming the background underneath.
     return window(text(" Override "),
-                  vbox({ text("Override kind " + std::to_string(kind)),
-                         separator(),
-                         text("Press ESC to close") }))
-           | bgcolor(Color::DarkBlue)
-           | border;
+                  vbox({text("Override kind " + std::to_string(kind)),
+                        separator(), text("Press ESC to close")})) |
+           bgcolor(Color::DarkBlue) | border;
   });
 }

@@ -7,10 +7,11 @@ void Animator::Add(Animation anim) {
 
 void Animator::Update(std::chrono::milliseconds dt) {
   std::lock_guard lock(mutex);
-  for (auto& anim : animations)
+  for (auto &anim : animations)
     anim.Advance(dt);
 
-  animations.erase(std::remove_if(animations.begin(), animations.end(),
-                                  [](const Animation& a) { return a.IsFinished(); }),
-                   animations.end());
+  animations.erase(
+      std::remove_if(animations.begin(), animations.end(),
+                     [](const Animation &a) { return a.IsFinished(); }),
+      animations.end());
 }

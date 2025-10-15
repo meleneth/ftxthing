@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
-#include <mutex>
 #include <chrono>
+#include <mutex>
+#include <vector>
 
 #include "animation.hpp"
 

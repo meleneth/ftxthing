@@ -14,7 +14,7 @@ public:
   std::chrono::milliseconds tick_interval{16};
   bool looping = false;
 
-  std::function<void(float)> on_tick;     // receives 0.0 → 1.0
+  std::function<void(float)> on_tick; // receives 0.0 → 1.0
   std::function<void()> on_complete;
 
 private:

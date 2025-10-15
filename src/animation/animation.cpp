@@ -7,7 +7,8 @@ void Animation::Advance(std::chrono::milliseconds dt) {
   elapsed += dt;
   since_last_tick += dt;
 
-  float t = std::min(1.0f, static_cast<float>(elapsed.count()) / duration.count());
+  float t =
+      std::min(1.0f, static_cast<float>(elapsed.count()) / duration.count());
 
   if (since_last_tick >= tick_interval) {
     since_last_tick = std::chrono::milliseconds(0);
@@ -26,4 +27,3 @@ void Animation::Advance(std::chrono::milliseconds dt) {
     }
   }
 }
-

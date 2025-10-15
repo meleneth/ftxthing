@@ -1,7 +1,7 @@
 #pragma once
+#include <deque>
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <deque>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -19,8 +19,7 @@ public:
   void Append(ftxui::Element el);
 
   // Direct text + decorators (no markup parsing):
-  template <typename... Ds>
-  void AppendText(std::string_view utf8, Ds... ds);
+  template <typename... Ds> void AppendText(std::string_view utf8, Ds... ds);
 
   void Clear();
   void SetStyle(std::string tag, ftxui::Decorator deco);

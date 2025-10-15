@@ -1,21 +1,22 @@
 #pragma once
-#include <memory>
-#include <vector>
 #include <functional>
+#include <memory>
 #include <string>
+#include <vector>
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 
 // forward decls of your stuff:
 struct LogBuffer;
-std::shared_ptr<LogBuffer> make_ftx_logger(std::shared_ptr<LogBuffer>, ftxui::ScreenInteractive*);
+std::shared_ptr<LogBuffer> make_ftx_logger(std::shared_ptr<LogBuffer>,
+                                           ftxui::ScreenInteractive *);
 
 struct ConsoleOverlay;
 struct CommandEngine;
 
 // FSM bits:
-#include "ui_fsm.hpp"  // provides UiCtx, UiMachine, events
+#include "ui_fsm.hpp" // provides UiCtx, UiMachine, events
 
 class MyFTXApp {
 public:
@@ -33,7 +34,7 @@ private:
 
   // console + commands + logs
   std::shared_ptr<LogBuffer> logs_;
-  //CommandEngine commands_;
+  // CommandEngine commands_;
   std::shared_ptr<ConsoleOverlay> console_;
 
   // FSM

@@ -1,7 +1,7 @@
 #include "log.hpp"
 
-#include <spdlog/sinks/base_sink.h>
 #include <spdlog/pattern_formatter.h>
+#include <spdlog/sinks/base_sink.h>
 #include <spdlog/spdlog.h>
 
 #include <mutex>
@@ -51,18 +51,18 @@ private:
 
 } // namespace
 
-// Factory to create an spdlog logger that writes to LogBuffer and can wake the UI.
+// Factory to create an spdlog logger that writes to LogBuffer and can wake the
+// UI.
 std::shared_ptr<spdlog::logger>
 make_ftx_logger(std::shared_ptr<LogBuffer> buffer,
-                std::function<void()> wake_ui,
-                std::string logger_name) {
+                std::function<void()> wake_ui, std::string logger_name) {
   // Create our custom sink
   auto sink =
       std::make_shared<logbuffer_sink>(std::move(buffer), std::move(wake_ui));
 
   // Create logger using only this sink
-  auto logger = std::make_shared<spdlog::logger>(
-      std::move(logger_name), spdlog::sinks_init_list{sink});
+  auto logger = std::make_shared<spdlog::logger>(std::move(logger_name),
+                                                 spdlog::sinks_init_list{sink});
 
   logger->set_level(spdlog::level::trace);
   logger->flush_on(spdlog::level::err);

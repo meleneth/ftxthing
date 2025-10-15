@@ -2,12 +2,12 @@
 
 #include <memory>
 
-#include <ftxui/component/screen_interactive.hpp>
-#include <ftxui/component/component.hpp>
 #include <entt/entt.hpp>
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/screen_interactive.hpp>
 
-#include <widget_types.hpp>
 #include <animator.hpp>
+#include <widget_types.hpp>
 
 class BattleScreen {
 public:

@@ -1,21 +1,22 @@
 #pragma once
-#include <pcg_random.hpp>
-#include <cstdint>
 #include <array>
-#include <random>
 #include <cassert>
+#include <cstdint>
+#include <pcg_random.hpp>
+#include <random>
 
 enum class RngStream : uint8_t { Combat, Loot, AI, World, COUNT };
 
 // SplitMix64 (good seed mixer)
-static inline uint64_t splitmix64(uint64_t& x) {
+static inline uint64_t splitmix64(uint64_t &x) {
   uint64_t z = (x += 0x9E3779B97F4A7C15ull);
   z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9ull;
   z = (z ^ (z >> 27)) * 0x94D049BB133111EBull;
   return z ^ (z >> 31);
 }
 
-// PCG64 has 128-bit state & 128-bit stream selector (“increment”); we’ll derive both
+// PCG64 has 128-bit state & 128-bit stream selector (“increment”); we’ll derive
+// both
 struct Pcg64Streams {
   using Engine = pcg64; // 64-bit output, small fast engine
   std::array<Engine, static_cast<size_t>(RngStream::COUNT)> eng{};
@@ -33,15 +34,15 @@ struct Pcg64Streams {
       uint64_t inc0 = splitmix64(x) | 1ull; // ensure odd
       uint64_t inc1 = splitmix64(x) | 1ull;
 
-      pcg64::state_type state{ s0, s1 };
-      pcg64::state_type seq{ inc0, inc1 }; // “sequence”/increment selector
+      pcg64::state_type state{s0, s1};
+      pcg64::state_type seq{inc0, inc1}; // “sequence”/increment selector
       eng[i] = Engine(state, seq);
       // Advance a bit to decorrelate from seeding edge-cases:
       eng[i].discard(16);
     }
   }
 
-  Engine& get(RngStream s) { return eng[static_cast<size_t>(s)]; }
+  Engine &get(RngStream s) { return eng[static_cast<size_t>(s)]; }
 
   // Helpers
   bool chance(RngStream s, double p) {

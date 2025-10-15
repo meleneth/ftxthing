@@ -1,7 +1,7 @@
 #pragma once
 
-#include<string>
+#include <string>
 
 class Account {
-    std::string name;
+  std::string name;
 };

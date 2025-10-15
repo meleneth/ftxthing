@@ -1,10 +1,10 @@
 #pragma once
-#include <mutex>
-#include <string>
-#include <vector>
 #include <chrono>
 #include <memory>
+#include <mutex>
 #include <optional>
+#include <string>
+#include <vector>
 
 #include <spdlog/spdlog.h>
 
@@ -16,7 +16,9 @@ struct LogEntry {
 
 class LogBuffer {
 public:
-  explicit LogBuffer(std::size_t capacity) : capacity_(capacity) { buf_.reserve(capacity); }
+  explicit LogBuffer(std::size_t capacity) : capacity_(capacity) {
+    buf_.reserve(capacity);
+  }
 
   // push a fully formatted line
   void push_line(spdlog::level::level_enum lvl, std::string line) {
@@ -49,10 +51,12 @@ public:
 
   // incremental fetch: return all entries with seq > since_seq
   // returns {entries, new_seq}
-  std::pair<std::vector<LogEntry>, std::uint64_t> since(std::uint64_t since_seq) const {
+  std::pair<std::vector<LogEntry>, std::uint64_t>
+  since(std::uint64_t since_seq) const {
     std::lock_guard<std::mutex> lk(mu_);
     std::vector<LogEntry> out;
-    if (since_seq == seq_) return {out, seq_};
+    if (since_seq == seq_)
+      return {out, seq_};
 
     // if the gap is larger than capacity, just return snapshot()
     if (seq_ - since_seq > capacity_) {
@@ -67,7 +71,8 @@ public:
     // compute start index relative to newest
     // newest logical index is (head_ + size_ - 1) % capacity_
     // number of new items = (seq_ - since_seq) but cap to size_
-    std::size_t new_items = static_cast<std::size_t>(std::min<std::uint64_t>(seq_ - since_seq, size_));
+    std::size_t new_items = static_cast<std::size_t>(
+        std::min<std::uint64_t>(seq_ - since_seq, size_));
     std::size_t start = (head_ + size_ - new_items) % capacity_;
     out.reserve(new_items);
     for (std::size_t i = 0; i < new_items; ++i) {
@@ -91,16 +96,16 @@ private:
   const std::size_t capacity_;
   mutable std::mutex mu_;
   std::vector<LogEntry> buf_;
-  std::size_t head_{0};   // next overwrite position when full
-  std::size_t size_{0};   // number of valid entries <= capacity
-  std::uint64_t seq_{0};  // monotonic sequence for incremental reads
+  std::size_t head_{0};  // next overwrite position when full
+  std::size_t size_{0};  // number of valid entries <= capacity
+  std::uint64_t seq_{0}; // monotonic sequence for incremental reads
 };
 
-// Create a logger that writes to LogBuffer and nudges the FTXUI screen to refresh.
+// Create a logger that writes to LogBuffer and nudges the FTXUI screen to
+// refresh.
 std::shared_ptr<spdlog::logger>
 make_ftx_logger(std::shared_ptr<LogBuffer> buffer,
-                std::function<void()> wake_ui,
-                std::string logger_name = "ui");
+                std::function<void()> wake_ui, std::string logger_name = "ui");
 
 // Convenience overload: no wake callback.
 std::shared_ptr<spdlog::logger>
