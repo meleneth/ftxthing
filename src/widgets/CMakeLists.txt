@@ -1,6 +1,9 @@
 # Declare the screens library
 add_library(widgets STATIC
   combat_log.cpp
+  root_component.cpp
+  footer_component.cpp
+  body_component.cpp
 )
 
 # Set include path for other targets
