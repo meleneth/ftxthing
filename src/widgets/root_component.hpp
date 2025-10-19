@@ -4,12 +4,13 @@
 #include <ftxui/dom/elements.hpp>
 
 class RootComponent : public ftxui::ComponentBase {
- public:
+public:
   RootComponent();
   ftxui::Element Render() override;
 
- private:
+private:
   ftxui::Component header_;
   ftxui::Component body_;
   ftxui::Component footer_;
+  ftxui::Component console_;
 };

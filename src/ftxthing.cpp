@@ -39,11 +39,10 @@ int main(int argc, char *argv[]) {
 
   using namespace ftxui;
   ScreenInteractive screen = ScreenInteractive::Fullscreen();
-
+  screen.SetCursor(Screen::Cursor{.shape = Screen::Cursor::Hidden});
   auto root = Make<RootComponent>();
 
-  
-  auto ui   = Renderer(root, [&] {
+  auto ui = Renderer(root, [&] {
     static auto last = clock::now();
     auto now = clock::now();
     double dt = std::chrono::duration<double>(now - last).count();
@@ -51,39 +50,43 @@ int main(int argc, char *argv[]) {
     (void)dt;
     // advance sim here (on UI thread)
     // TODO
-    //sim.tick(dt);
+    // sim.tick(dt);
 
     return root->Render();
   });
 
   // 🔑 Add this: catch keyboard/mouse events.
   ui = CatchEvent(ui, [&](Event e) {
-  // quit
-  if (e == Event::Character('q') || e == Event::Escape) {
-    screen.Exit();
-    return true;          // we handled it
-  }
-  // arrows, etc.
-  if (e == Event::ArrowLeft)  { /* do something */ return true; }
-  if (e == Event::ArrowRight) { /* do something */ return true; }
+    // quit
+    if (e == Event::Character('q') || e == Event::Escape) {
+      screen.Exit();
+      return true; // we handled it
+    }
+    // arrows, etc.
+    if (e == Event::ArrowLeft) { /* do something */
+      return true;
+    }
+    if (e == Event::ArrowRight) { /* do something */
+      return true;
+    }
 
-  // characters
-  //if (e.is_character()) {
+    // characters
+    // if (e.is_character()) {
     // e.character() gives the char
     // ... handle text input or hotkeys ...
-  //  return true;
- // }
+    //  return true;
+    // }
 
-  return false;           // not handled → let others see it
-});
-
+    return false; // not handled → let others see it
+  });
 
   // wake UI at ~60Hz
   std::atomic<bool> running = true;
-  std::thread ticker([&]{
+  std::thread ticker([&] {
     using namespace std::chrono_literals;
     while (running) {
-      screen.PostEvent(ftxui::Event::Custom); // causes a rerender -> tick happens in Renderer
+      screen.PostEvent(ftxui::Event::Custom); // causes a rerender -> tick
+                                              // happens in Renderer
       std::this_thread::sleep_for(16ms);
     }
   });
@@ -92,8 +95,8 @@ int main(int argc, char *argv[]) {
   running = false;
   ticker.join();
 
-  //MyFTXApp myapp = MyFTXApp();
-  //return myapp.run();
+  // MyFTXApp myapp = MyFTXApp();
+  // return myapp.run();
 
   // entt::registry reg = build_demo_registry();
 

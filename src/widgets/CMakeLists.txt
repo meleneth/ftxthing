@@ -4,6 +4,7 @@ add_library(widgets STATIC
   root_component.cpp
   footer_component.cpp
   body_component.cpp
+  console_overlay.cpp
 )
 
 # Set include path for other targets
