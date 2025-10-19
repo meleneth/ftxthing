@@ -24,6 +24,7 @@ public:
   std::function<void(std::string_view)> on_command = [](std::string_view) {};
 
   bool OnEvent(ftxui::Event e) override;
+  void FocusInput();
 
   ftxui::Element Render() override;
 

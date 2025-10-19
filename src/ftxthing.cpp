@@ -1,8 +1,9 @@
-#include <CLI/CLI.hpp>
-#include <entt/entt.hpp>
-
 #include <iostream>
 #include <optional>
+
+#include <CLI/CLI.hpp>
+#include <entt/entt.hpp>
+#include <spdlog/sinks/basic_file_sink.h>
 
 #include "entities/entities.hpp"
 #include "screens/battle_screen.hpp"
@@ -27,7 +28,17 @@ int main(int argc, char *argv[]) {
                "Run in windowed mode (default fullscreen)");
 
   CLI11_PARSE(app, argc, argv);
-
+  /*try {
+    auto file_logger =
+        spdlog::basic_logger_mt("file_logger", "ftxthing.log", true);
+    spdlog::set_default_logger(file_logger);
+    spdlog::flush_on(spdlog::level::info);
+    spdlog::set_level(debug ? spdlog::level::debug : spdlog::level::info);
+    spdlog::info("Logging initialized");
+  } catch (const spdlog::spdlog_ex &ex) {
+    fprintf(stderr, "Log init failed: %s\n", ex.what());
+    exit(1);
+  }*/
   spdlog::set_level(debug ? spdlog::level::debug : spdlog::level::info);
   spdlog::set_pattern("[%H:%M:%S] [%^%l%$] %v");
   spdlog::info("Starting up...");
@@ -61,6 +72,10 @@ int main(int argc, char *argv[]) {
     if (e == Event::Character('q') || e == Event::Escape) {
       screen.Exit();
       return true; // we handled it
+    }
+    if (e == Event::Character("`")) {
+      root->toggle_console();
+      return true;
     }
     // arrows, etc.
     if (e == Event::ArrowLeft) { /* do something */

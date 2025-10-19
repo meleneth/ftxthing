@@ -7,10 +7,12 @@ class RootComponent : public ftxui::ComponentBase {
 public:
   RootComponent();
   ftxui::Element Render() override;
+  void toggle_console();
 
 private:
   ftxui::Component header_;
   ftxui::Component body_;
   ftxui::Component footer_;
   ftxui::Component console_;
+  ftxui::Component container_;
 };

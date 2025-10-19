@@ -13,7 +13,10 @@ target_include_directories(widgets PUBLIC
 )
 
 # Link FTXUI (required by battle_screen.cpp)
-target_link_libraries(widgets PUBLIC
+target_link_libraries(widgets
+PRIVATE 
+  systems 
+PUBLIC
   ftxui::screen
   ftxui::dom
   ftxui::component

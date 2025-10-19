@@ -15,19 +15,36 @@ RootComponent::RootComponent() {
   footer_ = Make<FooterComponent>();
   console_ = Make<ConsoleOverlay>();
 
-  auto container = Container::Vertical({header_, body_, footer_});
-  Add(container);
+  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);
 
-  container->SetActiveChild(body_);
+  overlay->push_line("some line");
+  overlay->push_line("another line");
+
+  container_ = Container::Vertical({header_, body_, footer_});
+  Add(container_);
+  Add(console_);
+
+  container_->SetActiveChild(body_);
 
   // Example: catch events at root level to update footer
-  Add(CatchEvent(container, [&](Event e) {
+  Add(CatchEvent(container_, [&](Event e) {
     auto b = std::dynamic_pointer_cast<BodyComponent>(body_);
     auto f = std::dynamic_pointer_cast<FooterComponent>(footer_);
     f->SetMessage("Body count = " + std::to_string(b->counter()));
     (void)e;
     return false;
   }));
+}
+
+void RootComponent::toggle_console() {
+  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);
+  overlay->toggle();
+  if (overlay->should_show()) {
+    container_->SetActiveChild(console_);
+    overlay->FocusInput(); // ensure cursor lands in Input
+  } else {
+    container_->SetActiveChild(body_);
+  }
 }
 
 ftxui::Element RootComponent::Render() {
