@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
   // cfg.seed = seed_opt;
   // cfg.stream = stream;
   // cfg.fullscreen = fullscreen;
-  auto grand_central = fairways::GrandCentral();
+  auto grand_central = fairlanes::GrandCentral();
   grand_central.main_loop();
 
   return 0;

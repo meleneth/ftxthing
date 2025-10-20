@@ -8,7 +8,7 @@
 #include "systems/log.hpp"
 #include "widgets/root_component.hpp"
 
-using namespace fairways;
+using namespace fairlanes;
 
 GrandCentral::GrandCentral()
     : root_component(std::make_shared<RootComponent>()) {}

@@ -8,6 +8,8 @@
 #include "console_overlay.hpp"
 #include "log.hpp"
 
+using namespace fairlanes;
+
 ConsoleOverlay::ConsoleOverlay() {
   input_ = ftxui::Input(&line_);
   Add(input_);

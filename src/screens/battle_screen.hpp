@@ -9,6 +9,8 @@
 #include "animation/animator.hpp"
 #include "widgets/widget_types.hpp"
 
+namespace fairlanes {
+
 class BattleScreen {
 public:
   BattleScreen(entt::registry &combatants_);
@@ -26,3 +28,5 @@ private:
 
   int log_height = 10;
 };
+
+} // namespace fairlanes

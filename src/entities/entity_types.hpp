@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+namespace fairlanes {
+
 struct Name {
   std::string value;
 };
@@ -12,3 +14,5 @@ struct EnemyControlled {};
 struct Level {
   int value;
 };
+
+} // namespace fairlanes

@@ -1,7 +1,7 @@
 #pragma once
 #include "widgets/root_component.hpp"
 
-namespace fairways {
+namespace fairlanes {
 class GrandCentral {
 public:
   GrandCentral();
@@ -10,4 +10,4 @@ public:
 private:
   std::shared_ptr<RootComponent> root_component;
 };
-} // namespace fairways
+} // namespace fairlanes

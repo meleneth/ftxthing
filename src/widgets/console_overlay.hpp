@@ -6,6 +6,8 @@
 #include <ftxui/dom/elements.hpp>
 #include <string>
 
+namespace fairlanes {
+
 class ConsoleOverlay : public ftxui::ComponentBase {
 public:
   ConsoleOverlay();
@@ -40,3 +42,5 @@ private:
   std::string line_;
   ftxui::Component input_;
 };
+
+} // namespace fairlanes

@@ -8,6 +8,7 @@
 #include "widgets/combatant.hpp"
 
 using namespace ftxui;
+using namespace fairlanes;
 
 BattleScreen::BattleScreen(entt::registry &combatants_)
     : screen(ScreenInteractive::Fullscreen()), combatants(combatants_),

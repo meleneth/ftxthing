@@ -2,6 +2,8 @@
 #include "entities.hpp"
 #include "entity_types.hpp"
 
+using namespace fairlanes;
+
 entt::registry build_demo_registry() {
   entt::registry reg;
 

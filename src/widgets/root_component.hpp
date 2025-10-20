@@ -3,6 +3,8 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 
+namespace fairlanes {
+
 class RootComponent : public ftxui::ComponentBase {
 public:
   RootComponent();
@@ -17,3 +19,5 @@ private:
   ftxui::Component console_;
   ftxui::Component container_;
 };
+
+} // namespace fairlanes

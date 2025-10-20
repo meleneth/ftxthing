@@ -4,6 +4,8 @@
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/elements.hpp>
 
+namespace fairlanes {
+
 class Combatant : public ftxui::ComponentBase {
 public:
   Combatant(entt::registry &reg_, entt::entity entity_)
@@ -49,3 +51,5 @@ private:
   entt::registry &reg;
   entt::entity entity;
 };
+
+} // namespace fairlanes

@@ -8,6 +8,8 @@
 #include "console_overlay.hpp"
 #include "footer_component.hpp"
 
+using namespace fairlanes;
+
 RootComponent::RootComponent() {
   using namespace ftxui;
   header_ = Renderer([] { return text("Header") | center | bold | border; });
