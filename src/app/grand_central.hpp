@@ -3,7 +3,9 @@
 
 namespace fairways {
 class GrandCentral {
+public:
   GrandCentral();
+  void main_loop();
 
 private:
   std::shared_ptr<RootComponent> root_component;

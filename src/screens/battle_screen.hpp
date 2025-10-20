@@ -6,7 +6,7 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 
-#include "animator.hpp"
+#include "animation/animator.hpp"
 #include "widgets/widget_types.hpp"
 
 class BattleScreen {
