@@ -1,6 +1,7 @@
 # Declare the library
 add_library(entities STATIC
   entities.cpp
+  party.cpp
 )
 
 # Link EnTT (it's INTERFACE, so PUBLIC propagates usage reqs to dependents)
