@@ -77,6 +77,11 @@ int main(int argc, char *argv[]) {
       root->toggle_console();
       return true;
     }
+    if (e == Event::Character("~")) {
+      root->set_full_open();
+      root->toggle_console();
+      return true;
+    }
     // arrows, etc.
     if (e == Event::ArrowLeft) { /* do something */
       return true;

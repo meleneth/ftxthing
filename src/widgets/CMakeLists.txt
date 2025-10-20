@@ -8,8 +8,9 @@ add_library(widgets STATIC
 )
 
 # Set include path for other targets
-target_include_directories(widgets PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}
+target_include_directories(widgets 
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/src
 )
 
 # Link FTXUI (required by battle_screen.cpp)

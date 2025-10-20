@@ -32,7 +32,7 @@ void ConsoleOverlay::set_open(bool v) {
 void ConsoleOverlay::FocusInput() { input_->TakeFocus(); }
 
 void ConsoleOverlay::set_full_open() {
-  should_open_full_ = true;
+  should_open_full_ = !should_open_full_;
   set_open(true);
 }
 

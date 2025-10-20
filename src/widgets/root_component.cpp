@@ -47,6 +47,11 @@ void RootComponent::toggle_console() {
   }
 }
 
+void RootComponent::set_full_open() {
+  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);
+  overlay->set_full_open();
+}
+
 ftxui::Element RootComponent::Render() {
   using namespace ftxui;
   auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);

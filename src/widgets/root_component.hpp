@@ -8,6 +8,7 @@ public:
   RootComponent();
   ftxui::Element Render() override;
   void toggle_console();
+  void set_full_open();
 
 private:
   ftxui::Component header_;

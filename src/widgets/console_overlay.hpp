@@ -27,7 +27,6 @@ public:
   void FocusInput();
 
   ftxui::Element Render() override;
-
   bool should_show();
 
 private:
