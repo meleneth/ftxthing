@@ -1,7 +1,9 @@
 # Declare the library
+file(GLOB_RECURSE ENTITIES_SOURCES CONFIGURE_DEPENDS *.cpp)
+
+# Declare the library
 add_library(entities STATIC
-  entities.cpp
-  party.cpp
+  ${ENTITIES_SOURCES}
 )
 
 # Link EnTT (it's INTERFACE, so PUBLIC propagates usage reqs to dependents)

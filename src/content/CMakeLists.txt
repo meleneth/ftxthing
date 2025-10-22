@@ -1,9 +1,9 @@
 # Declare the library
+file(GLOB_RECURSE CONTENT_SOURCES CONFIGURE_DEPENDS *.cpp)
+
+# Declare the library
 add_library(content STATIC
-  cycle_i_origin.cpp
-  cycle_ii_resonance.cpp
-  cycle_iii_conflict.cpp
-  cycle_iv_singularity.cpp
+  ${CONTENT_SOURCES}
 )
 
 # Headers live in the source dir

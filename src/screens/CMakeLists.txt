@@ -1,7 +1,9 @@
 # screens/CMakeLists.txt (or wherever this lives)
+file(GLOB_RECURSE SCREENS_SOURCES CONFIGURE_DEPENDS *.cpp)
 
+# Declare the library
 add_library(screens STATIC
-  battle_screen.cpp
+  ${SCREENS_SOURCES}
 )
 
 # Headers for this target (lets dependents do: #include "screens/…")

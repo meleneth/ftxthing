@@ -1,10 +1,10 @@
 # Declare the screens library
+
+file(GLOB_RECURSE WIDGETS_SOURCES CONFIGURE_DEPENDS *.cpp)
+
+# Declare the library
 add_library(widgets STATIC
-  fancy_log.cpp
-  root_component.cpp
-  footer_component.cpp
-  body_component.cpp
-  console_overlay.cpp
+  ${WIDGETS_SOURCES}
 )
 
 # Set include path for other targets

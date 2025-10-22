@@ -1,8 +1,9 @@
 # Declare the animations library
+file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS *.cpp)
+
+# Declare the library
 add_library(app STATIC
-  account.cpp
-  my_ftx_app.cpp
-  grand_central.cpp
+  ${APP_SOURCES}
 )
 
 # Set include path for other targets

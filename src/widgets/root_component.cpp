@@ -20,9 +20,6 @@ RootComponent::RootComponent(std::shared_ptr<FancyLog> console)
 
   auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);
 
-  console_->append_plain("some line");
-  console_->append_plain("another line");
-
   container_ = Container::Vertical({header_, body_, footer_});
   Add(container_);
   Add(console_overlay_);
