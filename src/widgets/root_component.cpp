@@ -10,21 +10,22 @@
 
 using namespace fairlanes;
 
-RootComponent::RootComponent() {
+RootComponent::RootComponent(std::shared_ptr<FancyLog> console)
+    : console_(console) {
   using namespace ftxui;
   header_ = Renderer([] { return text("Header") | center | bold | border; });
   body_ = Make<BodyComponent>();
   footer_ = Make<FooterComponent>();
-  console_ = Make<ConsoleOverlay>();
+  console_overlay_ = Make<ConsoleOverlay>(console_);
 
   auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);
 
-  overlay->push_line("some line");
-  overlay->push_line("another line");
+  console_->append_plain("some line");
+  console_->append_plain("another line");
 
   container_ = Container::Vertical({header_, body_, footer_});
   Add(container_);
-  Add(console_);
+  Add(console_overlay_);
 
   container_->SetActiveChild(body_);
 
@@ -39,10 +40,10 @@ RootComponent::RootComponent() {
 }
 
 void RootComponent::toggle_console() {
-  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);
+  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_overlay_);
   overlay->toggle();
   if (overlay->should_show()) {
-    container_->SetActiveChild(console_);
+    container_->SetActiveChild(console_overlay_);
     overlay->FocusInput(); // ensure cursor lands in Input
   } else {
     container_->SetActiveChild(body_);
@@ -50,13 +51,13 @@ void RootComponent::toggle_console() {
 }
 
 void RootComponent::set_full_open() {
-  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);
+  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_overlay_);
   overlay->set_full_open();
 }
 
 ftxui::Element RootComponent::Render() {
   using namespace ftxui;
-  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_);
+  auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_overlay_);
   overlay->tick();
 
   auto content = vbox({
@@ -65,7 +66,7 @@ ftxui::Element RootComponent::Render() {
       footer_->Render() | flex,
   });
   if (overlay->should_show()) {
-    return dbox({content, console_->Render()});
+    return dbox({content, console_overlay_->Render()});
   }
   return content;
 }

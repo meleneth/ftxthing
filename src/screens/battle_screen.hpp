@@ -7,6 +7,7 @@
 #include <ftxui/component/screen_interactive.hpp>
 
 #include "animation/animator.hpp"
+#include "widgets/fancy_log.hpp"
 #include "widgets/widget_types.hpp"
 
 namespace fairlanes {
@@ -20,8 +21,8 @@ public:
 private:
   ftxui::ScreenInteractive screen;
   entt::registry &combatants;
-  CombatLogPtr log;
-  ftxui::Component combatant_list = ftxui::Container::Vertical({});
+  std::shared_ptr<FancyLog> log;
+  // ftxui::Component combatant_list = ftxui::Container::Vertical({});
   ftxui::Component root;
   std::vector<ftxui::Component> combatant_components;
   Animator animator;

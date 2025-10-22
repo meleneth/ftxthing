@@ -6,11 +6,13 @@
 #include <string>
 
 #include "console_overlay.hpp"
+#include "fancy_log.hpp"
 #include "log.hpp"
 
 using namespace fairlanes;
 
-ConsoleOverlay::ConsoleOverlay() {
+ConsoleOverlay::ConsoleOverlay(std::shared_ptr<FancyLog> console)
+    : console_(console) {
   input_ = ftxui::Input(&line_);
   Add(input_);
 }
@@ -45,12 +47,6 @@ void ConsoleOverlay::tick() {
   rows_ += (rows_ < target_rows_) ? 1 : -1;
 }
 
-void ConsoleOverlay::push_line(std::string s) {
-  log_.push_back(std::move(s));
-  if (log_.size() > 5000)
-    log_.pop_front();
-}
-
 // Simple fake command hook
 std::function<void(std::string_view)> on_command = [](std::string_view) {};
 
@@ -61,7 +57,7 @@ bool ConsoleOverlay::OnEvent(ftxui::Event e) {
 
   if (e == ftxui::Event::Return) {
     if (!line_.empty()) {
-      push_line("> " + line_);
+      console_->append_plain("> " + line_);
       on_command(line_);
       line_.clear();
     }
@@ -86,7 +82,7 @@ ftxui::Element ConsoleOverlay::Render() {
 
   // 1) Let the log view expand vertically so the input gets pushed to the
   // bottom.
-  auto log_view = vbox(TransformLog()) | vscroll_indicator | yframe |
+  auto log_view = vbox(console_->Render()) | vscroll_indicator | yframe |
                   yflex_grow; // <- key: consume spare vertical space
 
   auto input_bar = hbox({text("> "), input_->Render()});
@@ -97,15 +93,6 @@ ftxui::Element ConsoleOverlay::Render() {
   // 2) Clear underneath and clamp the overlay height EXACTLY to rows_.
   return panel | xflex_grow | clear_under |
          size(HEIGHT, EQUAL, std::max(0, rows_));
-}
-
-std::vector<ftxui::Element> ConsoleOverlay::TransformLog() const {
-  using namespace ftxui;
-  std::vector<Element> out;
-  out.reserve(log_.size());
-  for (auto &s : log_)
-    out.push_back(text(s));
-  return out;
 }
 
 bool ConsoleOverlay::should_show() { return open_; }

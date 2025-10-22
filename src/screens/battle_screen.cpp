@@ -4,30 +4,32 @@
 
 #include "battle_screen.hpp"
 #include "entity_types.hpp"
-#include "widgets/combat_log.hpp" // the new widget
 #include "widgets/combatant.hpp"
+#include "widgets/fancy_log.hpp"
 
 using namespace ftxui;
 using namespace fairlanes;
 
 BattleScreen::BattleScreen(entt::registry &combatants_)
     : screen(ScreenInteractive::Fullscreen()), combatants(combatants_),
-      log(std::make_shared<CombatLog>(log_height)),
-      combatant_list(Container::Vertical({})) {
-  log->Append("[info](Battle begins)");
-  log->Append("[warn](Enemies approaching)");
-  log->Append("[name](Snail) uses [error](Slime Blast)");
-  log->Append("[name](𐓙)");
-  auto unicode_element = ftxui::text("😊");
-  log->Append(unicode_element);
-  log->Append(gauge(0.75f) | color(Color::Green));
-
+      log(std::make_shared<FancyLog>())
+//,
+//  combatant_list(Container::Vertical({}))
+{
+  /*  log->append("[info](Battle begins)");
+    log->append("[warn](Enemies approaching)");
+    log->append("[name](Snail) uses [error](Slime Blast)");
+    log->append("[name](𐓙)");
+    auto unicode_element = ftxui::text("😊");
+    log->append(unicode_element);
+    log->append(gauge(0.75f) | color(Color::Green));
+  */
   // Generate combatant views
   combatants.view<Name, Health, Level>().each(
       [&](entt::entity e, Name &, Health &, Level &) {
         auto comp = Make<Combatant>(combatants, e);
         combatant_components.push_back(comp);
-        combatant_list->Add(comp);
+        // combatant_list->Add(comp);
       });
 
   // Final layout
@@ -37,7 +39,7 @@ BattleScreen::BattleScreen(entt::registry &combatants_)
     auto combatant_box =
         hbox({
             filler(),
-            combatant_list->Render() | size(WIDTH, LESS_THAN, 40) | border,
+            // combatant_list->Render() | size(WIDTH, LESS_THAN, 40) | border,
             filler(),
         }) |
         flex;

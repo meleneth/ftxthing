@@ -1,4 +1,5 @@
 #pragma once
+#include "widgets/fancy_log.hpp"
 #include "widgets/root_component.hpp"
 
 namespace fairlanes {
@@ -8,6 +9,7 @@ public:
   void main_loop();
 
 private:
-  std::shared_ptr<RootComponent> root_component;
+  ftxui::Component root_component_;
+  std::shared_ptr<FancyLog> console_;
 };
 } // namespace fairlanes

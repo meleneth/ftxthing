@@ -6,19 +6,23 @@
 #include "grand_central.hpp"
 #include "screens/battle_screen.hpp"
 #include "systems/log.hpp"
+#include "widgets/fancy_log.hpp"
 #include "widgets/root_component.hpp"
 
 using namespace fairlanes;
 
-GrandCentral::GrandCentral()
-    : root_component(std::make_shared<RootComponent>()) {}
+GrandCentral::GrandCentral() {
+  using namespace ftxui;
+  console_ = std::make_shared<fairlanes::FancyLog>();
+  root_component_ = Make<RootComponent>(console_);
+  console_->append_markup("[name](Snail) uses [error](Slime Blast) 🔥");
+}
 
 void GrandCentral::main_loop() {
-
   using namespace ftxui;
   ScreenInteractive screen = ScreenInteractive::Fullscreen();
   screen.SetCursor(Screen::Cursor{.shape = Screen::Cursor::Hidden});
-  auto root = Make<RootComponent>();
+  auto root = Make<RootComponent>(console_);
 
   auto ui = Renderer(root, [&] {
     using clock = std::chrono::steady_clock;

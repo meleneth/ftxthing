@@ -6,11 +6,13 @@
 #include <ftxui/dom/elements.hpp>
 #include <string>
 
+#include "fancy_log.hpp"
+
 namespace fairlanes {
 
 class ConsoleOverlay : public ftxui::ComponentBase {
 public:
-  ConsoleOverlay();
+  ConsoleOverlay(std::shared_ptr<FancyLog> console);
 
   bool open() const;
   void toggle();
@@ -19,8 +21,6 @@ public:
 
   // Call this from your frame tick to animate height
   void tick();
-
-  void push_line(std::string s);
 
   // Simple fake command hook
   std::function<void(std::string_view)> on_command = [](std::string_view) {};
@@ -32,13 +32,11 @@ public:
   bool should_show();
 
 private:
-  std::vector<ftxui::Element> TransformLog() const;
-
   bool open_ = false;
   bool should_open_full_ = false;
   int rows_ = 0;
   int target_rows_ = 0;
-  std::deque<std::string> log_;
+  std::shared_ptr<FancyLog> console_;
   std::string line_;
   ftxui::Component input_;
 };
