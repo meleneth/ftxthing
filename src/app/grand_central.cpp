@@ -35,9 +35,38 @@ GrandCentral::GrandCentral(const AppConfig &cfg) {
 
   // Parties reference registry/log/rng extracted from ctx; ctx can die after
   // this
-  auto &party = parties_.emplace_back(ctx);
-  auto character = party.create_member("APlayer");
-  (void)character;
+
+  for (int i = 1; i <= 8; ++i) {
+    const auto acc_name = fmt::format("Account {}", i);
+    const auto party_name = fmt::format("Party {}", i);
+    const auto member_name = fmt::format("Player{}", i);
+
+    // Create account i
+    accounts_.push_back(std::make_unique<Account>(ctx, acc_name));
+
+    auto &account = accounts_.back();
+
+    // Create party i in account i
+    auto &party = account->create_party(ctx, party_name);
+
+    // Log the join (and optionally account/party creation)
+    console_->append_markup(fmt::format(
+        "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
+
+    // Create a single member in that party
+    auto character = party.create_member(ctx, member_name);
+
+    (void)character;
+  }
+  console_->append_markup("[name](Snail) uses [error](Slime Blast) 🔥");
+}
+
+void GrandCentral::sim_tick(float dt) {
+  for (auto &account : accounts_) {
+    for (auto &party : account->parties()) {
+      party->tick(dt);
+    }
+  }
 }
 
 void GrandCentral::main_loop() {
@@ -51,10 +80,10 @@ void GrandCentral::main_loop() {
     using clock = std::chrono::steady_clock;
     static auto last = clock::now();
     const auto now = clock::now();
-    const double dt = std::chrono::duration<double>(now - last).count();
-    (void)dt;
+    float dt = std::chrono::duration<float>(now - last).count();
     last = now;
 
+    sim_tick(dt);
     // TODO: sim.tick(dt);
 
     return root->Render();
