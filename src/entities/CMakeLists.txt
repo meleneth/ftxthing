@@ -7,14 +7,18 @@ add_library(entities STATIC
 )
 
 # Link EnTT (it's INTERFACE, so PUBLIC propagates usage reqs to dependents)
-target_link_libraries(entities PUBLIC
+target_link_libraries(entities 
+PRIVATE
+app
+PUBLIC
   EnTT::EnTT
   nlohmann_json::nlohmann_json
 )
 
 # Headers for this target (so dependents can do #include "entities/…")
 target_include_directories(entities PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/src
 )
 
 # Warnings (portable)

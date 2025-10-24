@@ -10,6 +10,7 @@
 
 #include <pcg_random.hpp>
 
+namespace fairlanes {
 // Choose your engine here (pcg64_fast is good for games/sims).
 using Engine = pcg64;
 
@@ -182,3 +183,4 @@ private:
   uint64_t master_seed_;
   uint64_t base_sequence_;
 };
+} // namespace fairlanes

@@ -3,7 +3,7 @@
 #include <ftxui/screen/screen.hpp>
 
 #include "battle_screen.hpp"
-#include "entity_types.hpp"
+#include "entities/entity_types.hpp"
 #include "widgets/combatant.hpp"
 #include "widgets/fancy_log.hpp"
 

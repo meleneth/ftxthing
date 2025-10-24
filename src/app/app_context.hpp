@@ -1,27 +1,23 @@
 // context.hpp
 #pragma once
 #include <entt/entt.hpp>
-namespace ftxui {
-class ScreenInteractive;
-}
 
 namespace fairlanes {
-class ConsoleOverlay;
+class FancyLog; // fwd-declare only; avoid including the header here
 class RandomHub;
-class Router;
-class Party;
+class GrandCentral; // friend below
 
 class AppContext {
 public:
-  // accessors only (could be methods if you prefer)
-  ConsoleOverlay &console() noexcept { return console_; }
-  entt::registry &registry() noexcept { return registry_; }
-  RandomHub &rng() noexcept { return rng_; }
-  Router &router() noexcept { return router_; }
-  ftxui::ScreenInteractive &screen() noexcept { return screen_; }
+  // accessors
+  FancyLog &log() noexcept { return log_; }
+  const FancyLog &log() const noexcept { return log_; }
 
-  Party *current_party() const noexcept { return current_party_; }
-  void set_current_party(Party *p) noexcept { current_party_ = p; }
+  entt::registry &registry() noexcept { return registry_; }
+  const entt::registry &registry() const noexcept { return registry_; }
+
+  RandomHub &rng() noexcept { return rng_; }
+  const RandomHub &rng() const noexcept { return rng_; }
 
   // non-copyable, non-movable
   AppContext(const AppContext &) = delete;
@@ -31,15 +27,11 @@ public:
 
 private:
   friend class GrandCentral; // only GC can build it
-  AppContext(ConsoleOverlay &c, entt::registry &r, RandomHub &g, Router &t,
-             ftxui::ScreenInteractive &s)
-      : console_(c), registry_(r), rng_(g), router_(t), screen_(s) {}
+  AppContext(FancyLog &log, entt::registry &r, RandomHub &g)
+      : log_(log), registry_(r), rng_(g) {}
 
-  ConsoleOverlay &console_;
+  FancyLog &log_;
   entt::registry &registry_;
   RandomHub &rng_;
-  Router &router_;
-  ftxui::ScreenInteractive &screen_;
-  Party *current_party_ = nullptr;
 };
 } // namespace fairlanes
