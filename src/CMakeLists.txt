@@ -38,6 +38,7 @@ target_link_libraries(ftxthing PRIVATE
   ExprTk::exprtk
   CLI11::CLI11
   spdlog::spdlog
+  fmt::fmt
 )
 
 ftxthing_set_warnings(ftxthing)

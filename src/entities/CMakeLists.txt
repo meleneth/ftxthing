@@ -13,6 +13,7 @@ app
 PUBLIC
   EnTT::EnTT
   nlohmann_json::nlohmann_json
+  spdlog::spdlog
 )
 
 # Headers for this target (so dependents can do #include "entities/…")

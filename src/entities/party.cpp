@@ -1,14 +1,16 @@
-#include "party.hpp"
+#include <fmt/core.h>
+
 #include "app/app_context.hpp"
 #include "entity_types.hpp"
+#include "party.hpp"
 #include "widgets/fancy_log.hpp"
 
 using namespace fairlanes;
-Party::Party(AppContext &ctx) : reg_(ctx.registry()) {
-  create_member("Player 1");
-}
+Party::Party(AppContext &ctx)
+    : reg_(ctx.registry()), log_(ctx.log()), rng_(ctx.rng()) {}
 
 entt::entity Party::create_member(std::string name) {
+  log_.append_markup(fmt::format("Party Member [name]({}) joined!", name));
   auto player = reg_.create();
   reg_.emplace<Name>(player, name);
   reg_.emplace<Health>(player, 40, 50);

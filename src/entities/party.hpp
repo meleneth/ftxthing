@@ -4,6 +4,8 @@
 #include "app/app_context.hpp"
 
 namespace fairlanes {
+class FancyLog;
+
 class Party {
 public:
   Party(AppContext &ctx);
@@ -12,5 +14,7 @@ public:
 private:
   std::vector<entt::entity> members;
   entt::registry &reg_;
+  FancyLog &log_;
+  RandomHub &rng_;
 };
 } // namespace fairlanes

@@ -13,7 +13,6 @@
 #include "widgets/fancy_log.hpp"
 #include "widgets/root_component.hpp"
 
-
 using namespace fairlanes;
 
 GrandCentral::GrandCentral(const AppConfig &cfg) {
@@ -36,7 +35,9 @@ GrandCentral::GrandCentral(const AppConfig &cfg) {
 
   // Parties reference registry/log/rng extracted from ctx; ctx can die after
   // this
-  parties_.emplace_back(ctx);
+  auto &party = parties_.emplace_back(ctx);
+  auto character = party.create_member("APlayer");
+  (void)character;
 }
 
 void GrandCentral::main_loop() {

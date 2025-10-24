@@ -144,7 +144,30 @@ CPMAddPackage(
 )
 
 CPMAddPackage("gh:CLIUtils/CLI11@2.4.2")
-CPMAddPackage("gh:gabime/spdlog@1.13.0")
+# fmt (compiled library)
+CPMAddPackage(
+  NAME fmt
+  GITHUB_REPOSITORY fmtlib/fmt
+  GIT_TAG 10.2.1
+  OPTIONS
+    "FMT_DOC OFF"
+    "FMT_TEST OFF"
+)
+
+# Tell spdlog to use the external fmt we just added
+set(SPDLOG_FMT_EXTERNAL ON CACHE BOOL "" FORCE)
+
+CPMAddPackage(
+  NAME spdlog
+  GITHUB_REPOSITORY gabime/spdlog
+  VERSION 1.14.1
+  OPTIONS
+    "SPDLOG_BUILD_SHARED OFF"
+    "SPDLOG_BUILD_EXAMPLE OFF"
+    "SPDLOG_BUILD_TESTS OFF"
+)
+
+
 
 # --- Your code ---------------------------------------------------------------
 add_subdirectory(src)
