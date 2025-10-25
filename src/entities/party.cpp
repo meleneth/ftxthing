@@ -17,6 +17,7 @@ entt::entity Party::create_member(AppContext &ctx, std::string name) {
   reg_.emplace<Health>(player, 40, 50);
   reg_.emplace<PlayerControlled>(player);
   reg_.emplace<Level>(player, 1);
+  members.push_back(player);
   return player;
 }
 
