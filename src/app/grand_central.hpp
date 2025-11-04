@@ -2,6 +2,8 @@
 #include <entt/entt.hpp>
 
 #include "app/app_config.hpp"
+#include "app/app_context.hpp"
+
 #include "systems/random_hub.hpp"
 #include "widgets/fancy_log.hpp"
 #include "widgets/root_component.hpp"
@@ -11,9 +13,11 @@ class GrandCentral {
 public:
   GrandCentral(const AppConfig &cfg);
   void main_loop();
-  entt::entity create_account(std::string name);
-  entt::entity create_party_in_account(std::string name, entt::entity account);
-  entt::entity create_member_in_party(std::string name, entt::entity party);
+  entt::entity create_account(AppContext &ctx, std::string name);
+  entt::entity create_party_in_account(AppContext &ctx, std::string name,
+                                       entt::entity account);
+  entt::entity create_member_in_party(AppContext &ctx, std::string name,
+                                      entt::entity party);
 
   void switch_account(std::size_t idx);
 
@@ -29,6 +33,5 @@ private:
   ftxui::Component root_component_;
   std::shared_ptr<FancyLog> console_;
   std::shared_ptr<RandomHub> random_;
-  entt::registry registry_;
 };
 } // namespace fairlanes

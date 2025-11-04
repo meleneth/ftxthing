@@ -6,9 +6,9 @@
 
 #include "app/app_context.hpp"
 #include "entities/entities.hpp"
-#include "fairlanes/ecs/components/account.hpp"
-#include "fairlanes/ecs/components/party.hpp"
-#include "fairlanes/ecs/components/party_fsm.hpp"
+#include "fairlanes/ecs/components/is_account.hpp"
+#include "fairlanes/ecs/components/is_party.hpp"
+#include "fairlanes/ecs/components/party_member.hpp"
 #include "grand_central.hpp"
 #include "screens/battle_screen.hpp"
 #include "systems/log.hpp"
@@ -18,31 +18,42 @@
 
 using namespace fairlanes;
 
-entt::entity GrandCentral::create_account(std::string name) {
+entt::entity GrandCentral::create_account(AppContext &ctx, std::string name) {
   auto e = reg_.create();
   using fairlanes::ecs::components::IsAccount;
 
-  reg_.emplace<IsAccount>(e, std::move(name));
+  reg_.emplace<IsAccount>(e, ctx, std::move(name));
   return e;
 }
 
-entt::entity GrandCentral::create_party_in_account(std::string name,
+entt::entity GrandCentral::create_party_in_account(AppContext &ctx,
+                                                   std::string name,
                                                    entt::entity account) {
   auto e = reg_.create();
-  using fairlanes::ecs::components::IsParty;
-  // TODO the problem is HERE
-  reg_.emplace<IsParty>(e, std::move(name), account);
+  using ::fairlanes::ecs::components::IsParty;
+  using ::fairlanes::ecs::components::PartyBusiness;
+
+  // spdlog::debug("create: reg={}, party={}", fmt::ptr(&reg_),
+  // (uint32_t)entt::to_integral(e));
+
+  reg_.emplace<PartyBusiness>(e, ctx, "idle");
+  auto &business = reg_.get<PartyBusiness>(e);
+  (void)business;
+  reg_.emplace<IsParty>(e, ctx, e, std::move(name), account);
+
   return e;
 }
 
-entt::entity GrandCentral::create_member_in_party(std::string name,
+entt::entity GrandCentral::create_member_in_party(AppContext &ctx,
+                                                  std::string name,
                                                   entt::entity party) {
   auto e = reg_.create();
   using fairlanes::ecs::components::PartyMember;
-  reg_.emplace<PartyMember>(e, party);
+  reg_.emplace<PartyMember>(e, ctx, name, party);
   (void)name;
   return e;
 }
+
 GrandCentral::GrandCentral(const AppConfig &cfg) {
   using namespace ftxui;
 
@@ -59,7 +70,7 @@ GrandCentral::GrandCentral(const AppConfig &cfg) {
   random_ = std::make_shared<RandomHub>(seed, cfg.stream);
 
   // Build a temporary context to wire new subsystems
-  AppContext ctx(*console_, registry_, *random_);
+  AppContext ctx(*console_, reg_, *random_);
 
   // Parties reference registry/log/rng extracted from ctx; ctx can die after
   // this
@@ -70,17 +81,17 @@ GrandCentral::GrandCentral(const AppConfig &cfg) {
     const auto member_name = fmt::format("Player{}", i);
 
     // Create account i
-    auto account = create_account(acc_name);
+    auto account = create_account(ctx, acc_name);
 
     // Create party i in account i
-    auto party = create_party_in_account(party_name, account);
+    auto party = create_party_in_account(ctx, party_name, account);
 
     // Log the join (and optionally account/party creation)
     console_->append_markup(fmt::format(
         "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
 
     // Create a single member in that party
-    auto character = create_member_in_party(member_name, party);
+    auto character = create_member_in_party(ctx, member_name, party);
 
     (void)character;
   }
@@ -89,13 +100,11 @@ GrandCentral::GrandCentral(const AppConfig &cfg) {
 
 inline void GrandCentral::tick_party_fsms(float dt) {
   using fairlanes::ecs::components::IsParty;
-  using fairlanes::ecs::components::PartyFSM;
   (void)dt;
-  auto v = registry_.view<IsParty, PartyFSM>();
-  for (auto [e, party, fsm] : v.each()) {
-    fsm.next();
+  auto v = reg_.view<IsParty>();
+  for (auto [e, party] : v.each()) {
+    party.next();
     (void)e;
-    (void)party;
   }
 }
 
