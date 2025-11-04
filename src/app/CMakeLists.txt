@@ -29,5 +29,6 @@ target_compile_options(app PRIVATE
 
 target_include_directories(app PRIVATE
   ${entt_SOURCE_DIR}/single_include
+  ${PROJECT_SOURCE_DIR}/src/include
 )
 

@@ -20,6 +20,8 @@ PUBLIC
 target_include_directories(entities PUBLIC
   PUBLIC
     ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src/include
+
 )
 
 # Warnings (portable)

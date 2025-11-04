@@ -6,6 +6,9 @@
 
 #include "app/app_context.hpp"
 #include "entities/entities.hpp"
+#include "fairlanes/ecs/components/account.hpp"
+#include "fairlanes/ecs/components/party.hpp"
+#include "fairlanes/ecs/components/party_fsm.hpp"
 #include "grand_central.hpp"
 #include "screens/battle_screen.hpp"
 #include "systems/log.hpp"
@@ -15,6 +18,31 @@
 
 using namespace fairlanes;
 
+entt::entity GrandCentral::create_account(std::string name) {
+  auto e = reg_.create();
+  using fairlanes::ecs::components::IsAccount;
+
+  reg_.emplace<IsAccount>(e, std::move(name));
+  return e;
+}
+
+entt::entity GrandCentral::create_party_in_account(std::string name,
+                                                   entt::entity account) {
+  auto e = reg_.create();
+  using fairlanes::ecs::components::IsParty;
+  // TODO the problem is HERE
+  reg_.emplace<IsParty>(e, std::move(name), account);
+  return e;
+}
+
+entt::entity GrandCentral::create_member_in_party(std::string name,
+                                                  entt::entity party) {
+  auto e = reg_.create();
+  using fairlanes::ecs::components::PartyMember;
+  reg_.emplace<PartyMember>(e, party);
+  (void)name;
+  return e;
+}
 GrandCentral::GrandCentral(const AppConfig &cfg) {
   using namespace ftxui;
 
@@ -42,30 +70,32 @@ GrandCentral::GrandCentral(const AppConfig &cfg) {
     const auto member_name = fmt::format("Player{}", i);
 
     // Create account i
-    accounts_.push_back(std::make_unique<Account>(ctx, acc_name));
-
-    auto &account = accounts_.back();
+    auto account = create_account(acc_name);
 
     // Create party i in account i
-    auto &party = account->create_party(ctx, party_name);
+    auto party = create_party_in_account(party_name, account);
 
     // Log the join (and optionally account/party creation)
     console_->append_markup(fmt::format(
         "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
 
     // Create a single member in that party
-    auto character = party.create_member(ctx, member_name);
+    auto character = create_member_in_party(member_name, party);
 
     (void)character;
   }
   console_->append_markup("[name](Snail) uses [error](Slime Blast) 🔥");
 }
 
-void GrandCentral::sim_tick(float dt) {
-  for (auto &account : accounts_) {
-    for (auto &party : account->parties()) {
-      party->tick(dt);
-    }
+inline void GrandCentral::tick_party_fsms(float dt) {
+  using fairlanes::ecs::components::IsParty;
+  using fairlanes::ecs::components::PartyFSM;
+  (void)dt;
+  auto v = registry_.view<IsParty, PartyFSM>();
+  for (auto [e, party, fsm] : v.each()) {
+    fsm.next();
+    (void)e;
+    (void)party;
   }
 }
 
@@ -83,7 +113,7 @@ void GrandCentral::main_loop() {
     float dt = std::chrono::duration<float>(now - last).count();
     last = now;
 
-    sim_tick(dt);
+    tick_party_fsms(dt);
     // TODO: sim.tick(dt);
 
     return root->Render();

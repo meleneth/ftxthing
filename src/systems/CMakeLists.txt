@@ -14,13 +14,14 @@ target_include_directories(systems PUBLIC
 # Link against SML (header-only target)
 target_link_libraries(systems
 PUBLIC
-Boost::sml::system
+  EnTT::EnTT
+  Boost::sml::system
   ftxui::screen
   ftxui::dom
   ftxui::component
-ExprTk::exprtk
-spdlog::spdlog
-CLI11::CLI11
+  ExprTk::exprtk
+  spdlog::spdlog
+  CLI11::CLI11
 )
 
 target_include_directories(systems PUBLIC
