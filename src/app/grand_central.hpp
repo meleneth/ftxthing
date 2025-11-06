@@ -9,6 +9,7 @@
 #include "widgets/root_component.hpp"
 
 namespace fairlanes {
+class RootComponent;
 class GrandCentral {
 public:
   GrandCentral(const AppConfig &cfg);
@@ -21,17 +22,24 @@ public:
 
   void switch_account(std::size_t idx);
 
+  AppContext &app_context();
+
   // Map F1..F8 → accounts[0..7]
   bool handle_event(const ftxui::Event &e);
   inline void tick_party_fsms(float dt);
 
+  RootComponent *root_component();
   entt::registry &registry() { return reg_; }
+  entt::entity get_account(int id);
 
 private:
   entt::registry reg_;
   std::size_t active_idx_ = 0;
-  ftxui::Component root_component_;
   std::shared_ptr<FancyLog> console_;
+  ftxui::Component root_component_;
+  std::vector<entt::entity> account_ids;
+  uint64_t seed_;
   std::shared_ptr<RandomHub> random_;
+  AppContext app_context_;
 };
 } // namespace fairlanes

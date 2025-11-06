@@ -15,6 +15,7 @@ target_precompile_headers(ftxthing_tests PRIVATE
   <catch2/matchers/catch_matchers_floating_point.hpp>
 )
 
+target_link_libraries(ftxthing_tests PRIVATE fairlanes)
 target_link_libraries(ftxthing_tests PRIVATE entities)
 target_link_libraries(ftxthing_tests PRIVATE animation)
 target_link_libraries(ftxthing_tests PRIVATE widgets)

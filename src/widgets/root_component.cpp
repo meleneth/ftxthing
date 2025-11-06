@@ -47,6 +47,10 @@ void RootComponent::toggle_console() {
   }
 }
 
+BodyComponent *RootComponent::body() {
+  return dynamic_cast<BodyComponent *>(body_.get());
+}
+
 void RootComponent::set_full_open() {
   auto overlay = std::dynamic_pointer_cast<ConsoleOverlay>(console_overlay_);
   overlay->set_full_open();

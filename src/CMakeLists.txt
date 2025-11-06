@@ -7,6 +7,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
 endif()
 
+add_subdirectory(fairlanes)
 add_subdirectory(widgets)
 add_subdirectory(screens)
 add_subdirectory(entities)
@@ -24,6 +25,7 @@ target_link_libraries(ftxthing PRIVATE screens)
 target_link_libraries(ftxthing PRIVATE systems)
 target_link_libraries(ftxthing PRIVATE app)
 target_link_libraries(ftxthing PRIVATE content)
+target_link_libraries(ftxthing PRIVATE fairlanes)
 
 target_include_directories(ftxthing PRIVATE
   ${entt_SOURCE_DIR}/single_include

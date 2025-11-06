@@ -14,6 +14,7 @@ target_include_directories(app PUBLIC
 target_link_libraries(app PRIVATE entities)
 target_link_libraries(app PRIVATE systems)
 target_link_libraries(app PRIVATE widgets)
+target_link_libraries(app PUBLIC fairlanes)
 
 # Link FTXUI (required by battle_animation.cpp)
 target_link_libraries(app PUBLIC

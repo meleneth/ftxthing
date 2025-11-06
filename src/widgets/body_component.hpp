@@ -2,6 +2,7 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 
+namespace fairlanes {
 class BodyComponent : public ftxui::ComponentBase {
 public:
   bool OnEvent(ftxui::Event e) override;
@@ -11,6 +12,10 @@ public:
   // 🔑 This makes the component a keyboard target.
   bool Focusable() const override;
 
+  std::string party_doing;
+
 private:
   int counter_ = 0;
 };
+
+} // namespace fairlanes

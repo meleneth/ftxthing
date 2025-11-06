@@ -6,6 +6,7 @@
 #include "widgets/fancy_log.hpp"
 
 namespace fairlanes {
+class BodyComponent;
 
 class RootComponent : public ftxui::ComponentBase {
 public:
@@ -13,6 +14,7 @@ public:
   ftxui::Element Render() override;
   void toggle_console();
   void set_full_open();
+  BodyComponent *body();
 
 private:
   ftxui::Component header_;

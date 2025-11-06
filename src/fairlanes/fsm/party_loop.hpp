@@ -39,10 +39,10 @@ struct PartyLoop {
 
     return make_transition_table(
         *state<Idle> + on_entry<_> / enter_idle,
-        state<Idle> + event<NextEvent> = state<Farming>,
         state<Farming> + on_entry<_> / enter_farming,
-        state<Farming> + event<NextEvent> = state<Fixing>,
         state<Fixing> + on_entry<_> / enter_fixing,
+        state<Idle> + event<NextEvent> = state<Farming>,
+        state<Farming> + event<NextEvent> = state<Fixing>,
         state<Fixing> + event<NextEvent> = state<Idle>);
   }
 };
