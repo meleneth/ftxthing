@@ -10,6 +10,8 @@
 #include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/party_business.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
+#include "fairlanes/ecs/components/stats.hpp"
+#include "fairlanes/ecs/components/track_xp.hpp"
 #include "grand_central.hpp"
 #include "screens/battle_screen.hpp"
 #include "systems/log.hpp"
@@ -52,7 +54,12 @@ entt::entity GrandCentral::create_member_in_party(AppContext &ctx,
                                                   entt::entity party) {
   auto e = reg_.create();
   using fairlanes::ecs::components::PartyMember;
+  using fairlanes::ecs::components::Stats;
+  using fairlanes::ecs::components::TrackXP;
+
   reg_.emplace<PartyMember>(e, ctx, name, party);
+  reg_.emplace<TrackXP>(e, ctx, 0);
+  reg_.emplace<Stats>(e, ctx, name);
   (void)name;
   return e;
 }
@@ -96,21 +103,40 @@ AppContext &GrandCentral::app_context() { return app_context_; }
 
 inline void GrandCentral::tick_party_fsms(float dt) {
   using fairlanes::ecs::components::IsParty;
-  (void)dt;
-  auto v = reg_.view<IsParty>();
-  for (auto [e, party] : v.each()) {
-    party.next();
-    (void)e;
-  }
   using fairlanes::ecs::components::PartyBusiness;
-  auto pb = reg_.view<PartyBusiness>();
+  using fairlanes::ecs::components::PartyMember;
+  using fairlanes::ecs::components::Stats;
+  using fairlanes::ecs::components::TrackXP;
 
-  auto range = pb.each();
-  if (range.begin() != range.end()) {
-    auto [first_entity, first_comp] = *range.begin();
-    root_component()->body()->party_doing = first_comp.doing;
+  (void)dt;
+
+  auto parties = reg_.view<IsParty>();
+  auto members = reg_.view<PartyMember>();
+
+  // Step 1: tick all party FSMs and update “what the party is doing” for UI
+  for (auto [party_e, party] : parties.each()) {
+    party.next();
+
+    // Update UI from THIS party’s PartyBusiness (not “first in registry”)
+    auto &business = reg_.get<PartyBusiness>(party_e);
+    root_component()->body()->party_doing = business.doing;
+
+    // Step 2: grant XP (or just inspect) to members of THIS party
+    for (auto member_e : members) {
+      auto &pm = members.get<PartyMember>(member_e);
+      if (pm.party_ == party_e) {
+        entt::handle h{reg_, member_e};
+        auto &xp = h.get<TrackXP>();
+        // auto &stats = h.get<Stats>();
+        //  do your award, then log
+        //  xp.value += grant_amount;
+        xp.add_xp(h, 256);
+        // fmt::print("Member {} has {} XP\n", stats.name_, xp.xp);
+      }
+    }
   }
 }
+
 RootComponent *GrandCentral::root_component() {
   return dynamic_cast<RootComponent *>(root_component_.get());
 }

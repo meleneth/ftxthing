@@ -16,6 +16,8 @@ FancyLog::FancyLog(Options opt) : opts(opt) {
   // sane defaults you can override with styles(...)
   style_map = {
       {"name", bold},
+      {"xp", color(Color::Blue)},
+      {"level", color(Color::Green)},
       {"error", color(Color::Red)},
       {"warn", color(Color::Yellow)},
       {"ok", color(Color::Green)},

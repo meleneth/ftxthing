@@ -1,14 +1,11 @@
 #pragma once
-#include "fairlanes/ecs/fwd.hpp"
-#include "fairlanes/fsm/party_loop.hpp"
-#include "fairlanes/fsm/party_loop_ctx.hpp"
-#include "systems/log.hpp"
-
-#include <spdlog/spdlog.h>
 #include <string>
-
+namespace fairlanes {
+class AppContext;
+}
 namespace fairlanes::ecs::components {
-using fairlanes::fsm::PartyLoopCtx;
+using fairlanes::AppContext;
+
 // Marks an entity as an Account
 struct IsAccount {
   std::string account_name_;
