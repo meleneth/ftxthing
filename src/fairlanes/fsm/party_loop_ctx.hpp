@@ -7,9 +7,9 @@ namespace fairlanes::fsm {
 namespace sml = boost::sml;
 
 struct PartyLoopCtx {
-  entt::registry *reg{nullptr};
-  entt::entity party{entt::null};
-  spdlog::logger *log{nullptr};
+  entt::registry *reg_{nullptr};
+  entt::entity party_{entt::null};
+  spdlog::logger *log_{nullptr};
 };
 
 } // namespace fairlanes::fsm

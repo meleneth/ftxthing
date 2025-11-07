@@ -1,30 +1,40 @@
 #pragma once
-#include <boost/sml.hpp>
+#include <entt/entt.hpp>
+#include <ranges>
 #include <string>
 
 #include "fairlanes/ecs/fwd.hpp"
-#include "fairlanes/fsm/party_loop.hpp"
-#include "fairlanes/fsm/party_loop_ctx.hpp"
-#include "systems/log.hpp"
 
 namespace fairlanes::ecs::components {
-namespace sml = boost::sml;
 
-// Marks an entity as a Party (party itself is an entity)
-using fairlanes::fsm::PartyLoop;
-using fairlanes::fsm::PartyLoopCtx;
-
-// Member belongs to a Party (attach to player/member entities)
 struct PartyMember {
-  fairlanes::ecs::Entity party_{};
+  fairlanes::ecs::Entity party_{entt::null};
 
-  PartyMember(AppContext &context, std::string name, entt::entity party)
-      : party_(party) {
-    (void)context;
-    // spdlog::debug("PartyMember ctor: registry={}, name={}",
-    //             fmt::ptr(&context.registry()), name);
-    (void)name;
-  }
+  PartyMember(fairlanes::AppContext &context, std::string /*name*/,
+              entt::entity party);
 };
+
+// Call `fn(entt::handle)` for each member of `party_e`
+template <typename PM = PartyMember, typename Fn>
+inline void for_each_member(entt::registry &reg, entt::entity party_e,
+                            Fn &&fn) {
+  auto view = reg.view<PM>();            // entities with PartyMember
+  for (auto e : view) {                  // iterate entities
+    if (view.get(e).party_ == party_e) { // match party
+      fn(entt::handle{reg, e});          // yield handle
+    }
+  }
+}
+
+template <typename PM = PartyMember, typename Fn>
+inline void for_each_member(entt::registry *reg, entt::entity party_e,
+                            Fn &&fn) {
+  for_each_member<PM>(*reg, party_e, std::forward<Fn>(fn));
+}
+
+template <typename Ctx, typename PM = PartyMember, typename Fn>
+inline void for_each_member(Ctx &ctx, entt::entity party_e, Fn &&fn) {
+  for_each_member<PM>(*ctx.reg_, party_e, std::forward<Fn>(fn));
+}
 
 } // namespace fairlanes::ecs::components

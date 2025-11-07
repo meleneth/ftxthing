@@ -23,7 +23,7 @@ TrackXP::TrackXP(AppContext &context, int starting_xp)
 void TrackXP::add_xp(entt::handle self, int amount) {
   xp += amount;
   using fairlanes::ecs::components::Stats;
-  while (xp >= next_level_at) {
+  while (next_level_at && xp >= next_level_at) {
     ++level;
     next_level_at = xp_for_level(level + 1);
     if (auto info = self.try_get<Stats>()) {

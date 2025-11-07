@@ -111,7 +111,7 @@ inline void GrandCentral::tick_party_fsms(float dt) {
   (void)dt;
 
   auto parties = reg_.view<IsParty>();
-  auto members = reg_.view<PartyMember>();
+  // auto members = reg_.view<PartyMember>();
 
   // Step 1: tick all party FSMs and update “what the party is doing” for UI
   for (auto [party_e, party] : parties.each()) {
@@ -120,20 +120,6 @@ inline void GrandCentral::tick_party_fsms(float dt) {
     // Update UI from THIS party’s PartyBusiness (not “first in registry”)
     auto &business = reg_.get<PartyBusiness>(party_e);
     root_component()->body()->party_doing = business.doing;
-
-    // Step 2: grant XP (or just inspect) to members of THIS party
-    for (auto member_e : members) {
-      auto &pm = members.get<PartyMember>(member_e);
-      if (pm.party_ == party_e) {
-        entt::handle h{reg_, member_e};
-        auto &xp = h.get<TrackXP>();
-        // auto &stats = h.get<Stats>();
-        //  do your award, then log
-        //  xp.value += grant_amount;
-        xp.add_xp(h, 256);
-        // fmt::print("Member {} has {} XP\n", stats.name_, xp.xp);
-      }
-    }
   }
 }
 

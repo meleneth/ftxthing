@@ -28,7 +28,7 @@ FancyLog::FancyLog(Options opt) : opts(opt) {
 // ---- append ---------------------------------------------------------------
 
 void FancyLog::append_markup(std::string_view utf8_line) {
-  spdlog::info(utf8_line);
+  // spdlog::info(utf8_line);
   push(parse_markup(utf8_line));
 }
 
