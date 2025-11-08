@@ -5,8 +5,7 @@
 
 namespace fairlanes::systems {
 void TickPartyFSMs::commit(entt::registry &reg) {
-  using fairlanes::ecs::components::IsParty;
-  auto parties = reg.view<IsParty>();
+  auto parties = reg.view<fairlanes::ecs::components::IsParty>();
 
   // Step 1: tick all party FSMs and update “what the party is doing” for UI
   for (auto [party_e, party] : parties.each()) {

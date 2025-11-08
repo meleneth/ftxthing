@@ -12,6 +12,7 @@
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
+#include "fairlanes/systems/tick_party_fsms.hpp"
 #include "grand_central.hpp"
 #include "screens/battle_screen.hpp"
 #include "systems/log.hpp"
@@ -107,20 +108,9 @@ inline void GrandCentral::tick_party_fsms(float dt) {
   using fairlanes::ecs::components::PartyMember;
   using fairlanes::ecs::components::Stats;
   using fairlanes::ecs::components::TrackXP;
-
+  using fairlanes::systems::TickPartyFSMs;
   (void)dt;
-
-  auto parties = reg_.view<IsParty>();
-  // auto members = reg_.view<PartyMember>();
-
-  // Step 1: tick all party FSMs and update “what the party is doing” for UI
-  for (auto [party_e, party] : parties.each()) {
-    party.next();
-
-    // Update UI from THIS party’s PartyBusiness (not “first in registry”)
-    auto &business = reg_.get<PartyBusiness>(party_e);
-    root_component()->body()->party_doing = business.doing;
-  }
+  TickPartyFSMs::commit(reg_);
 }
 
 RootComponent *GrandCentral::root_component() {
