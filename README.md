@@ -96,3 +96,9 @@ struct WorthExperience { int value; };
 ## Cycle III: Conflict
 
 ## Cycle IV: Singularity
+
+# The Code
+
+We currently have a god object, GrandCentral. Nothing else is allowed to know about GrandCentral, it's just the owner for all the things.
+
+AppContext has log*, registry*, and rng\_.

@@ -29,6 +29,9 @@ entt::entity GrandCentral::create_account(AppContext &ctx, std::string name) {
 
   reg_.emplace<IsAccount>(e, ctx, std::move(name));
   account_ids.push_back(e);
+  if (selected_account_ == entt::null) {
+    selected_account_ = e;
+  }
   return e;
 }
 
@@ -54,10 +57,7 @@ entt::entity GrandCentral::create_member_in_party(AppContext &ctx,
                                                   std::string name,
                                                   entt::entity party) {
   auto e = reg_.create();
-  using fairlanes::ecs::components::PartyMember;
-  using fairlanes::ecs::components::Stats;
-  using fairlanes::ecs::components::TrackXP;
-
+  using namespace fairlanes::ecs::components;
   reg_.emplace<PartyMember>(e, ctx, name, party);
   reg_.emplace<TrackXP>(e, ctx, 0);
   reg_.emplace<Stats>(e, ctx, name);
@@ -97,17 +97,12 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
 
     (void)character;
   }
-  console_->append_markup("[name](Snail) uses [error](Slime Blast) 🔥");
+  console_->append_markup("[name](Snail) uses [ability](Slime Blast) 🔥");
 }
 
 AppContext &GrandCentral::app_context() { return app_context_; }
 
 inline void GrandCentral::tick_party_fsms(float dt) {
-  using fairlanes::ecs::components::IsParty;
-  using fairlanes::ecs::components::PartyBusiness;
-  using fairlanes::ecs::components::PartyMember;
-  using fairlanes::ecs::components::Stats;
-  using fairlanes::ecs::components::TrackXP;
   using fairlanes::systems::TickPartyFSMs;
   (void)dt;
   TickPartyFSMs::commit(reg_);
@@ -132,7 +127,6 @@ void GrandCentral::main_loop() {
     last = now;
 
     tick_party_fsms(dt);
-    // TODO: sim.tick(dt);
 
     return root->Render();
   });

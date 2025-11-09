@@ -20,6 +20,7 @@ FancyLog::FancyLog(Options opt) : opts(opt) {
       {"level", color(Color::Green)},
       {"error", color(Color::Red)},
       {"warn", color(Color::Yellow)},
+      {"ability", color(Color::RedLight)},
       {"ok", color(Color::Green)},
       {"hint", dim},
   };

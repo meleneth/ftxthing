@@ -32,3 +32,8 @@ target_include_directories(fairlanes PRIVATE
   ${entt_SOURCE_DIR}/single_include
 )
 
+# CMakeLists.txt
+set_source_files_properties(
+  skills/thump.cpp
+  PROPERTIES COMPILE_OPTIONS "-Wa,-mbig-obj"
+)

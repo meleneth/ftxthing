@@ -38,6 +38,7 @@ private:
   std::shared_ptr<FancyLog> console_;
   ftxui::Component root_component_;
   std::vector<entt::entity> account_ids;
+  entt::entity selected_account_{entt::null};
   uint64_t seed_;
   std::shared_ptr<RandomHub> random_;
   AppContext app_context_;
