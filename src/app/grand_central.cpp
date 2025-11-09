@@ -18,6 +18,7 @@
 #include "systems/log.hpp"
 #include "systems/random_hub.hpp"
 #include "widgets/body_component.hpp"
+#include "widgets/console_overlay.hpp"
 #include "widgets/fancy_log.hpp"
 #include "widgets/root_component.hpp"
 
@@ -74,7 +75,7 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
   using namespace ftxui;
 
   // UI bits
-  console_->append_markup("[name](Snail) uses [error](Slime Blast) 🔥");
+  console_->append_markup("[name](Snail) uses [error](Slime Blast) 🔥🔥🔥");
   spdlog::debug("GrandCentral ctor: seed={}, stream={}", seed_, cfg.stream);
 
   for (int i = 1; i <= 8; ++i) {
@@ -84,16 +85,23 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
 
     // Create account i
     auto account = create_account(app_context(), acc_name);
-
+    using fairlanes::ecs::components::IsAccount;
+    auto &reg = app_context().registry();
+    auto &is_account = reg.get<IsAccount>(account);
+    auto &account_log = *is_account.log_;
+    auto account_specific_app_context =
+        AppContext{account_log, reg, app_context().rng()};
     // Create party i in account i
-    auto party = create_party_in_account(app_context(), party_name, account);
+    auto party = create_party_in_account(account_specific_app_context,
+                                         party_name, account);
 
     // Log the join (and optionally account/party creation)
-    console_->append_markup(fmt::format(
+    account_log.append_markup(fmt::format(
         "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
 
     // Create a single member in that party
-    auto character = create_member_in_party(app_context(), member_name, party);
+    auto character = create_member_in_party(account_specific_app_context,
+                                            member_name, party);
 
     (void)character;
   }
@@ -117,9 +125,8 @@ void GrandCentral::main_loop() {
 
   ScreenInteractive screen = ScreenInteractive::Fullscreen();
   screen.SetCursor(Screen::Cursor{.shape = Screen::Cursor::Hidden});
-  auto root = Make<RootComponent>(console_);
 
-  auto ui = Renderer(root, [&] {
+  auto ui = Renderer(root_component_, [&] {
     using clock = std::chrono::steady_clock;
     static auto last = clock::now();
     const auto now = clock::now();
@@ -128,8 +135,9 @@ void GrandCentral::main_loop() {
 
     tick_party_fsms(dt);
 
-    return root->Render();
+    return root_component()->Render();
   });
+  using fairlanes::ecs::components::IsAccount;
 
   ui = CatchEvent(ui, [&](Event e) {
     if (e == Event::Character('q') || e == Event::Escape) {
@@ -139,11 +147,22 @@ void GrandCentral::main_loop() {
     if (e == ftxui::Event::F1) {
       // Handle F1 key
       spdlog::debug("f1 detected");
+      selected_account_ = account_ids[0];
+      auto &is_account = reg_.get<IsAccount>(selected_account_);
+      console_ = is_account.log_;
+      root_component()->console_overlay()->change_console(console_);
       return true;
     }
     if (e == ftxui::Event::F2) {
       // Handle F2 key
       spdlog::debug("f2 detected");
+      selected_account_ = account_ids[1];
+      auto &is_account = reg_.get<IsAccount>(selected_account_);
+      spdlog::debug("console_ was {} and becomes {}", fmt::ptr(console_),
+                    fmt::ptr(is_account.log_));
+
+      console_ = is_account.log_;
+      root_component()->console_overlay()->change_console(console_);
       return true;
     }
     if (e == ftxui::Event::F3) {
@@ -177,12 +196,12 @@ void GrandCentral::main_loop() {
       return true;
     }
     if (e == Event::Character('`')) {
-      root->toggle_console();
+      root_component()->toggle_console();
       return true;
     }
     if (e == Event::Character('~')) {
-      root->set_full_open();
-      root->toggle_console();
+      root_component()->set_full_open();
+      root_component()->toggle_console();
       return true;
     }
     if (e == Event::ArrowLeft) {

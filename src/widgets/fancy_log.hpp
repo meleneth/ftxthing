@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "systems/log.hpp"
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 

@@ -14,6 +14,7 @@ FancyLog::FancyLog() : FancyLog(Options{}) {}
 
 FancyLog::FancyLog(Options opt) : opts(opt) {
   // sane defaults you can override with styles(...)
+
   style_map = {
       {"name", bold},
       {"xp", color(Color::Blue)},
@@ -71,22 +72,21 @@ size_t FancyLog::size() const { return log.size(); }
 bool FancyLog::empty() const { return log.empty(); }
 
 // ---- ComponentBase --------------------------------------------------------
-
-Element FancyLog::Render() {
-  const int rows = std::max(0, opts.max_rows);
-  const size_t take = std::min(log.size(), static_cast<size_t>(rows));
+ftxui::Element FancyLog::Render() {
+  size_t rows_to_take =
+      (opts.max_rows <= 0)
+          ? log.size()
+          : std::min(log.size(), static_cast<size_t>(opts.max_rows));
 
   std::vector<Element> last;
-  last.reserve(take);
+  last.reserve(rows_to_take);
 
-  auto begin = log.size() > take ? log.end() - static_cast<std::ptrdiff_t>(take)
-                                 : log.begin();
+  auto begin = (log.size() > rows_to_take)
+                   ? log.end() - static_cast<std::ptrdiff_t>(rows_to_take)
+                   : log.begin();
   std::copy(begin, log.end(), std::back_inserter(last));
 
-  // size() clamps the box visually; swap to yframe()+vscroll_indicator() if you
-  // add manual scrolling.
-  return vbox(std::move(last)) |
-         ftxui::size(ftxui::HEIGHT, ftxui::LESS_THAN, rows);
+  return vbox(std::move(last)); // <- no inner size() clamp here
 }
 
 // ---- internals ------------------------------------------------------------
