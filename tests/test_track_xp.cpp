@@ -16,21 +16,21 @@ TEST_CASE("TrackXP basic leveling", "[ecs][xp]") {
   entt::handle handle{gc.registry(), e};
 
   SECTION("Starts at level 1 with 0 xp") {
-    REQUIRE(xp.level == 1);
-    REQUIRE(xp.xp == 0);
+    REQUIRE(xp.level_ == 1);
+    REQUIRE(xp.xp_ == 0);
     REQUIRE(xp.next_level_at == xp.xp_for_level(2));
   }
 
   SECTION("Adding xp levels up correctly") {
     // Add just enough to reach next level
     xp.add_xp(handle, xp.next_level_at);
-    REQUIRE(xp.level > 1);
-    REQUIRE(xp.xp >= xp.xp_for_level(2));
+    REQUIRE(xp.level_ > 1);
+    REQUIRE(xp.xp_ >= xp.xp_for_level(2));
 
     // Add a large amount that should cause multiple level-ups
     xp.add_xp(handle, 5000);
-    REQUIRE(xp.level > 2);
-    REQUIRE(xp.xp >= xp.xp_for_level(xp.level));
+    REQUIRE(xp.level_ > 2);
+    REQUIRE(xp.xp_ >= xp.xp_for_level(xp.level_));
   }
 
   SECTION("xp_for_level() curve is quadratic") {

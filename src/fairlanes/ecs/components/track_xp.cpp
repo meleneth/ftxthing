@@ -17,19 +17,19 @@ int TrackXP::xp_for_level(int level_calc) {
 }
 
 TrackXP::TrackXP(AppContext &context, int starting_xp)
-    : xp(starting_xp), next_level_at(xp_for_level(level + 1)),
+    : xp_(starting_xp), next_level_at(xp_for_level(level_ + 1)),
       log_(context.log()) {}
 
 void TrackXP::add_xp(entt::handle self, int amount) {
-  xp += amount;
+  xp_ += amount;
   using fairlanes::ecs::components::Stats;
-  while (next_level_at && xp >= next_level_at) {
-    ++level;
-    next_level_at = xp_for_level(level + 1);
+  while (next_level_at && xp_ >= next_level_at) {
+    ++level_;
+    next_level_at = xp_for_level(level_ + 1);
     if (auto info = self.try_get<Stats>()) {
       log_.append_markup(fmt::format(
           "[name]({}) Level up! level=[level]({}) in next=[xp]({}) XP",
-          info->name_, level, next_level_at));
+          info->name_, level_, next_level_at));
     } // spdlog::debug("Level up! level={} next={}", level, next_level_at);
   }
 }

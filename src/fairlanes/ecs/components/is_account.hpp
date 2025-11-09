@@ -2,14 +2,15 @@
 #include <string>
 namespace fairlanes {
 class AppContext;
-}
+class FancyLog;
+} // namespace fairlanes
 namespace fairlanes::ecs::components {
-using fairlanes::AppContext;
-
 // Marks an entity as an Account
 struct IsAccount {
   std::string account_name_;
-  IsAccount(AppContext &context, std::string name) : account_name_(name) {
+  std::unique_ptr<fairlanes::FancyLog> log_;
+  IsAccount(fairlanes::AppContext &context, std::string name)
+      : account_name_(name) {
     (void)context;
     // spdlog::debug("IsAccount ctor: registry={}",
     // fmt::ptr(&context.registry()));
