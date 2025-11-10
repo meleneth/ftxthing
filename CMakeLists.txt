@@ -167,8 +167,6 @@ CPMAddPackage(
     "SPDLOG_BUILD_TESTS OFF"
 )
 
-
-
 # --- Your code ---------------------------------------------------------------
 add_subdirectory(src)
 add_subdirectory(tests)

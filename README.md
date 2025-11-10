@@ -2,6 +2,8 @@ FTXThing
 
 run it, then hit the quake console key, the grave quote (it's on the tilde)
 
+with the console open, f1-f8 will switch between accounts
+
 Playing around w/EnTT, FTX::UI, boost_ext / SML and <strike>turn based</strike> combat systems
 
     cmake --build . --target clang-format

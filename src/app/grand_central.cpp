@@ -36,6 +36,17 @@ entt::entity GrandCentral::create_account(AppContext &ctx, std::string name) {
   return e;
 }
 
+void GrandCentral::switch_account(std::size_t idx) {
+  using fairlanes::ecs::components::IsAccount;
+  selected_account_ = account_ids[idx];
+  auto &is_account = reg_.get<IsAccount>(selected_account_);
+  /* spdlog::debug("console_ was {} and becomes {}", fmt::ptr(console_),
+                 fmt::ptr(is_account.log_));
+ */
+  console_ = is_account.log_;
+  root_component()->console_overlay()->change_console(console_);
+}
+
 entt::entity GrandCentral::create_party_in_account(AppContext &ctx,
                                                    std::string name,
                                                    entt::entity account) {
@@ -145,54 +156,35 @@ void GrandCentral::main_loop() {
       return true;
     }
     if (e == ftxui::Event::F1) {
-      // Handle F1 key
-      spdlog::debug("f1 detected");
-      selected_account_ = account_ids[0];
-      auto &is_account = reg_.get<IsAccount>(selected_account_);
-      console_ = is_account.log_;
-      root_component()->console_overlay()->change_console(console_);
+      switch_account(0);
       return true;
     }
     if (e == ftxui::Event::F2) {
-      // Handle F2 key
-      spdlog::debug("f2 detected");
-      selected_account_ = account_ids[1];
-      auto &is_account = reg_.get<IsAccount>(selected_account_);
-      spdlog::debug("console_ was {} and becomes {}", fmt::ptr(console_),
-                    fmt::ptr(is_account.log_));
-
-      console_ = is_account.log_;
-      root_component()->console_overlay()->change_console(console_);
+      switch_account(1);
       return true;
     }
     if (e == ftxui::Event::F3) {
-      // Handle F3 key
-      spdlog::debug("f3 detected");
+      switch_account(2);
       return true;
     }
     if (e == ftxui::Event::F4) {
-      // Handle F4 key
-      spdlog::debug("f4 detected");
+      switch_account(3);
       return true;
     }
     if (e == ftxui::Event::F5) {
-      // Handle F5 key
-      spdlog::debug("f5 detected");
+      switch_account(4);
       return true;
     }
     if (e == ftxui::Event::F6) {
-      // Handle F6 key
-      spdlog::debug("f6 detected");
+      switch_account(5);
       return true;
     }
     if (e == ftxui::Event::F7) {
-      // Handle F7 key
-      spdlog::debug("f7 detected");
+      switch_account(6);
       return true;
     }
     if (e == ftxui::Event::F8) {
-      // Handle F8 key
-      spdlog::debug("f8 detected");
+      switch_account(7);
       return true;
     }
     if (e == Event::Character('`')) {
