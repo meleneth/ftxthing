@@ -7,7 +7,6 @@
 #include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "systems/log.hpp"
 
-
 namespace fairlanes::ecs::components {
 namespace sml = boost::sml;
 

@@ -1,16 +1,15 @@
 #pragma once
 #include <entt/entt.hpp>
 #include <vector>
-namespace fairlanes {
-class AppContext;
+namespace fairlanes::fsm {
+class PartyLoopCtx;
 }
 
 namespace fairlanes::concepts {
-class Encounter;
 
 class EncounterBuilder {
 public:
-  static Encounter thump_it_out(fairlanes::AppContext &ctx, entt::entity party);
+  static void thump_it_out(fairlanes::fsm::PartyLoopCtx &ctx);
 };
 
 } // namespace fairlanes::concepts

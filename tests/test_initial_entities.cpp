@@ -8,9 +8,6 @@
 
 using json = nlohmann::json;
 
-struct Stats; // forward decls only if headers need it
-struct Tags;
-
 TEST_CASE("EntityBuilder + ComponentBuilder basics", "[entity][builder]") {
   entt::registry reg;
 

@@ -1,10 +1,8 @@
 #pragma once
-#include <boost/sml.hpp>
 #include <entt/entt.hpp>
 #include <spdlog/spdlog.h>
 
 namespace fairlanes::fsm {
-namespace sml = boost::sml;
 
 struct PartyLoopCtx {
   entt::registry *reg_{nullptr};

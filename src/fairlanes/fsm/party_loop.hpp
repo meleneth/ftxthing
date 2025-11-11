@@ -3,6 +3,8 @@
 #include <entt/entt.hpp>
 #include <spdlog/spdlog.h>
 
+#include "fairlanes/concepts/encounter_builder.hpp"
+#include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/systems/grant_xp_to_party.hpp"
 
@@ -23,16 +25,24 @@ struct PartyLoop {
     const auto enter_idle = [](PartyLoopCtx &ctx) {
       // Mark the party attached to this FSM as idle.
       using fairlanes::systems::GrantXPToParty;
-      entt::handle h{*ctx.reg_, ctx.party_};
-      GrantXPToParty::commit(h, 256);
+      (void)ctx;
+      // No more free XP for slackers!
+      /*entt::handle h{*ctx.reg_, ctx.party_};
+      GrantXPToParty::commit(h, 256);*/
     };
 
     const auto enter_farming = [](PartyLoopCtx &ctx) {
       // Also set the label for the party tied to this FSM (nice for local UI)
-      (void)ctx;
+
+      using fairlanes::ecs::components::Encounter;
+      using fairlanes::concepts::EncounterBuilder;
+      EncounterBuilder::thump_it_out(ctx);
     };
 
-    const auto enter_fixing = [](PartyLoopCtx &ctx) { (void)ctx; };
+    const auto enter_fixing = [](PartyLoopCtx &ctx) {
+      (void)ctx;
+      ctx.reg_->remove<Encounter>(ctx.party_);
+    };
 
     return make_transition_table(
         *state<Idle> + on_entry<_> / enter_idle,

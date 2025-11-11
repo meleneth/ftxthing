@@ -21,6 +21,7 @@ PUBLIC
   ftxui::screen
   ftxui::dom
   ftxui::component
+  nlohmann_json::nlohmann_json
 )
 
 # Optional: compile flags
