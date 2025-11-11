@@ -143,7 +143,25 @@ CPMAddPackage(
   GIT_TAG master
 )
 
-CPMAddPackage("gh:CLIUtils/CLI11@2.4.2")
+# CLI11 as pure headers via CPM — no add_subdirectory, no policy spam
+CPMAddPackage(
+  NAME CLI11
+  GITHUB_REPOSITORY CLIUtils/CLI11
+  VERSION 2.4.2
+  DOWNLOAD_ONLY YES        # <- key: fetch only, don't configure/build
+)
+
+if (CLI11_ADDED)
+  add_library(CLI11 INTERFACE)
+  # mark as SYSTEM to silence third-party warnings, optional
+  target_include_directories(CLI11
+    INTERFACE
+      $<BUILD_INTERFACE:${CLI11_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>
+  )
+endif()
+
+
 # fmt (compiled library)
 CPMAddPackage(
   NAME fmt

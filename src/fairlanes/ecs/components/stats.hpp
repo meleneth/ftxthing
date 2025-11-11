@@ -15,9 +15,9 @@ using fairlanes::concepts::Resistances;
 struct Stats {
   std::string name_{"Unknown"};
   int hp_ = 10;
-  int max_hp_;
-  int mp_;
-  int max_mp_;
+  int max_hp_ = 10;
+  int mp_ = 0;
+  int max_mp_ = 0;
   Resistances resistances_;
 
   Stats() = default;

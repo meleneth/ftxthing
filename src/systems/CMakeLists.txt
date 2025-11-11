@@ -21,7 +21,7 @@ PUBLIC
   ftxui::component
   ExprTk::exprtk
   spdlog::spdlog
-  CLI11::CLI11
+  CLI11
 )
 
 target_include_directories(systems PUBLIC

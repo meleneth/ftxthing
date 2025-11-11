@@ -38,7 +38,7 @@ target_link_libraries(ftxthing PRIVATE
   Boost::sml::system
   EnTT::EnTT::system
   ExprTk::exprtk
-  CLI11::CLI11
+  CLI11
   spdlog::spdlog
   fmt::fmt
 )
