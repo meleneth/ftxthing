@@ -3,15 +3,18 @@
 #include <vector>
 
 namespace fairlanes {
-class Party;
+class AppContext;
+}
+
+namespace fairlanes::concepts {
 
 class Encounter {
 public:
-  Encounter(Party &party);
+  Encounter(fairlanes::AppContext &ctx, entt::entity party);
   void tick(float dt);
 
 private:
-  Party &party_;
+  entt::entity &party_;
   std::vector<entt::entity> enemies_;
 };
-} // namespace fairlanes
+} // namespace fairlanes::concepts
