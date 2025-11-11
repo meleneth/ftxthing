@@ -10,8 +10,8 @@ class GrandCentral; // friend below
 class AppContext {
 public:
   // accessors
-  FancyLog &log() noexcept { return log_; }
-  const FancyLog &log() const noexcept { return log_; }
+  std::shared_ptr<FancyLog> log() noexcept { return log_; }
+  const std::shared_ptr<FancyLog> log() const noexcept { return log_; }
 
   entt::registry &registry() noexcept { return registry_; }
   const entt::registry &registry() const noexcept { return registry_; }
@@ -27,10 +27,10 @@ public:
 
 private:
   friend class GrandCentral; // only GC can build it
-  AppContext(FancyLog &log, entt::registry &r, RandomHub &g)
+  AppContext(std::shared_ptr<FancyLog> log, entt::registry &r, RandomHub &g)
       : log_(log), registry_(r), rng_(g) {}
 
-  FancyLog &log_;
+  std::shared_ptr<FancyLog> log_;
   entt::registry &registry_;
   RandomHub &rng_;
 };

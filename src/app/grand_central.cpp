@@ -82,7 +82,7 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
       root_component_(Make<RootComponent>(console_)),
       seed_(cfg.seed.value_or(static_cast<uint64_t>(std::random_device{}()))),
       random_(std::make_shared<RandomHub>(seed_, cfg.stream)),
-      app_context_(AppContext{*console_, reg_, *random_}) {
+      app_context_(AppContext{console_, reg_, *random_}) {
   using namespace ftxui;
 
   // UI bits
@@ -99,15 +99,14 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
     using fairlanes::ecs::components::IsAccount;
     auto &reg = app_context().registry();
     auto &is_account = reg.get<IsAccount>(account);
-    auto &account_log = *is_account.log_;
     auto account_specific_app_context =
-        AppContext{account_log, reg, app_context().rng()};
+        AppContext{is_account.log_, reg, app_context().rng()};
     // Create party i in account i
     auto party = create_party_in_account(account_specific_app_context,
                                          party_name, account);
 
     // Log the join (and optionally account/party creation)
-    account_log.append_markup(fmt::format(
+    is_account.log_->append_markup(fmt::format(
         "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
 
     // Create a single member in that party

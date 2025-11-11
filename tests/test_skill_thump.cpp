@@ -1,4 +1,6 @@
 // tests/test_entity_builder.cpp
+#include <memory>
+
 #include <catch2/catch_test_macros.hpp>
 #include <entt/entt.hpp>
 #include <nlohmann/json.hpp>
@@ -32,7 +34,7 @@ TEST_CASE("Skill: Thump", "[entity][builder]") {
     auto party_e = reg.create();
 
     // Log + RNG
-    fairlanes::FancyLog log{};
+    auto log = std::make_shared<fairlanes::FancyLog>();
     fairlanes::RandomHub rng{/*seed=*/12345}; // make deterministic if supported
 
     fairlanes::fsm::PartyLoopCtx ctx{&reg, party_e, log, rng};

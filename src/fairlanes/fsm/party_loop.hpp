@@ -40,6 +40,7 @@ struct PartyLoop {
 
         state<Idle> + event<NextEvent> = state<Farming>,
         state<Farming> + event<NextEvent>[needs_town] = state<Fixing>,
+        state<Farming> + event<NextEvent> / combat_tick,
         state<Fixing> + event<NextEvent> = state<Idle>);
   }
 };
