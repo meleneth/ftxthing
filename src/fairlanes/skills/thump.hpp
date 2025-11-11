@@ -1,4 +1,3 @@
-// ThumpSystem.hpp
 #pragma once
 #include <cmath>
 #include <random>
@@ -6,17 +5,7 @@
 #include <entt/entt.hpp>
 #include <exprtk.hpp>
 
-struct WeaponDamage {
-  int min_damage;
-  int max_damage;
-  bool one_handed = true;
-};
-
-struct Stats {
-  int hp;
-  int max_hp;
-};
-
+namespace fairlanes::skills {
 class ThumpSystem {
 public:
   ThumpSystem();
@@ -27,8 +16,7 @@ public:
   // Tunables
   double hit_rate = 0.90;
   double crit_rate = 0.05;
-  double skill_mult = 1.0;     // per-skill scalar (start at 1.0)
-  double one_handed_mod = 1.0; // start at 1.0; tweak later if needed
+  double skill_mult = 1.0; // per-skill scalar (start at 1.0)
 
 private:
   using expr_t = exprtk::expression<double>;
@@ -47,3 +35,4 @@ private:
   std::mt19937_64 rng_;
   std::uniform_real_distribution<double> uni_{0.0, 1.0};
 };
+} // namespace fairlanes::skills

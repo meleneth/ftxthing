@@ -1,4 +1,8 @@
 #include "thump.hpp"
+#include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/ecs/components/stats.hpp"
+
+using namespace fairlanes::skills;
 
 ThumpSystem::ThumpSystem() : rng_(std::random_device{}()) {
   // Bind variables to the symbol table
@@ -17,7 +21,7 @@ ThumpSystem::ThumpSystem() : rng_(std::random_device{}()) {
   expr_.register_symbol_table(sym_);
 
   const std::string expr_src = "base := (wd_min + (wd_max - wd_min) * u_roll) "
-                               "* skill_mult * one_handed_mod;"
+                               "* skill_mult;"
                                "hit  := (u_hit  < hit_rate);"
                                "crit := (u_crit < crit_rate);"
                                "damage := hit ? (base * (1 + crit)) : 0;";
@@ -30,12 +34,13 @@ ThumpSystem::ThumpSystem() : rng_(std::random_device{}()) {
 int ThumpSystem::thump(entt::registry &reg, entt::entity attacker,
                        entt::entity defender) {
   // Grab weapon range (you can derive this differently if needed)
-  const auto &w = reg.get<WeaponDamage>(attacker);
+  (void)attacker;
+  using fairlanes::ecs::components::Stats;
   auto &dst = reg.get<Stats>(defender);
 
   // Load per-attack inputs
-  wd_min_ = static_cast<double>(w.min_damage);
-  wd_max_ = static_cast<double>(w.max_damage);
+  wd_min_ = 1;
+  wd_max_ = 5;
   hit_rate_ = hit_rate;
   crit_rate_ = crit_rate;
   u_roll_ = uni_(rng_);
@@ -44,15 +49,16 @@ int ThumpSystem::thump(entt::registry &reg, entt::entity attacker,
 
   // Modifiers
   skill_mult_ = skill_mult;
-  one_handed_mod_ = (w.one_handed ? one_handed_mod : 1.0);
 
   // Evaluate
   double dealt = expr_.value();
 
   // Commit to defender (round however you like)
   int dmg = static_cast<int>(std::floor(dealt + 0.5));
-  dmg = std::max(0, std::min(dmg, dst.hp));
-  dst.hp -= dmg;
+  dmg = std::max(0, std::min(dmg, dst.hp_));
+  //  dst.hp -= dmg;
+
+  dst.take_damage(attacker, {.physical = dmg});
 
   return dmg;
 }
