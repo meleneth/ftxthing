@@ -6,9 +6,9 @@
 #include <exprtk.hpp>
 
 namespace fairlanes::skills {
-class ThumpSystem {
+class Thump {
 public:
-  ThumpSystem();
+  Thump();
 
   // Apply one Thump from attacker->defender, returns damage dealt (int).
   int thump(entt::registry &reg, entt::entity attacker, entt::entity defender);

@@ -1,10 +1,39 @@
 #include "thump.hpp"
 #include "fairlanes/concepts/damage.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
+#include <algorithm>
+#include <cmath>
+#include <random>
 
 using namespace fairlanes::skills;
 
-ThumpSystem::ThumpSystem() : rng_(std::random_device{}()) {
+template <typename T>
+void dump_exprtk_errors(const exprtk::parser<T> &parser,
+                        const std::string &expr_src) {
+  using error_t = exprtk::parser_error::type;
+
+  for (std::size_t i = 0; i < parser.error_count(); ++i) {
+    const error_t err = parser.get_error(i);
+    const auto pos = static_cast<std::size_t>(err.token.position);
+
+    // Build a caret indicator under the offending position.
+    std::string caret(expr_src.size(), ' ');
+    if (pos < caret.size())
+      caret[pos] = '^';
+
+    std::fprintf(stderr,
+                 "ExprTk error %zu\n"
+                 "  Type    : [%s]\n"
+                 "  Message : %s\n"
+                 "  Position: %zu\n"
+                 "  Source  : %s\n"
+                 "             %s\n",
+                 i, exprtk::parser_error::to_str(err.mode).c_str(),
+                 err.diagnostic.c_str(), pos, expr_src.c_str(), caret.c_str());
+  }
+}
+
+Thump::Thump() : rng_(std::random_device{}()) {
   // Bind variables to the symbol table
   sym_.add_variable("wd_min", wd_min_);
   sym_.add_variable("wd_max", wd_max_);
@@ -14,49 +43,50 @@ ThumpSystem::ThumpSystem() : rng_(std::random_device{}()) {
   sym_.add_variable("u_hit", u_hit_);
   sym_.add_variable("u_crit", u_crit_);
   sym_.add_variable("skill_mult", skill_mult_);
-  sym_.add_variable("one_handed_mod", one_handed_mod_);
   sym_.add_variable("damage", damage_);
   sym_.add_constants();
 
   expr_.register_symbol_table(sym_);
 
-  const std::string expr_src = "base := (wd_min + (wd_max - wd_min) * u_roll) "
-                               "* skill_mult;"
-                               "hit  := (u_hit  < hit_rate);"
-                               "crit := (u_crit < crit_rate);"
-                               "damage := hit ? (base * (1 + crit)) : 0;";
+  const std::string expr_src =
+      "var base := (wd_min + (wd_max - wd_min) * u_roll) * skill_mult;"
+      "var hit  := (u_hit  < hit_rate);"
+      "var crit := (u_crit < crit_rate);"
+      "damage := hit ? (base * (1 + crit)) : 0;";
 
   if (!parser_.compile(expr_src, expr_)) {
+    dump_exprtk_errors(parser_, expr_src);
+
     throw std::runtime_error("ExprTk compile failed for Thump");
   }
 }
 
-int ThumpSystem::thump(entt::registry &reg, entt::entity attacker,
-                       entt::entity defender) {
-  // Grab weapon range (you can derive this differently if needed)
-  (void)attacker;
+int Thump::thump(entt::registry &reg, entt::entity attacker,
+                 entt::entity defender) {
   using fairlanes::ecs::components::Stats;
   auto &dst = reg.get<Stats>(defender);
 
-  // Load per-attack inputs
-  wd_min_ = 1;
-  wd_max_ = 5;
-  hit_rate_ = hit_rate;
-  crit_rate_ = crit_rate;
+  // Weapon range (placeholder values; wire to your actual weapon data)
+  wd_min_ = 1.0;
+  wd_max_ = 5.0;
+
+  // If you removed the external one-handed modifier, set sane defaults here
+  hit_rate_ = 0.90;   // 90% hit chance
+  crit_rate_ = 0.05;  // 5% crit chance
+  skill_mult_ = 1.00; // no extra multiplier
+
+  // Random uniforms in [0,1)
   u_roll_ = uni_(rng_);
   u_hit_ = uni_(rng_);
   u_crit_ = uni_(rng_);
 
-  // Modifiers
-  skill_mult_ = skill_mult;
-
-  // Evaluate
+  // Evaluate expression
   double dealt = expr_.value();
 
-  // Commit to defender (round however you like)
+  // Clamp and round: never deal more than current HP, never negative
+  int hp_now = dst.hp_; // or dst.hp_ if that's your field
   int dmg = static_cast<int>(std::floor(dealt + 0.5));
-  dmg = std::max(0, std::min(dmg, dst.hp_));
-  //  dst.hp -= dmg;
+  dmg = std::clamp(dmg, 0, hp_now);
 
   dst.take_damage(attacker, {.physical = dmg});
 
