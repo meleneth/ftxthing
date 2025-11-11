@@ -2,11 +2,14 @@
 #include <memory>
 #include <string>
 
-
 namespace fairlanes {
 class AppContext;
 class FancyLog;
 } // namespace fairlanes
+
+namespace fairlanes::fsm {
+struct PartyLoopCtx;
+}
 
 namespace fairlanes::ecs::components {
 // Marks an entity as an Account

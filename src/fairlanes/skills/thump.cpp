@@ -1,6 +1,7 @@
 #include "thump.hpp"
 #include "fairlanes/concepts/damage.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
+#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include <algorithm>
 #include <cmath>
 #include <random>
@@ -61,10 +62,10 @@ Thump::Thump() : rng_(std::random_device{}()) {
   }
 }
 
-int Thump::thump(entt::registry &reg, entt::entity attacker,
+int Thump::thump(PartyLoopCtx &ctx, entt::entity attacker,
                  entt::entity defender) {
   using fairlanes::ecs::components::Stats;
-  auto &dst = reg.get<Stats>(defender);
+  auto &dst = ctx.reg_->get<Stats>(defender);
 
   // Weapon range (placeholder values; wire to your actual weapon data)
   wd_min_ = 1.0;

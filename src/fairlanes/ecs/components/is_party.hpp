@@ -25,5 +25,6 @@ struct IsParty {
           entt::entity account);
 
   void next();
+  bool needs_town();
 };
 } // namespace fairlanes::ecs::components

@@ -14,6 +14,16 @@ namespace sml = boost::sml;
 struct NextEvent {};
 
 struct PartyLoop {
+  void enter_idle(PartyLoopCtx &ctx);
+  void enter_farming(PartyLoopCtx &ctx);
+  void exit_farming(PartyLoopCtx &ctx);
+  void enter_fixing(PartyLoopCtx &ctx);
+
+  bool needs_town(PartyLoopCtx &ctx);
+  bool in_combat(PartyLoopCtx &ctx);
+
+  void combat_tick(PartyLoopCtx &ctx);
+
   auto operator()() const {
     using namespace sml;
     using namespace fairlanes::ecs::components;
@@ -22,35 +32,14 @@ struct PartyLoop {
     struct Farming {};
     struct Fixing {};
 
-    const auto enter_idle = [](PartyLoopCtx &ctx) {
-      // Mark the party attached to this FSM as idle.
-      using fairlanes::systems::GrantXPToParty;
-      (void)ctx;
-      // No more free XP for slackers!
-      /*entt::handle h{*ctx.reg_, ctx.party_};
-      GrantXPToParty::commit(h, 256);*/
-    };
-
-    const auto enter_farming = [](PartyLoopCtx &ctx) {
-      // Also set the label for the party tied to this FSM (nice for local UI)
-
-      using fairlanes::ecs::components::Encounter;
-      using fairlanes::concepts::EncounterBuilder;
-      EncounterBuilder::thump_it_out(ctx);
-    };
-
-    const auto enter_fixing = [](PartyLoopCtx &ctx) {
-      (void)ctx;
-      ctx.reg_->remove<Encounter>(ctx.party_);
-    };
-
     return make_transition_table(
         *state<Idle> + on_entry<_> / enter_idle,
         state<Farming> + on_entry<_> / enter_farming,
+        state<Farming> + on_exit<_> / exit_farming,
         state<Fixing> + on_entry<_> / enter_fixing,
 
         state<Idle> + event<NextEvent> = state<Farming>,
-        state<Farming> + event<NextEvent> = state<Fixing>,
+        state<Farming> + event<NextEvent>[needs_town] = state<Fixing>,
         state<Fixing> + event<NextEvent> = state<Idle>);
   }
 };

@@ -32,7 +32,7 @@ void EncounterBuilder::thump_it_out(PartyLoopCtx &ctx) {
   field_mouse(e);
 
   // Attach / ensure an Encounter on the party and add the enemy
-  auto &enc = ctx.reg_->emplace<Encounter>(ctx.party_); // <- ctx.reg_->
+  auto &enc = ctx.reg_->emplace<Encounter>(ctx.party_, ctx); // <- ctx.reg_->
   enc.enemies_.push_back(e);
 }
 
