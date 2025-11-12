@@ -6,6 +6,7 @@
 
 #include "app/app_context.hpp"
 #include "entities/entities.hpp"
+#include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/ecs/components/is_account.hpp"
 #include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/party_business.hpp"
@@ -116,6 +117,8 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
     (void)character;
   }
   console_->append_markup("[name](Snail) uses [ability](Slime Blast) 🔥");
+  using fairlanes::ecs::components::install_encounter_hooks;
+  install_encounter_hooks(reg_);
 }
 
 AppContext &GrandCentral::app_context() { return app_context_; }

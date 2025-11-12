@@ -7,6 +7,10 @@ class FancyLog;
 class AppContext;
 } // namespace fairlanes
 
+namespace fairlanes::fsm {
+class PartyLoopCtx;
+}
+
 namespace fairlanes::ecs::components {
 
 using fairlanes::concepts::Damage;
@@ -22,7 +26,9 @@ struct Stats {
 
   Stats() = default;
   explicit Stats(fairlanes::AppContext &context, std::string name_);
-  void take_damage(entt::entity attacker, Damage damage);
+  void take_damage(fairlanes::fsm::PartyLoopCtx &ctx, entt::entity attacker,
+                   entt::entity target, Damage damage);
+  bool is_alive(fairlanes::fsm::PartyLoopCtx &ctx);
 };
 
 } // namespace fairlanes::ecs::components

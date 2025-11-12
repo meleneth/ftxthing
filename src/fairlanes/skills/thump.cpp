@@ -85,11 +85,15 @@ int Thump::thump(PartyLoopCtx &ctx, entt::entity attacker,
   double dealt = expr_.value();
 
   // Clamp and round: never deal more than current HP, never negative
-  int hp_now = dst.hp_; // or dst.hp_ if that's your field
+  int hp_now = dst.hp_;
   int dmg = static_cast<int>(std::floor(dealt + 0.5));
   dmg = std::clamp(dmg, 0, hp_now);
-
-  dst.take_damage(attacker, {.physical = dmg});
+  auto &attacker_stats = ctx.reg_->get<Stats>(attacker);
+  auto &defender_stats = ctx.reg_->get<Stats>(defender);
+  ctx.log_->append_markup(
+      fmt::format("[name]({}) thumped [name]({}) for [error]({}) damage",
+                  attacker_stats.name_, defender_stats.name_, dmg));
+  dst.take_damage(ctx, attacker, defender, {.physical = dmg});
 
   return dmg;
 }
