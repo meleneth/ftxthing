@@ -1,10 +1,11 @@
-#include "thump.hpp"
-#include "fairlanes/concepts/damage.hpp"
-#include "fairlanes/ecs/components/stats.hpp"
-#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include <algorithm>
 #include <cmath>
 #include <random>
+
+#include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/ecs/components/stats.hpp"
+#include "fairlanes/fsm/party_loop_ctx.hpp"
+#include "thump.hpp"
 
 using namespace fairlanes::skills;
 
@@ -88,11 +89,12 @@ int Thump::thump(PartyLoopCtx &ctx, entt::entity attacker,
   int hp_now = dst.hp_;
   int dmg = static_cast<int>(std::floor(dealt + 0.5));
   dmg = std::clamp(dmg, 0, hp_now);
-  auto &attacker_stats = ctx.reg_->get<Stats>(attacker);
-  auto &defender_stats = ctx.reg_->get<Stats>(defender);
-  ctx.log_->append_markup(
-      fmt::format("[name]({}) thumped [name]({}) for [error]({}) damage",
-                  attacker_stats.name_, defender_stats.name_, dmg));
+  entt::handle attacker_h{*ctx.reg_, attacker};
+  entt::handle defender_h{*ctx.reg_, defender};
+
+  ctx.log_->append_markup(fmt::format("{} thumped {} for [error]({}) damage",
+                                      ctx.log_->name_tag_for(attacker_h),
+                                      ctx.log_->name_tag_for(defender_h), dmg));
   dst.take_damage(ctx, attacker, defender, {.physical = dmg});
 
   return dmg;

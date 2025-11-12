@@ -2,6 +2,8 @@
 #include <cstddef>
 #include <utility>
 
+#include "fairlanes/ecs/components/party_member.hpp"
+#include "fairlanes/ecs/components/stats.hpp"
 #include "fancy_log.hpp"
 #include "systems/log.hpp"
 
@@ -12,19 +14,34 @@ using namespace fairlanes;
 
 FancyLog::FancyLog() : FancyLog(Options{}) {}
 
+ftxui::Decorator on_not_black(uint8_t r, uint8_t g, uint8_t b) {
+  return color(Color(r, g, b)) | color(Color(16, 18, 28));
+}
+
+std::string FancyLog::name_tag_for(entt::handle target) {
+  using fairlanes::ecs::components::PartyMember;
+  using fairlanes::ecs::components::Stats;
+  auto &target_stats = target.get<Stats>();
+  if (target.any_of<PartyMember>()) {
+    return fmt::format("[player_name]({})", target_stats.name_);
+  } else {
+    return fmt::format("[enemy_name]({})", target_stats.name_);
+  }
+}
+
 FancyLog::FancyLog(Options opt) : opts(opt) {
   // sane defaults you can override with styles(...)
 
-  style_map = {
-      {"name", bold},
-      {"xp", color(Color::Blue)},
-      {"level", color(Color::Green)},
-      {"error", color(Color::Red)},
-      {"warn", color(Color::Yellow)},
-      {"ability", color(Color::RedLight)},
-      {"ok", color(Color::Green)},
-      {"hint", dim},
-  };
+  style_map = {{"player_name", on_not_black(98, 164, 119)},
+               {"enemy_name", on_not_black(154, 77, 118)},
+               {"xp", on_not_black(109, 234, 214)},
+               {"level", on_not_black(247, 243, 183)},
+               {"error", on_not_black(236, 39, 63)},
+               {"warn", on_not_black(222, 93, 58)},
+               {"ability", on_not_black(0, 139, 139)},
+               {"ok", on_not_black(90, 181, 82)},
+               {"hint", dim},
+               {"black", on_not_black(16, 18, 28)}};
 }
 
 // ---- append ---------------------------------------------------------------

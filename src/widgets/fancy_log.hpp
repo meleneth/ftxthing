@@ -5,9 +5,11 @@
 #include <unordered_map>
 #include <vector>
 
-#include "systems/log.hpp"
+#include <entt/entt.hpp>
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
+
+#include "systems/log.hpp"
 
 /// FancyLog: styled append-only log for FTXUI with lightweight markup.
 ///
@@ -65,6 +67,8 @@ public:
 
   size_t size() const; // current #entries
   bool empty() const;
+
+  std::string name_tag_for(entt::handle target);
 
   // ---- ComponentBase -------------------------------------------------------
   ftxui::Element Render() override;
