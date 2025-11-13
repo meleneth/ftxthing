@@ -33,7 +33,7 @@ void Stats::take_damage(PartyLoopCtx &ctx, entt::entity attacker,
     if (party) {
       using fairlanes::systems::GrantXPToParty;
       entt::handle h{*ctx.reg_, ctx.party_};
-      GrantXPToParty::commit(h, 256);
+      GrantXPToParty::commit(ctx, h, 256);
     }
   }
   (void)attacker;

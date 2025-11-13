@@ -38,6 +38,19 @@ what damage types do we have?
 what are caps for resistances?
 what are the damage reduction formulas?
 
+# Skills
+
+so by default, you don't know anything
+but you venture into the forest, and a field mouse uses Thump on you
+and then you learn the skill Thump
+and the power spiral begins
+
+we're making 5's a thing here. so each acccount has 5 parties, each party has 5 members, and each party member has 5 skills.
+
+Skills can be abandoned at any time. Some skills will leave behind permanent buffs even when abandoned, others require the skill to be learned (and optionally levelled!) for their effects.
+
+We're going to need tags for the skills. Thump is a damage, physical skill. It doesn't use any weapons.
+
 ## how does experience work?
 
 Level cap is 100
@@ -81,13 +94,7 @@ mutations?
 
 # Entity Component Types
 
-struct Name { std::string value; };
-struct Health { int current, max; };
-struct PlayerControlled {};
-struct EnemyControlled {};
-struct Level { int value; };
-struct Experience { int value; int next_level_at };
-struct WorthExperience { int value; };
+please generate the documentation and refer to fairlanes::ecs::components
 
 # Areas
 
