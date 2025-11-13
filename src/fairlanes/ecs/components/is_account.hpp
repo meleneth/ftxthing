@@ -4,18 +4,21 @@
 
 namespace fairlanes {
 class AppContext;
-class FancyLog;
 } // namespace fairlanes
-
+namespace fairlanes::widgets {
+class FancyLog;
+}
 namespace fairlanes::fsm {
 struct PartyLoopCtx;
 }
 
 namespace fairlanes::ecs::components {
+
+using fairlanes::widgets::FancyLog;
 // Marks an entity as an Account
 struct IsAccount {
   std::string account_name_;
-  std::shared_ptr<fairlanes::FancyLog> log_;
+  std::shared_ptr<fairlanes::widgets::FancyLog> log_;
   IsAccount(fairlanes::AppContext &context, std::string name);
 };
 

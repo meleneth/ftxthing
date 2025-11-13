@@ -18,7 +18,6 @@ target_precompile_headers(ftxthing_tests PRIVATE
 target_link_libraries(ftxthing_tests PRIVATE fairlanes)
 target_link_libraries(ftxthing_tests PRIVATE entities)
 target_link_libraries(ftxthing_tests PRIVATE animation)
-target_link_libraries(ftxthing_tests PRIVATE widgets)
 target_link_libraries(ftxthing_tests PRIVATE screens)
 target_link_libraries(ftxthing_tests PRIVATE systems)
 target_link_libraries(ftxthing_tests PRIVATE content)

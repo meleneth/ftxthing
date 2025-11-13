@@ -13,7 +13,6 @@ target_include_directories(screens PUBLIC
 
 # Link deps; PUBLIC so downstream users get the usage requirements
 target_link_libraries(screens PUBLIC
-  widgets
   entities
   animation
   ftxui::screen

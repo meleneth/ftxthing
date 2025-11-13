@@ -1,6 +1,6 @@
 #include "is_account.hpp"
 #include "app/app_context.hpp"
-#include "widgets/fancy_log.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::ecs::components {
 

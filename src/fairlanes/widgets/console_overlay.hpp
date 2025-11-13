@@ -8,7 +8,7 @@
 
 #include "fancy_log.hpp"
 
-namespace fairlanes {
+namespace fairlanes::widgets {
 
 class ConsoleOverlay : public ftxui::ComponentBase {
 public:
@@ -42,4 +42,4 @@ private:
   ftxui::Component input_;
 };
 
-} // namespace fairlanes
+} // namespace fairlanes::widgets

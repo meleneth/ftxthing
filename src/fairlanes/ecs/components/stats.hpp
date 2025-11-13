@@ -1,9 +1,10 @@
 #pragma once
 #include "fairlanes/concepts/damage.hpp"
 #include <entt/entt.hpp>
-
-namespace fairlanes {
+namespace fairlanes::widgets {
 class FancyLog;
+}
+namespace fairlanes {
 class AppContext;
 } // namespace fairlanes
 

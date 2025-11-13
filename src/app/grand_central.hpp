@@ -1,15 +1,21 @@
 #pragma once
 #include <entt/entt.hpp>
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/event.hpp>
+
 
 #include "app/app_config.hpp"
 #include "app/app_context.hpp"
 
 #include "systems/random_hub.hpp"
-#include "widgets/fancy_log.hpp"
-#include "widgets/root_component.hpp"
 
-namespace fairlanes {
+namespace fairlanes::widgets {
 class RootComponent;
+class FancyLog;
+} // namespace fairlanes::widgets
+namespace fairlanes {
+using fairlanes::widgets::FancyLog;
+using fairlanes::widgets::RootComponent;
 class GrandCentral {
 public:
   GrandCentral(const AppConfig &cfg);

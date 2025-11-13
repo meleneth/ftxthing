@@ -2,8 +2,9 @@
 
 #include "app/app_context.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
 #include "track_xp.hpp"
-#include "widgets/fancy_log.hpp"
+
 
 using fairlanes::ecs::components::TrackXP;
 

@@ -5,7 +5,7 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 
-using namespace fairlanes;
+using namespace fairlanes::widgets;
 
 bool BodyComponent::OnEvent(ftxui::Event e) {
   if (e == ftxui::Event::Character('a')) {

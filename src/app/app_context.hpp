@@ -1,11 +1,13 @@
 // context.hpp
 #pragma once
 #include <entt/entt.hpp>
-
+namespace fairlanes::widgets {
+class FancyLog;
+}
 namespace fairlanes {
-class FancyLog; // fwd-declare only; avoid including the header here
 class RandomHub;
-class GrandCentral; // friend below
+class GrandCentral;
+using fairlanes::widgets::FancyLog;
 
 class AppContext {
 public:

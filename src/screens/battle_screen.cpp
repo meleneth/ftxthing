@@ -4,11 +4,11 @@
 
 #include "battle_screen.hpp"
 #include "entities/entity_types.hpp"
-#include "widgets/combatant.hpp"
-#include "widgets/fancy_log.hpp"
+#include "fairlanes/widgets/combatant.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
 
 using namespace ftxui;
-using namespace fairlanes;
+using namespace fairlanes::widgets;
 
 BattleScreen::BattleScreen(entt::registry &combatants_)
     : screen(ScreenInteractive::Fullscreen()), combatants(combatants_),

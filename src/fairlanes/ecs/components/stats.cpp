@@ -6,8 +6,9 @@
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/systems/grant_xp_to_party.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
 #include "stats.hpp"
-#include "widgets/fancy_log.hpp"
+
 
 using fairlanes::ecs::components::Stats;
 

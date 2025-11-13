@@ -8,7 +8,7 @@
 #include "systems/log.hpp"
 
 using namespace ftxui;
-using namespace fairlanes;
+using namespace fairlanes::widgets;
 
 // ---- construction ----------------------------------------------------------
 

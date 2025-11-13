@@ -2,7 +2,7 @@
 #include "app/app_context.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
-#include "widgets/fancy_log.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::ecs::components {
 std::vector<entt::entity> Encounter::players(PartyLoopCtx &ctx_) {

@@ -2,7 +2,7 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 
-namespace fairlanes {
+namespace fairlanes::widgets {
 class BodyComponent : public ftxui::ComponentBase {
 public:
   bool OnEvent(ftxui::Event e) override;
@@ -18,4 +18,4 @@ private:
   int counter_ = 0;
 };
 
-} // namespace fairlanes
+} // namespace fairlanes::widgets

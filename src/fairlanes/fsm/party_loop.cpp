@@ -8,6 +8,7 @@
 #include "fairlanes/skills/thump.hpp"
 #include "fairlanes/systems/grant_xp_to_party.hpp"
 #include "fairlanes/systems/replenish_party.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
 #include <spdlog/spdlog.h>
 
 namespace fairlanes::fsm {

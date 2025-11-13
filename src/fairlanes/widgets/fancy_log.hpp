@@ -14,7 +14,7 @@
 /// FancyLog: styled append-only log for FTXUI with lightweight markup.
 ///
 /// Markup example: "[name](Snail) uses [error](Slime Blast) 🔥"
-namespace fairlanes {
+namespace fairlanes::widgets {
 
 class FancyLog : public ftxui::ComponentBase {
 public:
@@ -85,4 +85,4 @@ private:
   Options opts;
   StyleMap style_map;
 };
-} // namespace fairlanes
+} // namespace fairlanes::widgets

@@ -8,7 +8,7 @@
 #include "console_overlay.hpp"
 #include "footer_component.hpp"
 
-using namespace fairlanes;
+using namespace fairlanes::widgets;
 
 RootComponent::RootComponent(std::shared_ptr<FancyLog> console)
     : console_(std::move(console)) {
@@ -76,8 +76,12 @@ ftxui::Element RootComponent::Render() {
 }
 
 void RootComponent::change_console(
-    std::shared_ptr<fairlanes::FancyLog> console) {
+    std::shared_ptr<fairlanes::widgets::FancyLog> console) {
   console_ = console;
   auto cso = console_overlay();
   cso->change_console(console);
+}
+
+void RootComponent::select_account(entt::entity account) {
+  selected_account_ = account;
 }

@@ -14,14 +14,15 @@
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
 #include "fairlanes/systems/tick_party_fsms.hpp"
+#include "fairlanes/widgets/body_component.hpp"
+#include "fairlanes/widgets/console_overlay.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
+#include "fairlanes/widgets/root_component.hpp"
 #include "grand_central.hpp"
 #include "screens/battle_screen.hpp"
 #include "systems/log.hpp"
 #include "systems/random_hub.hpp"
-#include "widgets/body_component.hpp"
-#include "widgets/console_overlay.hpp"
-#include "widgets/fancy_log.hpp"
-#include "widgets/root_component.hpp"
+
 
 using namespace fairlanes;
 
@@ -215,7 +216,10 @@ void GrandCentral::main_loop() {
     using namespace std::chrono_literals;
     while (running) {
       screen.PostEvent(Event::Custom); // kick a rerender (~60 Hz)
+                                       // TODO 16
       std::this_thread::sleep_for(16ms);
+
+      // std::this_thread::sleep_for(250ms);
     }
   });
 

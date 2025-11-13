@@ -1,5 +1,6 @@
 #include "footer_component.hpp"
 
+using namespace fairlanes::widgets;
 void FooterComponent::SetMessage(std::string msg) { msg_ = std::move(msg); }
 
 ftxui::Element FooterComponent::Render() {

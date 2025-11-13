@@ -10,7 +10,7 @@
 #include "fairlanes/ecs/components/stats.hpp" // <-- needed
 #include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/skills/thump.hpp"
-#include "widgets/fancy_log.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
 
 TEST_CASE("Skill: Thump", "[entity][builder]") {
   using fairlanes::ecs::components::Stats;
@@ -34,7 +34,7 @@ TEST_CASE("Skill: Thump", "[entity][builder]") {
     auto party_e = reg.create();
 
     // Log + RNG
-    auto log = std::make_shared<fairlanes::FancyLog>();
+    auto log = std::make_shared<fairlanes::widgets::FancyLog>();
     fairlanes::RandomHub rng{/*seed=*/12345}; // make deterministic if supported
 
     fairlanes::fsm::PartyLoopCtx ctx{&reg, party_e, log, rng};

@@ -7,10 +7,10 @@
 #include <ftxui/component/screen_interactive.hpp>
 
 #include "animation/animator.hpp"
-#include "widgets/fancy_log.hpp"
-#include "widgets/widget_types.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
+#include "fairlanes/widgets/widget_types.hpp"
 
-namespace fairlanes {
+namespace fairlanes::widgets {
 
 class BattleScreen {
 public:
@@ -30,4 +30,4 @@ private:
   int log_height = 10;
 };
 
-} // namespace fairlanes
+} // namespace fairlanes::widgets

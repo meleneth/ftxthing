@@ -1,4 +1,4 @@
-# Declare the screens library
+# Declare the fairlanes library
 
 file(GLOB_RECURSE FAIRLANES_SOURCES CONFIGURE_DEPENDS *.cpp)
 

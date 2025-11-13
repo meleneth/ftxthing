@@ -9,7 +9,7 @@
 #include "fancy_log.hpp"
 #include "log.hpp"
 
-using namespace fairlanes;
+using namespace fairlanes::widgets;
 
 ConsoleOverlay::ConsoleOverlay(std::shared_ptr<FancyLog> console)
     : console_(console) {

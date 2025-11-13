@@ -4,7 +4,7 @@
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/elements.hpp>
 
-namespace fairlanes {
+namespace fairlanes::widgets {
 
 class Combatant : public ftxui::ComponentBase {
 public:
@@ -16,4 +16,4 @@ private:
   entt::entity entity;
 };
 
-} // namespace fairlanes
+} // namespace fairlanes::widgets

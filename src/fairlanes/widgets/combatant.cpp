@@ -3,7 +3,7 @@
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
 
-namespace fairlanes {
+namespace fairlanes::widgets {
 
 Combatant::Combatant(entt::registry &reg_, entt::entity entity_)
     : reg(reg_), entity(entity_) {}
@@ -44,4 +44,4 @@ ftxui::Element Combatant::Render() {
   return border;
 }
 
-} // namespace fairlanes
+} // namespace fairlanes::widgets
