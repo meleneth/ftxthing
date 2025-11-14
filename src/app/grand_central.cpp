@@ -91,7 +91,8 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
   using namespace ftxui;
 
   // UI bits
-  console_->append_markup("[name](Snail) uses [error](Slime Blast) 🔥🔥🔥");
+  console_->append_markup("[name](Snail) uses [error](Slime Blast) "
+                          "[yellow](🔥)[orange](🔥)[red](🔥)");
   spdlog::debug("GrandCentral ctor: seed={}, stream={}", seed_, cfg.stream);
 
   for (int i = 1; i <= 8; ++i) {
@@ -132,7 +133,8 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
     }
     (void)character;
   }
-  console_->append_markup("[name](Snail) uses [ability](Slime Blast) 🔥");
+  console_->append_markup(
+      "[name](Snail) uses [ability](Slime Blast) [bravo](🔥)");
   fairlanes::ecs::components::install_encounter_hooks(reg_);
 }
 

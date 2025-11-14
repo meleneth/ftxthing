@@ -40,6 +40,10 @@ FancyLog::FancyLog(Options opt) : opts(opt) {
                {"warn", on_not_black(222, 93, 58)},
                {"ability", on_not_black(0, 139, 139)},
                {"ok", on_not_black(90, 181, 82)},
+               {"orange", on_not_black(243, 168, 51)},
+               {"yellow", on_not_black(247, 243, 183)},
+               {"red", on_not_black(250, 110, 121)},
+               {"bravo", on_not_black(109, 234, 214)},
                {"hint", dim},
                {"black", on_not_black(16, 18, 28)}};
 }
