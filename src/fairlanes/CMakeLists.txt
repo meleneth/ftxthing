@@ -22,6 +22,7 @@ PUBLIC
   ftxui::dom
   ftxui::component
   nlohmann_json::nlohmann_json
+  TracyClient
 )
 
 # Optional: compile flags

@@ -1,5 +1,7 @@
 #include "root_component.hpp"
 
+#include <tracy/Tracy.hpp>
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
@@ -60,7 +62,7 @@ ftxui::Element RootComponent::Render() {
   auto overlay = console_overlay();
   overlay
       ->tick(); // TODO make a lock here, mouse events are making ticks too fast
-
+  ZoneScoped;
   auto content = vbox({
       header_->Render() | flex,
       body_->Render(),

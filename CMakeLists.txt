@@ -185,6 +185,21 @@ CPMAddPackage(
     "SPDLOG_BUILD_TESTS OFF"
 )
 
+
+# Tracy profiler
+set(TRACY_ENABLE ON CACHE BOOL "Enable Tracy profiling" FORCE)
+set(TRACY_ON_DEMAND ON CACHE BOOL "Enable Tracy on-demand connection" FORCE)
+set(TRACY_NO_EXIT OFF CACHE BOOL "Tracy persists after disconnect" FORCE)
+
+FetchContent_Declare(
+tracy
+GIT_REPOSITORY https://github.com/wolfpld/tracy.git
+GIT_TAG master
+GIT_SHALLOW true
+GIT_PROGRESS true
+)
+
+FetchContent_MakeAvailable(tracy)
 # --- Your code ---------------------------------------------------------------
 add_subdirectory(src)
 add_subdirectory(tests)

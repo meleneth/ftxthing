@@ -20,6 +20,7 @@ target_link_libraries(app PUBLIC
   ftxui::screen
   ftxui::dom
   ftxui::component
+  TracyClient
 )
 
 # Optional: compile flags

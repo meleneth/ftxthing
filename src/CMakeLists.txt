@@ -39,6 +39,8 @@ target_link_libraries(ftxthing PRIVATE
   CLI11
   spdlog::spdlog
   fmt::fmt
+  PUBLIC
+  TracyClient
 )
 
 ftxthing_set_warnings(ftxthing)

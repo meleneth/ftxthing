@@ -4,6 +4,8 @@
 #include <optional>
 #include <thread>
 
+#include <tracy/Tracy.hpp>
+
 #include "app/app_context.hpp"
 #include "entities/entities.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
@@ -89,6 +91,7 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
       random_(std::make_shared<RandomHub>(seed_, cfg.stream)),
       app_context_(AppContext{console_, reg_, *random_}) {
   using namespace ftxui;
+  ZoneScopedN("Startup");
 
   // UI bits
   console_->append_markup("[name](Snail) uses [error](Slime Blast) "
@@ -143,6 +146,7 @@ AppContext &GrandCentral::app_context() { return app_context_; }
 
 inline void GrandCentral::tick_party_fsms(float dt) {
   (void)dt;
+  ZoneScoped;
   fairlanes::systems::TickPartyFSMs::commit(reg_);
 }
 
@@ -231,7 +235,8 @@ void GrandCentral::main_loop() {
     using namespace std::chrono_literals;
     while (running) {
       screen.PostEvent(Event::Custom); // kick a rerender (~60 Hz)
-                                       // TODO 16
+      // TODO 16
+      ZoneScopedN("GameTick");
       //      std::this_thread::sleep_for(16ms);
 
       std::this_thread::sleep_for(250ms);

@@ -24,10 +24,12 @@ target_link_libraries(ftxthing_tests PRIVATE content)
 
 # Link test binary with main code + test framework
 target_link_libraries(ftxthing_tests
-    PRIVATE
-        Catch2::Catch2WithMain
-        ExprTk::exprtk
-        nlohmann_json::nlohmann_json
+  PRIVATE
+    Catch2::Catch2WithMain
+    ExprTk::exprtk
+    nlohmann_json::nlohmann_json
+  PUBLIC
+  TracyClient
 )
 
 target_include_directories(ftxthing_tests
