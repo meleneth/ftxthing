@@ -106,6 +106,10 @@ please generate the documentation and refer to fairlanes::ecs::components
 
 ## Cycle IV: Singularity
 
+# Currencies
+
+ᛞ Darrin-mark
+
 # The Code
 
 We currently have a god object, GrandCentral. Nothing else is allowed to know about GrandCentral, it's just the owner for all the things.

@@ -6,6 +6,7 @@
 
 #include "body_component.hpp"
 #include "console_overlay.hpp"
+#include "fancy_log.hpp"
 #include "footer_component.hpp"
 
 using namespace fairlanes::widgets;
@@ -13,8 +14,7 @@ using namespace fairlanes::widgets;
 RootComponent::RootComponent(std::shared_ptr<FancyLog> console)
     : console_(std::move(console)) {
   using namespace ftxui;
-
-  header_ = Renderer([] { return text("Header") | center | bold | border; });
+  header_ = Renderer([this] { return console_->Render() | border; });
   body_ = Make<BodyComponent>();
   footer_ = Make<FooterComponent>();
   console_overlay_ = Make<ConsoleOverlay>(console_);

@@ -14,11 +14,7 @@
 namespace fairlanes::fsm {
 void PartyLoop::enter_idle(PartyLoopCtx &ctx) {
   // Mark the party attached to this FSM as idle.
-  using fairlanes::systems::GrantXPToParty;
   (void)ctx;
-  // No more free XP for slackers!
-  /*entt::handle h{*ctx.reg_, ctx.party_};
-  GrantXPToParty::commit(h, 256);*/
 };
 
 void PartyLoop::enter_farming(PartyLoopCtx &ctx) {
