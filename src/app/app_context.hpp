@@ -26,14 +26,14 @@ public:
   AppContext &operator=(const AppContext &) = delete;
   AppContext(AppContext &&) = delete;
   AppContext &operator=(AppContext &&) = delete;
+  std::shared_ptr<FancyLog> log_;
+  entt::registry &registry_;
 
 private:
   friend class GrandCentral; // only GC can build it
   AppContext(std::shared_ptr<FancyLog> log, entt::registry &r, RandomHub &g)
       : log_(log), registry_(r), rng_(g) {}
 
-  std::shared_ptr<FancyLog> log_;
-  entt::registry &registry_;
   RandomHub &rng_;
 };
 } // namespace fairlanes

@@ -19,6 +19,7 @@
 #include "fairlanes/systems/tick_party_fsms.hpp"
 #include "fairlanes/unique_tag.hpp"
 #include "fairlanes/widgets/body_component.hpp"
+#include "fairlanes/widgets/combatant.hpp"
 #include "fairlanes/widgets/console_overlay.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "fairlanes/widgets/root_component.hpp"
@@ -26,7 +27,6 @@
 #include "screens/battle_screen.hpp"
 #include "systems/log.hpp"
 #include "systems/random_hub.hpp"
-
 
 using namespace fairlanes;
 
@@ -136,6 +136,7 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
   console_->append_markup(
       "[name](Snail) uses [ability](Slime Blast) [bravo](🔥)");
   fairlanes::ecs::components::install_encounter_hooks(reg_);
+  root_component()->change_body_component(app_context(), selected_character_);
 }
 
 AppContext &GrandCentral::app_context() { return app_context_; }

@@ -5,6 +5,10 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 
+namespace fairlanes {
+struct AppContext;
+}
+
 namespace fairlanes::widgets {
 class BodyComponent;
 class ConsoleOverlay;
@@ -19,6 +23,9 @@ public:
   void change_console(std::shared_ptr<fairlanes::widgets::FancyLog> console);
   void select_account(entt::entity account);
   void set_full_open();
+  void change_body_component(fairlanes::AppContext &ctx,
+                             entt::entity character);
+
   BodyComponent *body();
 
 private:

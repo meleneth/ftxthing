@@ -4,12 +4,18 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 
+#include "app/app_context.hpp"
 #include "body_component.hpp"
+#include "combatant.hpp"
 #include "console_overlay.hpp"
 #include "fancy_log.hpp"
 #include "footer_component.hpp"
 
 using namespace fairlanes::widgets;
+void RootComponent::change_body_component(fairlanes::AppContext &ctx,
+                                          entt::entity character) {
+  body_ = ftxui::Make<fairlanes::widgets::Combatant>(ctx.registry_, character);
+}
 
 RootComponent::RootComponent(std::shared_ptr<FancyLog> console)
     : console_(std::move(console)) {
@@ -22,16 +28,6 @@ RootComponent::RootComponent(std::shared_ptr<FancyLog> console)
   container_ = Container::Vertical({header_, body_, footer_});
   container_->SetActiveChild(body_);
 
-  auto guarded = CatchEvent(container_, [&](Event e) {
-    auto b = std::dynamic_pointer_cast<BodyComponent>(body_);
-    auto f = std::dynamic_pointer_cast<FooterComponent>(footer_);
-    f->SetMessage("Body count = " + std::to_string(b->counter()));
-    (void)e;
-    return false;
-  });
-
-  // Add only the wrapped container + the overlay
-  Add(guarded);
   Add(console_overlay_);
 }
 
@@ -62,11 +58,12 @@ void RootComponent::set_full_open() {
 ftxui::Element RootComponent::Render() {
   using namespace ftxui;
   auto overlay = console_overlay();
-  overlay->tick();
+  overlay
+      ->tick(); // TODO make a lock here, mouse events are making ticks too fast
 
   auto content = vbox({
       header_->Render() | flex,
-      body_->Render() | flex_grow,
+      body_->Render(),
       footer_->Render() | flex,
   });
   if (overlay->should_show()) {
@@ -78,8 +75,7 @@ ftxui::Element RootComponent::Render() {
 void RootComponent::change_console(
     std::shared_ptr<fairlanes::widgets::FancyLog> console) {
   console_ = console;
-  auto cso = console_overlay();
-  cso->change_console(console);
+  console_overlay()->change_console(console);
 }
 
 void RootComponent::select_account(entt::entity account) {

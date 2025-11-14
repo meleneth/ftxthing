@@ -3,7 +3,6 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/event.hpp>
 
-
 #include "app/app_config.hpp"
 #include "app/app_context.hpp"
 
