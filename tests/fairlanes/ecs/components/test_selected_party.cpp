@@ -22,7 +22,7 @@ TEST_CASE("SelectedParty", "[entity][builder]") {
     auto some_counter = 0;
     fairlanes::AppConfig app_config;
     fairlanes::GrandCentral gc{app_config};
-    auto &reg = gc.reg_;
+    auto &reg = gc.registry();
     gc.create_initial_accounts();
     auto view = reg.view<SelectedParty>();
     REQUIRE(view.size() ==

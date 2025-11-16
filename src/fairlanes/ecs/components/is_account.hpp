@@ -1,6 +1,9 @@
 #pragma once
 #include <memory>
 #include <string>
+#include <vector>
+
+#include <entt/entt.hpp>
 
 namespace fairlanes {
 class AppContext;
@@ -19,6 +22,8 @@ using fairlanes::widgets::FancyLog;
 struct IsAccount {
   std::string account_name_;
   std::shared_ptr<fairlanes::widgets::FancyLog> log_;
+  std::vector<entt::entity> parties_;
+
   IsAccount(fairlanes::AppContext &context, std::string name);
 };
 

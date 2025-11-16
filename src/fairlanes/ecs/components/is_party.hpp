@@ -20,6 +20,7 @@ struct IsParty {
   entt::entity account_;
   std::string name_;
   int level_ = 1;
+  std::vector<entt::entity> party_members_;
 
   IsParty(AppContext &context, entt::entity party, std::string name,
           entt::entity account);
