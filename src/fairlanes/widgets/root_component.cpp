@@ -10,13 +10,26 @@
 #include "body_component.hpp"
 #include "combatant.hpp"
 #include "console_overlay.hpp"
+#include "fairlanes/ecs/components/selected_party.hpp"
 #include "fancy_log.hpp"
 #include "footer_component.hpp"
 
 using namespace fairlanes::widgets;
 void RootComponent::change_body_component(fairlanes::AppContext &ctx,
-                                          entt::entity character) {
-  body_ = ftxui::Make<fairlanes::widgets::Combatant>(ctx.registry_, character);
+                                          entt::entity party) {
+
+  auto &selected_party =
+      ctx.registry().get<fairlanes::ecs::components::SelectedParty>(party);
+
+  auto row = ftxui::Container::Horizontal({});
+
+  selected_party.for_each_party_member(
+      ctx.registry_, party, [&](entt::entity member) {
+        row->Add(
+            ftxui::Make<fairlanes::widgets::Combatant>(ctx.registry(), member));
+      });
+
+  body_ = row;
 }
 
 RootComponent::RootComponent(std::shared_ptr<FancyLog> console)

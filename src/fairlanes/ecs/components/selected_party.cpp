@@ -10,4 +10,8 @@ SelectedParty::SelectedParty(fairlanes::AppContext &context) {
   // fmt::ptr(&context.registry()));
 }
 
+// for_each_entity(reg, [&](entt::entity e, auto &pos, auto &vel) {
+//  do your ECS thing
+//});
+
 } // namespace fairlanes::ecs::components

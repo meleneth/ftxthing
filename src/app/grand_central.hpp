@@ -26,6 +26,7 @@ public:
                                       entt::entity party);
 
   void switch_account(std::size_t idx);
+  void create_initial_accounts();
 
   AppContext &app_context();
 
@@ -36,9 +37,10 @@ public:
   RootComponent *root_component();
   entt::registry &registry() { return reg_; }
   entt::entity get_account(int id);
+  // TODO shame
+  entt::registry reg_;
 
 private:
-  entt::registry reg_;
   std::size_t active_idx_ = 0;
   std::shared_ptr<FancyLog> console_;
   ftxui::Component root_component_;

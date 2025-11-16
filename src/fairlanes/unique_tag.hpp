@@ -1,10 +1,17 @@
 #pragma once
 #include <entt/entt.hpp>
+#include <utility> // for std::forward
 
-template <typename Tag>
-void set_unique_tag(entt::registry &reg, entt::entity e) {
-  for (auto existing : reg.view<Tag>())
-    reg.remove<Tag>(existing);
+template <typename Tag, typename... Args>
+void set_unique_tag(entt::registry &reg, entt::entity e, Args &&...args) {
+  // Remove Tag from everyone else
+  auto view = reg.view<Tag>();
+  for (auto existing : view) {
+    if (existing != e) {
+      reg.remove<Tag>(existing);
+    }
+  }
 
-  reg.emplace_or_replace<Tag>(e);
+  // Set (or reset) Tag on the chosen entity with forwarded args
+  reg.emplace_or_replace<Tag>(e, std::forward<Args>(args)...);
 }

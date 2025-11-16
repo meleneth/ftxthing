@@ -85,6 +85,7 @@ int main(int argc, char *argv[]) {
 
   // ---- run app ----
   fairlanes::GrandCentral grand_central{cfg};
+  grand_central.create_initial_accounts();
   grand_central.main_loop();
 
   return 0;

@@ -52,6 +52,8 @@ void GrandCentral::switch_account(std::size_t idx) {
                  fmt::ptr(is_account.log_));
  */
   console_ = is_account.log_;
+  root_component()->change_body_component(app_context(), selected_party_);
+
   root_component()->change_console(console_);
 }
 
@@ -97,49 +99,58 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
   console_->append_markup("[name](Snail) uses [error](Slime Blast) "
                           "[yellow](🔥)[orange](🔥)[red](🔥)");
   spdlog::debug("GrandCentral ctor: seed={}, stream={}", seed_, cfg.stream);
-
+}
+void GrandCentral::create_initial_accounts() {
   for (int i = 1; i <= 8; ++i) {
     const auto acc_name = fmt::format("Account {}", i);
-    const auto party_name = fmt::format("Party {}", i);
-    const auto member_name = fmt::format("Player{}", i);
 
     // Create account i
     auto account = create_account(app_context(), acc_name);
     if (selected_account_ == entt::null) {
       selected_account_ = account;
       set_unique_tag<fairlanes::ecs::components::SelectedAccount>(
-          app_context().registry_, selected_account_);
+          app_context().registry_, account, app_context_);
     }
     auto &reg = app_context().registry();
     auto &is_account = reg.get<fairlanes::ecs::components::IsAccount>(account);
     auto account_specific_app_context =
         AppContext{is_account.log_, reg, app_context().rng()};
-    // Create party i in account i
-    auto party = create_party_in_account(account_specific_app_context,
-                                         party_name, account);
-    if (selected_party_ == entt::null) {
-      selected_party_ = party;
-      set_unique_tag<fairlanes::ecs::components::SelectedParty>(
-          app_context().registry_, selected_party_);
-    }
-    // Log the join (and optionally account/party creation)
-    is_account.log_->append_markup(fmt::format(
-        "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
 
-    // Create a single member in that party
-    auto character = create_member_in_party(account_specific_app_context,
-                                            member_name, party);
-    if (selected_character_ == entt::null) {
-      selected_character_ = character;
-      set_unique_tag<fairlanes::ecs::components::SelectedCharacter>(
-          app_context().registry_, selected_character_);
+    for (int party_no = 1; party_no <= 5; ++party_no) {
+      const auto party_name = fmt::format("Party {}.{}", i, party_no);
+
+      // Create party i in account i
+      auto party = create_party_in_account(account_specific_app_context,
+                                           party_name, account);
+      if (selected_party_ == entt::null) {
+        selected_party_ = party;
+        set_unique_tag<fairlanes::ecs::components::SelectedParty>(
+            app_context().registry_, selected_party_, app_context_);
+      }
+      // Log the join (and optionally account/party creation)
+      is_account.log_->append_markup(fmt::format(
+          "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
+      for (int party_member_no = 1; party_member_no <= 5; ++party_member_no) {
+
+        const auto member_name =
+            fmt::format("Player{}.{}.{}", i, party_no, party_member_no);
+
+        // Create a single member in that party
+        auto character = create_member_in_party(account_specific_app_context,
+                                                member_name, party);
+        if (selected_character_ == entt::null) {
+          selected_character_ = character;
+          set_unique_tag<fairlanes::ecs::components::SelectedCharacter>(
+              app_context().registry_, selected_character_);
+        }
+        (void)character;
+      }
     }
-    (void)character;
   }
   console_->append_markup(
       "[name](Snail) uses [ability](Slime Blast) [bravo](🔥)");
   fairlanes::ecs::components::install_encounter_hooks(reg_);
-  root_component()->change_body_component(app_context(), selected_character_);
+  root_component()->change_body_component(app_context(), selected_party_);
 }
 
 AppContext &GrandCentral::app_context() { return app_context_; }
