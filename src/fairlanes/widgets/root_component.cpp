@@ -19,7 +19,7 @@ void RootComponent::change_body_component(fairlanes::context::AppCtx &ctx,
                                           entt::entity party) {
 
   auto &selected_party =
-      ctx.reg_.get<fairlanes::ecs::components::SelectedParty>(party);
+      ctx.reg_->get<fairlanes::ecs::components::SelectedParty>(party);
 
   auto row = ftxui::Container::Horizontal({});
 
@@ -31,7 +31,7 @@ void RootComponent::change_body_component(fairlanes::context::AppCtx &ctx,
   body_ = row;
 }
 
-RootComponent::RootComponent(fairlanes::context::AppCtx *ctx_) {
+RootComponent::RootComponent(fairlanes::context::AppCtx ctx_) {
   using namespace ftxui;
 
   // body_ = Make<AccountBattleView>();

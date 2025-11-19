@@ -16,7 +16,7 @@ class FancyLog;
 
 class RootComponent : public ftxui::ComponentBase {
 public:
-  explicit RootComponent();
+  explicit RootComponent(fairlanes::context::AppCtx ctx);
   ftxui::Element Render() override;
   void toggle_console();
   ConsoleOverlay *console_overlay();
@@ -30,7 +30,7 @@ public:
 
 private:
   ftxui::Component body_{nullptr};
-  std::shared_ptr<fairlanes::widgets::FancyLog> console_;
+  fairlanes::widgets::FancyLog *console_;
   ftxui::Component console_overlay_;
   ftxui::Component container_;
   entt::entity selected_account_{entt::null};

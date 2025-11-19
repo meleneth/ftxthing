@@ -3,21 +3,16 @@
 
 #include "app/move_only.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
+#include "systems/random_hub.hpp"
 
 namespace fairlanes::context {
 
 struct EntityCtx {
-  entt::registry *reg_{};
+  entt::registry *reg_;
   fairlanes::widgets::FancyLog *log_;
-  entt::entity self_{};
-
-  EntityCtx() = default;
-
-  EntityCtx(entt::registry *r, fairlanes::widgets::FancyLog *log,
-            entt::entity self)
-      : reg_(r), log_(log), self_(self) {}
-
-  MARK_CLASS_MOVEONLY(EntityCtx);
+  fairlanes::RandomHub *rng_;
+  entt::entity self_;
+  // MARK_CLASS_MOVEONLY(EntityCtx);
 };
 
 } // namespace fairlanes::context

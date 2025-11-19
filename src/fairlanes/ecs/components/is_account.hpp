@@ -24,7 +24,7 @@ struct IsAccount {
   std::vector<entt::entity> parties_;
   fairlanes::context::AccountCtx ctx_;
 
-  IsAccount(fairlanes::context::AccountCtx &context, entt::entity self,
+  IsAccount(fairlanes::context::AccountCtx context, entt::entity self,
             std::string name);
 
   // Call `fn(entt::handle)` for each member of `party_e`

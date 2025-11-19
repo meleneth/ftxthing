@@ -5,8 +5,8 @@
 
 namespace fairlanes::ecs::components {
 
-IsAccount::IsAccount(fairlanes::context::AccountCtx &ctx, entt::entity self,
+IsAccount::IsAccount(fairlanes::context::AccountCtx ctx, entt::entity self,
                      std::string name)
-    : self_(self), account_name_{std::move(name)}, ctx_{std::move(ctx)} {}
+    : self_(self), account_name_{std::move(name)}, ctx_{ctx} {}
 
 } // namespace fairlanes::ecs::components

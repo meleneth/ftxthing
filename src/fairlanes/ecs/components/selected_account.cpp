@@ -4,8 +4,7 @@
 
 namespace fairlanes::ecs::components {
 
-SelectedAccount::SelectedAccount(fairlanes::context::AppCtx &context) {
-  (void)context;
+SelectedAccount::SelectedAccount() {
   // spdlog::debug("SelectedAccount ctor: registry={}",
   // fmt::ptr(&context.registry()));
 }

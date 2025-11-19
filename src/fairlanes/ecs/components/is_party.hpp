@@ -18,11 +18,12 @@ struct IsParty {
   PartyLoopCtx ctx_;
   sml::sm<PartyLoop> sm_;
   entt::entity account_;
+  entt::entity self_;
   std::string name_;
   int level_ = 1;
   std::vector<entt::entity> party_members_;
 
-  IsParty(fairlanes::context::AppCtx &context, entt::entity party,
+  IsParty(fairlanes::fsm::PartyLoopCtx &context, entt::entity party,
           std::string name, entt::entity account);
 
   void next();

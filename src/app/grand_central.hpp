@@ -42,11 +42,11 @@ public:
     }
   }
 
-  template <typename T> T &get(entt::entity e) { return ctx_.reg_.get<T>(e); }
+  template <typename T> T &get(entt::entity e) { return ctx_.reg_->get<T>(e); }
 
   template <typename Component, typename... Args>
   Component &emplace(entt::entity e, Args &&...args) {
-    return ctx_.reg_.emplace<Component>(e, std::forward<Args>(args)...);
+    return ctx_.reg_->emplace<Component>(e, std::forward<Args>(args)...);
   }
 
 private:
@@ -56,6 +56,7 @@ private:
   entt::entity selected_account_{entt::null};
   entt::entity selected_party_{entt::null};
   entt::entity selected_character_{entt::null};
+  entt::registry reg_;
   uint64_t seed_;
   RandomHub random_;
 };

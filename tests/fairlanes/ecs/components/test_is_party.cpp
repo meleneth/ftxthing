@@ -24,10 +24,10 @@ TEST_CASE("IsPartyParty", "[entity][builder]") {
     fairlanes::GrandCentral gc{app_config};
     auto &reg = gc.ctx_.reg_;
     gc.create_initial_accounts();
-    auto view = reg.view<SelectedParty>();
+    auto view = reg->view<SelectedParty>();
     REQUIRE(view.size() == 1);
     auto party = *view.begin();
-    auto &selected_party = reg.get<SelectedParty>(party);
+    auto &selected_party = reg->get<SelectedParty>(party);
 
     selected_party.for_each_party_member(
         reg, party, [&](entt::entity member) { some_counter++; });

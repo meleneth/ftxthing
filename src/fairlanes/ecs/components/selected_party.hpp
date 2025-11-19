@@ -27,10 +27,11 @@ struct SelectedParty {
   std::vector<entt::entity> party_members_;
 
   template <class F>
-  void for_each_party_member(entt::registry &reg, entt::entity party, F &&f) {
-    auto view = reg.view<fairlanes::ecs::components::PartyMember>();
+  void for_each_party_member(entt::registry *reg, entt::entity party, F &&f) {
+    auto view = reg->view<fairlanes::ecs::components::PartyMember>();
     for (auto entity : view) {
-      const auto &pm = view.get<PartyMember>(entity);
+      const auto &pm =
+          view.get<fairlanes::ecs::components::PartyMember>(entity);
       if (pm.party_ != party) {
         continue;
       }

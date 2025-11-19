@@ -12,19 +12,19 @@ TEST_CASE("IsAccount basic usage", "[ecs][account]") {
   SECTION("emplace with name") {
     fairlanes::AppConfig app_config;
     fairlanes::GrandCentral gc{app_config};
-    auto e = gc.ctx_.reg_.create();
+    auto e = gc.ctx_.reg_->create();
 
     gc.emplace<IsAccount>(e, gc.ctx_.account_context(e), e, "Acme");
-    auto &acct = gc.ctx_.reg_.get<IsAccount>(e);
+    auto &acct = gc.ctx_.reg_->get<IsAccount>(e);
     REQUIRE(acct.account_name_ == "Acme");
   }
 
   SECTION("default then assign") {
     fairlanes::AppConfig app_config;
     fairlanes::GrandCentral gc{app_config};
-    auto e = gc.ctx_.reg_.create();
+    auto e = gc.ctx_.reg_->create();
 
-    gc.emplace<IsAccount>(e, fairlanes::context::AccountCtx{&gc.ctx_.reg_, e},
+    gc.emplace<IsAccount>(e, fairlanes::context::AccountCtx{gc.ctx_.reg_, e},
                           "some value");
 
     auto &acct = gc.get<IsAccount>(e);

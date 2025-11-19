@@ -16,10 +16,10 @@ struct PartyLoopCtx {
   entt::registry *reg_{nullptr};
   entt::entity party_{entt::null};
   fairlanes::widgets::FancyLog *log_;
-  RandomHub &rng;
+  fairlanes::RandomHub *rng_;
 
   fairlanes::context::EntityCtx entity(entt::entity e) {
-    return fairlanes::context::EntityCtx{*reg_, *log_, rng_, e};
+    return fairlanes::context::EntityCtx{reg_, log_, rng_, e};
   }
 };
 

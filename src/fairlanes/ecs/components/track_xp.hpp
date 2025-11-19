@@ -1,16 +1,19 @@
 #pragma once
 #include <entt/entt.hpp>
+
+#include "fairlanes/context/entity_ctx.hpp"
+
 namespace fairlanes::widgets {
 class FancyLog;
 }
 namespace fairlanes::context {
-class AppCtx;
 struct EntityCtx;
 } // namespace fairlanes::context
 namespace fairlanes::ecs::components {
 
 struct TrackXP {
   static constexpr int BASE_XP_VALUE = 256;
+  fairlanes::context::EntityCtx ctx_;
 
   int level_ = 1;
   int xp_ = 0;
@@ -20,9 +23,9 @@ struct TrackXP {
   /// Closed-form XP curve: sum_{i=1}^{n} i * BASE_XP_VALUE
   int xp_for_level(int level_calc);
   TrackXP() = default;
-  explicit TrackXP(int starting_xp);
+  explicit TrackXP(fairlanes::context::EntityCtx ctx, int starting_xp);
 
-  void add_xp(fairlanes::context::EntityCtx &ctx, int amount);
+  void add_xp(int amount);
 };
 
 } // namespace fairlanes::ecs::components

@@ -12,7 +12,7 @@ namespace fairlanes::widgets {
 
 class ConsoleOverlay : public ftxui::ComponentBase {
 public:
-  ConsoleOverlay(std::shared_ptr<FancyLog> console);
+  ConsoleOverlay(FancyLog *console);
 
   bool open() const;
   void toggle();
@@ -21,7 +21,7 @@ public:
 
   // Call this from your frame tick to animate height
   void tick();
-  void change_console(std::shared_ptr<FancyLog> console);
+  void change_console(FancyLog *console);
 
   // Simple fake command hook
   std::function<void(std::string_view)> on_command = [](std::string_view) {};

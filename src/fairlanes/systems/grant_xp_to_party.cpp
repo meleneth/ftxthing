@@ -15,7 +15,7 @@ void GrantXPToParty::commit(PartyLoopCtx &ctx, entt::entity party, int amount) {
   for (auto &&[entity, member, track] : view.each()) {
     if (member.party_ == party) {
       entt::handle h{*ctx.reg_, entity};
-      track.add_xp(h, amount);
+      track.add_xp(amount);
     }
   }
 }

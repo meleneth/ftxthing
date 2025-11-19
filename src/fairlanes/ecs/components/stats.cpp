@@ -11,7 +11,10 @@
 
 using fairlanes::ecs::components::Stats;
 
-Stats::Stats(AppCtx &context, std::string name) : name_(name) { (void)context; }
+Stats::Stats(fairlanes::context::AppCtx &context, std::string name)
+    : name_(name) {
+  (void)context;
+}
 using fairlanes::fsm::PartyLoopCtx;
 void Stats::take_damage(PartyLoopCtx &ctx, entt::entity attacker,
                         entt::entity target, Damage damage) {

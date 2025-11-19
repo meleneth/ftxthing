@@ -7,15 +7,17 @@
 namespace fairlanes::context {
 
 struct AccountCtx {
-  entt::registry *reg_{};
-  entt::entity self_{};
-  fairlanes::widgets::FancyLog log_;
+  entt::registry *reg_;
+  fairlanes::widgets::FancyLog *log_;
+  entt::entity self_;
 
   AccountCtx() = default;
 
-  AccountCtx(entt::registry *r, entt::entity self) : reg_(r), self_(self) {}
+  AccountCtx(entt::registry *r, fairlanes::widgets::FancyLog *log,
+             entt::entity self)
+      : reg_(r), log_(log), self_(self) {}
 
-  MARK_CLASS_MOVEONLY(AccountCtx);
+  // MARK_CLASS_MOVEONLY(AccountCtx);
 };
 
 } // namespace fairlanes::context

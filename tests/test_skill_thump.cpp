@@ -34,10 +34,10 @@ TEST_CASE("Skill: Thump", "[entity][builder]") {
     auto party_e = reg.create();
 
     // Log + RNG
-    auto log = std::make_shared<fairlanes::widgets::FancyLog>();
+    fairlanes::widgets::FancyLog log;
     fairlanes::RandomHub rng{/*seed=*/12345}; // make deterministic if supported
 
-    fairlanes::fsm::PartyLoopCtx ctx{&reg, party_e, log, rng};
+    fairlanes::fsm::PartyLoopCtx ctx{&reg, party_e, &log, &rng};
 
     Thump thumper;
 

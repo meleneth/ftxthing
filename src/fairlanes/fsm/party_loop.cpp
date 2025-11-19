@@ -43,12 +43,12 @@ void PartyLoop::combat_tick(PartyLoopCtx &ctx) {
   using fairlanes::ecs::components::Encounter;
   using fairlanes::ecs::components::Stats;
   auto &encounter = ctx.reg_->get<Encounter>(ctx.party_);
-  for (auto player : encounter.players(ctx)) {
-    auto defender = encounter.random_alive_enemy(ctx);
+  for (auto player : encounter.players()) {
+    auto defender = encounter.random_alive_enemy();
     in_the_night.thump(ctx, player, defender);
   }
   for (auto enemy : encounter.enemies_) {
-    auto defender = encounter.random_alive_player(ctx);
+    auto defender = encounter.random_alive_player();
     in_the_night.thump(ctx, enemy, defender);
   }
 };

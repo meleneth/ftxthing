@@ -10,10 +10,10 @@ namespace sml = boost::sml;
 using fairlanes::fsm::NextEvent;
 using fairlanes::fsm::PartyLoop;
 
-IsParty::IsParty(fairlanes::context::AppCtx &context, entt::entity party,
+IsParty::IsParty(fairlanes::fsm::PartyLoopCtx &context, entt::entity party,
                  std::string name, entt::entity account)
-    : ctx_{&context.reg_, party, &context.log_, context.rng_},
-      sm_{PartyLoop{}, ctx_}, account_{account}, name_{std::move(name)} {}
+    : ctx_{context}, sm_{PartyLoop{}, ctx_}, account_{account}, self_(party),
+      name_{std::move(name)} {}
 
 void IsParty::next() { sm_.process_event(NextEvent{}); }
 
