@@ -37,7 +37,7 @@ private:
   bool should_open_full_ = false;
   int rows_ = 0;
   int target_rows_ = 0;
-  std::shared_ptr<FancyLog> console_;
+  FancyLog *console_;
   std::string line_;
   ftxui::Component input_;
 };

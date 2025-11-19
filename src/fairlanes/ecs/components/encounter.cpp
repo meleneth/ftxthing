@@ -1,5 +1,5 @@
 #include "encounter.hpp"
-#include "app/app_context.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
@@ -46,7 +46,7 @@ void Encounter::finalize(entt::registry &reg, entt::entity e) const {
   for (auto enemy : enemies_) {
     reg.destroy(enemy);
   }
-  log_->append_markup(fmt::format("Encounter {} finalized and cleaned up",
-                                  int(entt::to_integral(e))));
+  ctx_.log_->append_markup(fmt::format("Encounter {} finalized and cleaned up",
+                                       int(entt::to_integral(e))));
 }
 } // namespace fairlanes::ecs::components

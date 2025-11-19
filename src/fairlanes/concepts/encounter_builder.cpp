@@ -1,10 +1,11 @@
 #include "encounter_builder.hpp"
-#include "app/app_context.hpp"
 #include "entities/entity_builder.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
+
 
 namespace fairlanes::concepts {
 using fairlanes::fsm::PartyLoopCtx;

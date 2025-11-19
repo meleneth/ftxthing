@@ -2,8 +2,9 @@
 #include <entt/entt.hpp>
 #include <vector>
 
-#include "app/app_context.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
+#include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::ecs::components {
 using fairlanes::fsm::PartyLoopCtx;
@@ -11,7 +12,7 @@ struct Encounter {
 
   entt::entity party_{entt::null};    // the single party in this encounter
   std::vector<entt::entity> enemies_; // enemy entities participating
-  std::shared_ptr<fairlanes::FancyLog> log_;
+  fairlanes::widgets::FancyLog *log_;
 
   std::vector<entt::entity> players(PartyLoopCtx &ctx_);
   entt::entity random_alive_enemy(PartyLoopCtx &ctx_);

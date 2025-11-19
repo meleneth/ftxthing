@@ -94,7 +94,7 @@ public:
   }
 
 private:
-  std::shared_ptr<LogBuffer> buf_;
+  LogBuffer *buf_;
   // std::deque<LogRecord> cache_;
   uint64_t last_seq_{0};
 

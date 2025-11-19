@@ -13,7 +13,7 @@
 
 using json = nlohmann::json;
 
-TEST_CASE("SelectedParty", "[entity][builder]") {
+TEST_CASE("IsPartyParty", "[entity][builder]") {
   using fairlanes::ecs::components::IsParty;
   using fairlanes::ecs::components::PartyMember;
   using fairlanes::ecs::components::SelectedParty;
@@ -25,9 +25,8 @@ TEST_CASE("SelectedParty", "[entity][builder]") {
     auto &reg = gc.ctx_.reg_;
     gc.create_initial_accounts();
     auto view = reg.view<SelectedParty>();
-    REQUIRE(view.size() ==
-            1); // integration contract: exactly one selected party
-    auto party = *view.begin(); // the entity that has SelectedParty
+    REQUIRE(view.size() == 1);
+    auto party = *view.begin();
     auto &selected_party = reg.get<SelectedParty>(party);
 
     selected_party.for_each_party_member(

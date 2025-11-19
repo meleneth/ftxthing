@@ -22,10 +22,21 @@ struct IsParty {
   int level_ = 1;
   std::vector<entt::entity> party_members_;
 
-  IsParty(AppContext &context, entt::entity party, std::string name,
+  IsParty(AppCtx &context, entt::entity party, std::string name,
           entt::entity account);
 
   void next();
   bool needs_town();
+
+  // Call `fn(entt::handle)` for each member of `party_e`
+  template <typename PM = PartyMember, typename Fn>
+  inline void for_each_member(Fn &&fn) {
+    auto view = ctx_.reg_->view<PM>();         // entities with PartyMember
+    for (auto e : view) {                      // iterate entities
+      if (view.get(e).party_ == ctx_.party_) { // match party
+        fn(entt::handle{ctx_.reg_, e});        // yield handle
+      }
+    }
+  }
 };
 } // namespace fairlanes::ecs::components

@@ -1,10 +1,9 @@
 #include <fmt/core.h>
 
-#include "app/app_context.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "track_xp.hpp"
-
 
 using fairlanes::ecs::components::TrackXP;
 
@@ -17,9 +16,9 @@ int TrackXP::xp_for_level(int level_calc) {
   return BASE_XP_VALUE * (level_calc * (level_calc + 1)) / 2;
 }
 
-TrackXP::TrackXP(AppContext &context, int starting_xp)
+TrackXP::TrackXP(fairlanes::context::AppCtx &context, int starting_xp)
     : xp_(starting_xp), next_level_at(xp_for_level(level_ + 1)),
-      log_(context.log()) {}
+      log_(context.log_) {}
 
 void TrackXP::add_xp(entt::handle self, int amount) {
   xp_ += amount;

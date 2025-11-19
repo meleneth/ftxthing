@@ -4,9 +4,9 @@
 namespace fairlanes::widgets {
 class FancyLog;
 }
-namespace fairlanes {
-class AppContext;
-} // namespace fairlanes
+namespace fairlanes::context {
+class AppCtx;
+} // namespace fairlanes::context
 
 namespace fairlanes::fsm {
 class PartyLoopCtx;
@@ -26,7 +26,7 @@ struct Stats {
   Resistances resistances_;
 
   Stats() = default;
-  explicit Stats(fairlanes::AppContext &context, std::string name_);
+  explicit Stats(fairlanes::context::AppCtx &context, std::string name_);
   void take_damage(fairlanes::fsm::PartyLoopCtx &ctx, entt::entity attacker,
                    entt::entity target, Damage damage);
   bool is_alive(fairlanes::fsm::PartyLoopCtx &ctx);

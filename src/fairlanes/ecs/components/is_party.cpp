@@ -1,5 +1,5 @@
 #include "is_party.hpp"
-#include "app/app_context.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/fsm/party_loop.hpp"
@@ -10,9 +10,9 @@ namespace sml = boost::sml;
 using fairlanes::fsm::NextEvent;
 using fairlanes::fsm::PartyLoop;
 
-IsParty::IsParty(AppContext &context, entt::entity party, std::string name,
-                 entt::entity account)
-    : ctx_{&context.registry(), party, context.log(), context.rng()},
+IsParty::IsParty(fairlanes::context::AppCtx &context, entt::entity party,
+                 std::string name, entt::entity account)
+    : ctx_{&context.reg_, party, context.log_, context.rng_},
       sm_{PartyLoop{}, ctx_}, account_{account}, name_{std::move(name)} {}
 
 void IsParty::next() { sm_.process_event(NextEvent{}); }
@@ -22,7 +22,7 @@ bool IsParty::needs_town() {
 
   auto view = reg.view<PartyMember, Stats>();
   for (auto &&[entity, member, stats] : view.each()) {
-    if (member.party_ == ctx_.party_ && stats.hp_ < 1) {
+    if (member.party_ == ctx_.self_ && stats.hp_ < 1) {
       return true; // any downed member means “needs town”
     }
   }

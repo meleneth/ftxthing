@@ -2,17 +2,17 @@
 #include "fairlanes/ecs/fwd.hpp"
 #include <string>
 
-namespace fairlanes {
-class AppContext;
+namespace fairlanes::context {
+class AppCtx;
 }
 
 namespace fairlanes::ecs::components {
-using fairlanes::AppContext;
+using fairlanes::context::AppCtx;
 
 struct PartyBusiness {
   std::string doing;
 
-  PartyBusiness(AppContext &context, std::string initial);
+  PartyBusiness(AppCtx &context, std::string initial);
 };
 
 } // namespace fairlanes::ecs::components

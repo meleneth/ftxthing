@@ -1,7 +1,7 @@
 #include <fmt/core.h>
 
-#include "app/app_context.hpp"
 #include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
@@ -9,12 +9,9 @@
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "stats.hpp"
 
-
 using fairlanes::ecs::components::Stats;
 
-Stats::Stats(AppContext &context, std::string name) : name_(name) {
-  (void)context;
-}
+Stats::Stats(AppCtx &context, std::string name) : name_(name) { (void)context; }
 using fairlanes::fsm::PartyLoopCtx;
 void Stats::take_damage(PartyLoopCtx &ctx, entt::entity attacker,
                         entt::entity target, Damage damage) {

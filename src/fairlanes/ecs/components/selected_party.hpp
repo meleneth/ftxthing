@@ -7,9 +7,9 @@
 
 #include "fairlanes/ecs/components/party_member.hpp"
 
-namespace fairlanes {
-class AppContext;
-} // namespace fairlanes
+namespace fairlanes::context {
+class AppCtx;
+} // namespace fairlanes::context
 namespace fairlanes::widgets {
 class FancyLog;
 }
@@ -23,7 +23,7 @@ using fairlanes::widgets::FancyLog;
 
 // Marks an entity as an Account
 struct SelectedParty {
-  SelectedParty(fairlanes::AppContext &context);
+  SelectedParty(fairlanes::context::AppCtx &context);
   std::vector<entt::entity> party_members_;
 
   template <class F>

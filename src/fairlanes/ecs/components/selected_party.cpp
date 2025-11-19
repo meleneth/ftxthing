@@ -1,10 +1,10 @@
 #include "selected_party.hpp"
-#include "app/app_context.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::ecs::components {
 
-SelectedParty::SelectedParty(fairlanes::AppContext &context) {
+SelectedParty::SelectedParty(fairlanes::context::AppCtx &context) {
   (void)context;
   // spdlog::debug("SelectedParty ctor: registry={}",
   // fmt::ptr(&context.registry()));

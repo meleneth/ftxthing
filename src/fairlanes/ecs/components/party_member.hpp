@@ -4,13 +4,16 @@
 #include <string>
 
 #include "fairlanes/ecs/fwd.hpp"
+namespace fairlanes::context {
+struct AppCtx;
+}
 
 namespace fairlanes::ecs::components {
 
 struct PartyMember {
   fairlanes::ecs::Entity party_{entt::null};
 
-  PartyMember(fairlanes::AppContext &context, std::string /*name*/,
+  PartyMember(fairlanes::context::AppCtx &context, std::string /*name*/,
               entt::entity party);
 };
 
@@ -24,17 +27,6 @@ inline void for_each_member(entt::registry &reg, entt::entity party_e,
       fn(entt::handle{reg, e});          // yield handle
     }
   }
-}
-
-template <typename PM = PartyMember, typename Fn>
-inline void for_each_member(entt::registry *reg, entt::entity party_e,
-                            Fn &&fn) {
-  for_each_member<PM>(*reg, party_e, std::forward<Fn>(fn));
-}
-
-template <typename Ctx, typename PM = PartyMember, typename Fn>
-inline void for_each_member(Ctx &ctx, entt::entity party_e, Fn &&fn) {
-  for_each_member<PM>(*ctx.reg_, party_e, std::forward<Fn>(fn));
 }
 
 } // namespace fairlanes::ecs::components

@@ -14,7 +14,7 @@ namespace fairlanes::fsm {
 struct PartyLoopCtx {
   entt::registry *reg_{nullptr};
   entt::entity party_{entt::null};
-  std::shared_ptr<fairlanes::widgets::FancyLog> log_;
+  fairlanes::widgets::FancyLog *log_;
   RandomHub &rng;
 };
 
