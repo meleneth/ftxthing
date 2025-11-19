@@ -27,8 +27,8 @@ entt::entity Encounter::random_alive_player(PartyLoopCtx &ctx_) {
   return players_[0]; // TODO you're a bad man
 }
 
-Encounter::Encounter(PartyLoopCtx &ctx_)
-    : party_(ctx_.party_), log_(ctx_.log_) {
+Encounter::Encounter(fairlanes::context::EncounterCtx &ctx_, entt::entity party)
+    : ctx_(std::move(ctx)), party_(party)) {
 
       };
 

@@ -2,22 +2,22 @@
 #include <entt/entt.hpp>
 #include <vector>
 
-#include "fairlanes/context/app_ctx.hpp"
+#include "fairlanes/context/encounter_ctx.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::ecs::components {
 using fairlanes::fsm::PartyLoopCtx;
 struct Encounter {
-
+  fairlanes::context::EncounterCtx ctx_;
   entt::entity party_{entt::null};    // the single party in this encounter
   std::vector<entt::entity> enemies_; // enemy entities participating
-  fairlanes::widgets::FancyLog *log_;
+  std::vector<entt::entity> players();
 
-  std::vector<entt::entity> players(PartyLoopCtx &ctx_);
-  entt::entity random_alive_enemy(PartyLoopCtx &ctx_);
-  entt::entity random_alive_player(PartyLoopCtx &ctx_);
-  Encounter(PartyLoopCtx &context);
+  entt::entity random_alive_enemy();
+  entt::entity random_alive_player();
+
+  Encounter(fairlanes::context::EncounterCtx &context);
   void finalize(entt::registry &reg, entt::entity self) const;
 };
 

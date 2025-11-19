@@ -5,6 +5,7 @@ class FancyLog;
 }
 namespace fairlanes::context {
 class AppCtx;
+struct EntityCtx;
 } // namespace fairlanes::context
 namespace fairlanes::ecs::components {
 
@@ -19,9 +20,9 @@ struct TrackXP {
   /// Closed-form XP curve: sum_{i=1}^{n} i * BASE_XP_VALUE
   int xp_for_level(int level_calc);
   TrackXP() = default;
-  explicit TrackXP(fairlanes::context::AppCtx &context, int starting_xp);
+  explicit TrackXP(int starting_xp);
 
-  void add_xp(entt::handle self, int amount);
+  void add_xp(fairlanes::context::EntityCtx &ctx, int amount);
 };
 
 } // namespace fairlanes::ecs::components

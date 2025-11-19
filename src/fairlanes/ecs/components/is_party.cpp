@@ -12,7 +12,7 @@ using fairlanes::fsm::PartyLoop;
 
 IsParty::IsParty(fairlanes::context::AppCtx &context, entt::entity party,
                  std::string name, entt::entity account)
-    : ctx_{&context.reg_, party, context.log_, context.rng_},
+    : ctx_{&context.reg_, party, &context.log_, context.rng_},
       sm_{PartyLoop{}, ctx_}, account_{account}, name_{std::move(name)} {}
 
 void IsParty::next() { sm_.process_event(NextEvent{}); }
@@ -22,7 +22,7 @@ bool IsParty::needs_town() {
 
   auto view = reg.view<PartyMember, Stats>();
   for (auto &&[entity, member, stats] : view.each()) {
-    if (member.party_ == ctx_.self_ && stats.hp_ < 1) {
+    if (member.party_ == ctx_.party_ && stats.hp_ < 1) {
       return true; // any downed member means “needs town”
     }
   }

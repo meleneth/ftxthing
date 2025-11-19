@@ -87,7 +87,7 @@ entt::entity GrandCentral::create_member_in_party(std::string name,
 GrandCentral::GrandCentral(const AppConfig &cfg)
     : root_component_(ftxui::Make<RootComponent>(ctx_.log_)),
       seed_(cfg.seed.value_or(static_cast<uint64_t>(std::random_device{}()))),
-      random_(std::make_shared<RandomHub>(seed_, cfg.stream)) {
+      random_(seed_, cfg.stream) {
   using namespace ftxui;
   ZoneScopedN("Startup");
 
@@ -109,22 +109,19 @@ void GrandCentral::create_initial_accounts() {
     }
 
     auto &is_account = get<fairlanes::ecs::components::IsAccount>(account);
-    auto account_specific_app_context =
-        fairlanes::context::AppCtx{is_account.ctx_.log_, ctx_.reg_, ctx_.rng_};
 
     for (int party_no = 1; party_no <= 5; ++party_no) {
       const auto party_name = fmt::format("Party {}.{}", i, party_no);
 
       // Create party i in account i
-      auto party = create_party_in_account(account_specific_app_context,
-                                           party_name, account);
+      auto party = create_party_in_account(party_name, account);
       if (selected_party_ == entt::null) {
         selected_party_ = party;
         set_unique_tag<fairlanes::ecs::components::SelectedParty>(
             ctx_.reg_, selected_party_, ctx_);
       }
       // Log the join (and optionally account/party creation)
-      is_account.log_->append_markup(fmt::format(
+      is_account.ctx_.log_.append_markup(fmt::format(
           "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
       for (int party_member_no = 1; party_member_no <= 5; ++party_member_no) {
 
@@ -132,8 +129,7 @@ void GrandCentral::create_initial_accounts() {
             fmt::format("Player{}.{}.{}", i, party_no, party_member_no);
 
         // Create a single member in that party
-        auto character = create_member_in_party(account_specific_app_context,
-                                                member_name, party);
+        auto character = create_member_in_party(member_name, party);
         if (selected_character_ == entt::null) {
           selected_character_ = character;
           set_unique_tag<fairlanes::ecs::components::SelectedCharacter>(
