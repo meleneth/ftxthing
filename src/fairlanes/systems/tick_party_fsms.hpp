@@ -7,7 +7,7 @@
 namespace fairlanes::systems {
 class TickPartyFSMs {
 public:
-  static void commit(entt::registry &reg);
+  static void commit(entt::registry *reg);
 };
 
 } // namespace fairlanes::systems

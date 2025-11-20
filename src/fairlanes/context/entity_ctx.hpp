@@ -12,7 +12,8 @@ struct EntityCtx {
   fairlanes::widgets::FancyLog *log_;
   fairlanes::RandomHub *rng_;
   entt::entity self_;
-  // MARK_CLASS_MOVEONLY(EntityCtx);
+
+  /* M ARK_CLASS_MOVEONLY(EntityCtx); */
 };
 
 } // namespace fairlanes::context

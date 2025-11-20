@@ -5,7 +5,7 @@
 
 #include "app/app_config.hpp"
 #include "fairlanes/context/app_ctx.hpp"
-
+#include "registry_facade.hpp"
 #include "systems/random_hub.hpp"
 
 namespace fairlanes::widgets {

@@ -33,7 +33,7 @@ public:
   FancyLog();
   explicit FancyLog(Options opt);
 
-  // MARK_CLASS_MOVEONLY(FancyLog);
+  /* MARK_CLASS_MOVEONLY(FancyLog); */
   //  ---- append --------------------------------------------------------------
   //  Parses "[tag](text)" markup; unknown tags become plain text.
   void append_markup(std::string_view utf8_line);

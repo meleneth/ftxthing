@@ -14,11 +14,11 @@ namespace fairlanes::fsm {
 
 struct PartyLoopCtx {
   entt::registry *reg_{nullptr};
-  entt::entity party_{entt::null};
+  entt::entity party_;
   fairlanes::widgets::FancyLog *log_;
   fairlanes::RandomHub *rng_;
 
-  fairlanes::context::EntityCtx entity(entt::entity e) {
+  fairlanes::context::EntityCtx entity_context(entt::entity e) {
     return fairlanes::context::EntityCtx{reg_, log_, rng_, e};
   }
 };

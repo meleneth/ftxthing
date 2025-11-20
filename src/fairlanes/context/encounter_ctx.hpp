@@ -19,7 +19,7 @@ struct EncounterCtx {
                entt::entity self, entt::entity party)
       : reg_(r), log_(log), self_(self), party_(party) {}
 
-  // MARK_CLASS_MOVEONLY(EncounterCtx);
+  /* MARK_CLASS_MOVEONLY(EncounterCtx); */
 };
 
 } // namespace fairlanes::context

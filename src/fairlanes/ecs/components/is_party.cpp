@@ -2,6 +2,7 @@
 #include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
+#include "fairlanes/ecs/components/track_xp.hpp"
 #include "fairlanes/fsm/party_loop.hpp"
 #include "systems/log.hpp"
 
@@ -16,6 +17,15 @@ IsParty::IsParty(fairlanes::fsm::PartyLoopCtx &context, entt::entity party,
       name_{std::move(name)} {}
 
 void IsParty::next() { sm_.process_event(NextEvent{}); }
+
+entt::entity IsParty::create_member(std::string name) {
+  auto e = ctx_.reg_->create();
+  emplace<fairlanes::ecs::components::PartyMember>(e, ctx_, name, ctx_.party_);
+  emplace<fairlanes::ecs::components::TrackXp>(e, ctx_.entity_context(e), 0);
+  emplace<fairlanes::ecs::components::Stats>(e, ctx_, name);
+  (void)name;
+  return e;
+}
 
 bool IsParty::needs_town() {
   auto &reg = *ctx_.reg_; // convenience alias

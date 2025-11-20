@@ -3,6 +3,7 @@
 
 #include "app/app_config.hpp"
 #include "app/grand_central.hpp"
+#include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
 
 using fairlanes::ecs::components::TrackXP;
@@ -11,9 +12,11 @@ TEST_CASE("TrackXP basic leveling", "[ecs][xp]") {
   fairlanes::AppConfig app_config;
   fairlanes::GrandCentral gc{app_config};
 
-  auto e = gc.ctx_.reg_.create();
-  auto &xp = gc.emplace<TrackXP>(e, gc.ctx_, 0);
-  entt::handle handle{gc.ctx_.reg_, e};
+  auto e = gc.ctx_.reg_->create();
+  fairlanes::context::EntityCtx entity_ctx{gc.ctx_.reg_, gc.ctx_.log_.get(),
+                                           gc.ctx_.rng_, e};
+  auto &xp = gc.emplace<TrackXP>(e, entity_ctx, 0);
+  entt::handle handle{*gc.ctx_.reg_, e};
 
   SECTION("Starts at level 1 with 0 xp") {
     REQUIRE(xp.level_ == 1);

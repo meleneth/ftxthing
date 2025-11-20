@@ -13,17 +13,18 @@ using widgets::FancyLog;
 struct AppCtx {
   entt::registry *reg_;
   fairlanes::RandomHub *rng_;
-  FancyLog log_; // owned by value
+  std::shared_ptr<FancyLog> log_;
 
   AppCtx() = default;
 
-  AppCtx(entt::registry *reg, RandomHub *rng) : reg_(reg), rng_{rng} {}
+  AppCtx(entt::registry *reg, RandomHub *rng)
+      : reg_(reg), rng_{rng}, log_(std::make_shared<FancyLog>()) {}
 
   AccountCtx account_context(entt::entity account) {
-    return AccountCtx{reg_, &log, account};
+    return AccountCtx{reg_, rng_, account};
   }
 
-  // MARK_CLASS_MOVEONLY(AppCtx);
+  /* MA RK_CLASS_MOVEONLY(AppCtx); */
 };
 
 } // namespace fairlanes::context

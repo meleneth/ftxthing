@@ -23,9 +23,10 @@ TEST_CASE("IsAccount basic usage", "[ecs][account]") {
     fairlanes::AppConfig app_config;
     fairlanes::GrandCentral gc{app_config};
     auto e = gc.ctx_.reg_->create();
-
-    gc.emplace<IsAccount>(e, fairlanes::context::AccountCtx{gc.ctx_.reg_, e},
-                          "some value");
+    fairlanes::widgets::FancyLog log;
+    fairlanes::context::AccountCtx account_context{gc.ctx_.reg_, gc.ctx_.rng_,
+                                                   e};
+    gc.emplace<IsAccount>(e, account_context, e, "some value");
 
     auto &acct = gc.get<IsAccount>(e);
     REQUIRE(acct.account_name_ == "some value");

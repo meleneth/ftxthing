@@ -11,6 +11,7 @@ namespace fairlanes::widgets {
 AccountBattleView::AccountBattleView(AccountCtx &ctx) : ctx_(ctx) {
   auto view = ctx_.reg_->view<fairlanes::ecs::components::SelectedAccount>();
   auto entity = *view.begin();
+  (void)entity;
   // auto &selected_account =
   //   ctx_.reg_->get<fairlanes::ecs::components::SelectedAccount>(entity);
 
