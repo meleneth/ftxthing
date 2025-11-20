@@ -22,7 +22,6 @@ struct TrackXP {
 
   /// Closed-form XP curve: sum_{i=1}^{n} i * BASE_XP_VALUE
   int xp_for_level(int level_calc);
-  TrackXP() = default;
   explicit TrackXP(fairlanes::context::EntityCtx ctx, int starting_xp);
 
   void add_xp(int amount);

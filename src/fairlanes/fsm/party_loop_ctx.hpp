@@ -13,7 +13,7 @@ class FancyLog;
 namespace fairlanes::fsm {
 
 struct PartyLoopCtx {
-  entt::registry *reg_{nullptr};
+  entt::registry *reg_;
   entt::entity party_;
   fairlanes::widgets::FancyLog *log_;
   fairlanes::RandomHub *rng_;

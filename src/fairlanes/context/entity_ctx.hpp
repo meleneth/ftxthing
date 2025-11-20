@@ -13,6 +13,10 @@ struct EntityCtx {
   fairlanes::RandomHub *rng_;
   entt::entity self_;
 
+  EntityCtx entity_context(entt::entity e) {
+    return EntityCtx{reg_, log_, rng_, e};
+  }
+
   /* M ARK_CLASS_MOVEONLY(EntityCtx); */
 };
 

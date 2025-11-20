@@ -23,7 +23,9 @@ struct AppCtx {
   AccountCtx account_context(entt::entity account) {
     return AccountCtx{reg_, rng_, account};
   }
-
+  EntityCtx entity_context(entt::entity e) {
+    return EntityCtx{reg_, log_.get(), rng_, e};
+  }
   /* MA RK_CLASS_MOVEONLY(AppCtx); */
 };
 

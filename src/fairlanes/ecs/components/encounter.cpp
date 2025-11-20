@@ -19,7 +19,6 @@ std::vector<entt::entity> Encounter::players() {
   return players_;
 }
 entt::entity Encounter::random_alive_enemy() {
-  (void)ctx_;
   return enemies_[0]; // TODO you're a bad man
 }
 entt::entity Encounter::random_alive_player() {
@@ -32,13 +31,13 @@ Encounter::Encounter(fairlanes::context::EncounterCtx &ctx)
 
       };
 
-void on_encounter_destroy(entt::registry *reg, entt::entity e) {
-  auto &enc = reg->get<Encounter>(e); // valid: signal fires before removal
-  enc.finalize(*reg, e);
+void on_encounter_destroy(entt::registry &reg, entt::entity e) {
+  auto &enc = reg.get<Encounter>(e); // valid: signal fires before removal
+  enc.finalize(reg, e);
 }
 
-void install_encounter_hooks(entt::registry *reg) {
-  reg->on_destroy<Encounter>().connect<&on_encounter_destroy>();
+void install_encounter_hooks(entt::registry &reg) {
+  reg.on_destroy<Encounter>().connect<&on_encounter_destroy>();
 }
 
 void Encounter::finalize(entt::registry &reg, entt::entity e) const {

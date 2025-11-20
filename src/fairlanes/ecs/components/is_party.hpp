@@ -9,6 +9,7 @@
 #include "systems/log.hpp"
 
 namespace fairlanes::ecs::components {
+struct PartyMember;
 namespace sml = boost::sml;
 
 // Marks an entity as a Party (party itself is an entity)

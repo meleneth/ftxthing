@@ -25,6 +25,6 @@ struct InEncounter {                   // attach to the party
   entt::entity encounter_{entt::null}; // backlink to the encounter entity
 };
 
-void on_encounter_destroy(entt::registry *reg, entt::entity e);
-void install_encounter_hooks(entt::registry *reg);
+void on_encounter_destroy(entt::registry &reg, entt::entity e);
+void install_encounter_hooks(entt::registry &reg);
 } // namespace fairlanes::ecs::components

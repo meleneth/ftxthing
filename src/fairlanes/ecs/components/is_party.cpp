@@ -20,10 +20,10 @@ void IsParty::next() { sm_.process_event(NextEvent{}); }
 
 entt::entity IsParty::create_member(std::string name) {
   auto e = ctx_.reg_->create();
-  emplace<fairlanes::ecs::components::PartyMember>(e, ctx_, name, ctx_.party_);
-  emplace<fairlanes::ecs::components::TrackXp>(e, ctx_.entity_context(e), 0);
-  emplace<fairlanes::ecs::components::Stats>(e, ctx_, name);
-  (void)name;
+  ctx_.reg_->emplace<fairlanes::ecs::components::PartyMember>(e, ctx_.party_);
+  ctx_.reg_->emplace<fairlanes::ecs::components::TrackXP>(
+      e, ctx_.entity_context(e), 0);
+  ctx_.reg_->emplace<fairlanes::ecs::components::Stats>(e, name);
   return e;
 }
 
