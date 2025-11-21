@@ -15,8 +15,6 @@ struct AccountCtx {
   RandomHub *rng_;
   entt::entity self_;
 
-  AccountCtx() = default;
-
   AccountCtx(entt::registry *r, RandomHub *rng, entt::entity self)
       : reg_(r), log_(std::make_shared<fairlanes::widgets::FancyLog>()),
         rng_(rng), self_(self) {}

@@ -13,8 +13,6 @@ struct EncounterCtx {
   fairlanes::RandomHub *rng_;
   entt::entity self_{};
 
-  EncounterCtx() = default;
-
   EncounterCtx(entt::registry *r, fairlanes::widgets::FancyLog *log,
                fairlanes::RandomHub *rng, entt::entity self)
       : reg_(r), log_(log), rng_(rng), self_(self) {}
