@@ -13,12 +13,13 @@ using fairlanes::context::AccountCtx;
 
 class AccountBattleView : public ftxui::ComponentBase {
 public:
-  AccountBattleView(AccountCtx &context);
+  AccountBattleView(AccountCtx context);
   ftxui::Element Render() override;
+  ~AccountBattleView() override = default;
 
 private:
   AccountCtx ctx_;
-  ftxui::Component body_;
+  ftxui::Component body_{nullptr};
 };
 
 } // namespace fairlanes::widgets

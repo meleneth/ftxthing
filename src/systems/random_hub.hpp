@@ -49,7 +49,6 @@ inline uint64_t time_seed_now() {
 
 class RandomStream {
 public:
-  RandomStream() = default;
   RandomStream(uint64_t master_seed, uint64_t sequence, std::string key)
       : master_seed_(master_seed), sequence_(sequence), key_(std::move(key)) {}
 

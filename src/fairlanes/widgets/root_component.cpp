@@ -12,6 +12,7 @@
 #include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/selected_party.hpp"
+#include "fairlanes/widgets/account_battle_view.hpp"
 #include "fancy_log.hpp"
 #include "footer_component.hpp"
 
@@ -20,6 +21,8 @@ void RootComponent::change_body_component(fairlanes::context::AppCtx &ctx,
                                           entt::entity party) {
 
   auto &is_party = ctx.reg_->get<fairlanes::ecs::components::IsParty>(party);
+  body_ = ftxui::Make<fairlanes::widgets::AccountBattleView>(
+      ctx.account_context(is_party.account_));
 
   auto row = ftxui::Container::Horizontal({});
 
@@ -32,8 +35,6 @@ void RootComponent::change_body_component(fairlanes::context::AppCtx &ctx,
 
 RootComponent::RootComponent(fairlanes::context::AppCtx ctx_) {
   using namespace ftxui;
-
-  // body_ = Make<AccountBattleView>();
   console_overlay_ = Make<ConsoleOverlay>(ctx_.log_.get());
   Add(console_overlay_);
 }
@@ -68,11 +69,18 @@ ftxui::Element RootComponent::Render() {
   overlay
       ->tick(); // TODO make a lock here, mouse events are making ticks too fast
   ZoneScoped;
-  auto content = vbox({body_->Render()});
-  if (overlay->should_show()) {
-    return dbox({content, console_overlay_->Render()});
+  if (body_) {
+    auto content = vbox({body_->Render()});
+    if (overlay->should_show()) {
+      return dbox({content, console_overlay_->Render()});
+    }
+    return content;
+  } else {
+    if (overlay->should_show()) {
+      return dbox({ftxui::text("some other text"), console_overlay_->Render()});
+    }
+    return ftxui::text("some text");
   }
-  return content;
 }
 
 void RootComponent::change_console(fairlanes::widgets::FancyLog *console) {

@@ -54,7 +54,7 @@ void GrandCentral::switch_account(std::size_t idx) {
   /* spdlog::debug("console_ was {} and becomes {}", fmt::ptr(console_),
                  fmt::ptr(is_account.log_));
  */
-  root_component()->change_body_component(ctx_, selected_party_);
+  // root_component()->change_body_component(ctx_, selected_party_);
   root_component()->change_console(is_account.ctx_.log_.get());
 }
 
@@ -138,12 +138,12 @@ void GrandCentral::create_initial_accounts() {
   ctx_.log_.get()->append_markup(
       "[name](Snail) uses [ability](Slime Blast) [bravo](🔥)");
   fairlanes::ecs::components::install_encounter_hooks(*ctx_.reg_);
-  root_component()->change_body_component(ctx_, selected_party_);
+  // root_component()->change_body_component(ctx_, selected_party_);
 }
 
 inline void GrandCentral::tick_party_fsms(float dt) {
   (void)dt;
-  ZoneScoped;
+  ZoneScopedN("tick_party_fsms");
   fairlanes::systems::TickPartyFSMs::commit(ctx_.reg_);
 }
 
@@ -163,6 +163,7 @@ void GrandCentral::main_loop() {
     const auto now = clock::now();
     float dt = std::chrono::duration<float>(now - last).count();
     last = now;
+    ZoneScopedN("Renderer");
 
     tick_party_fsms(dt);
 

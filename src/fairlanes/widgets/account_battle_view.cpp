@@ -8,7 +8,7 @@
 
 namespace fairlanes::widgets {
 
-AccountBattleView::AccountBattleView(AccountCtx &ctx) : ctx_(ctx) {
+AccountBattleView::AccountBattleView(AccountCtx ctx) : ctx_(ctx) {
   auto view = ctx_.reg_->view<fairlanes::ecs::components::SelectedAccount>();
   auto entity = *view.begin();
   (void)entity;
@@ -23,4 +23,12 @@ AccountBattleView::AccountBattleView(AccountCtx &ctx) : ctx_(ctx) {
 
   body_ = row;
 }
+
+ftxui::Element AccountBattleView::Render() {
+  if (!body_) {
+    return ftxui::text("AccountBattleView: no body");
+  }
+  return body_->Render();
+}
+
 } // namespace fairlanes::widgets
