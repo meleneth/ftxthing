@@ -17,7 +17,7 @@ struct Encounter {
   entt::entity random_alive_enemy();
   entt::entity random_alive_player();
 
-  Encounter(fairlanes::context::EncounterCtx &context);
+  Encounter(fairlanes::context::EncounterCtx context);
   void finalize(entt::registry &reg, entt::entity self) const;
 };
 

@@ -11,7 +11,7 @@ struct AppCtx;
 namespace fairlanes::ecs::components {
 
 struct PartyMember {
-  fairlanes::ecs::Entity party_{entt::null};
+  fairlanes::ecs::Entity party_;
 
   PartyMember(entt::entity party);
 };

@@ -10,14 +10,14 @@ namespace fairlanes::context {
 struct EncounterCtx {
   entt::registry *reg_{};
   fairlanes::widgets::FancyLog *log_;
+  fairlanes::RandomHub *rng_;
   entt::entity self_{};
-  entt::entity party_{};
 
   EncounterCtx() = default;
 
   EncounterCtx(entt::registry *r, fairlanes::widgets::FancyLog *log,
-               entt::entity self, entt::entity party)
-      : reg_(r), log_(log), self_(self), party_(party) {}
+               fairlanes::RandomHub *rng, entt::entity self)
+      : reg_(r), log_(log), rng_(rng), self_(self) {}
 
   /* MARK_CLASS_MOVEONLY(EncounterCtx); */
 };

@@ -6,7 +6,6 @@
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
 
-
 namespace fairlanes::concepts {
 using fairlanes::fsm::PartyLoopCtx;
 
@@ -33,7 +32,8 @@ void EncounterBuilder::thump_it_out(PartyLoopCtx &ctx) {
   field_mouse(e);
 
   // Attach / ensure an Encounter on the party and add the enemy
-  auto &enc = ctx.reg_->emplace<Encounter>(ctx.party_, ctx); // <- ctx.reg_->
+  auto &enc = ctx.reg_->emplace<Encounter>(ctx.party_,
+                                           ctx.encounter_context(ctx.party_));
   enc.enemies_.push_back(e);
 }
 

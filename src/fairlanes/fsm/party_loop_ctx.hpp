@@ -4,6 +4,7 @@
 #include <entt/entt.hpp>
 #include <spdlog/spdlog.h>
 
+#include "fairlanes/context/encounter_ctx.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
 #include "systems/random_hub.hpp"
 
@@ -20,6 +21,10 @@ struct PartyLoopCtx {
 
   fairlanes::context::EntityCtx entity_context(entt::entity e) {
     return fairlanes::context::EntityCtx{reg_, log_, rng_, e};
+  }
+
+  fairlanes::context::EncounterCtx encounter_context(entt::entity e) {
+    return fairlanes::context::EncounterCtx{reg_, log_, rng_, e};
   }
 };
 

@@ -37,7 +37,7 @@ entt::entity GrandCentral::create_account(std::string name) {
   auto e = ctx_.reg_->create();
   using fairlanes::ecs::components::IsAccount;
 
-  ctx_.reg_->emplace<IsAccount>(e, ctx_, e, std::move(name));
+  ctx_.reg_->emplace<IsAccount>(e, ctx_.account_context(e), std::move(name));
   account_ids.push_back(e);
   if (selected_account_ == entt::null) {
     selected_account_ = e;
@@ -70,7 +70,9 @@ entt::entity GrandCentral::create_party_in_account(std::string name,
   emplace<PartyBusiness>(e, ctx_, "idle");
   auto &business = ctx_.reg_->get<PartyBusiness>(e);
   (void)business;
-  emplace<IsParty>(e, ctx_, e, std::move(name), account);
+  auto account_ctx = ctx_.account_context(account);
+  auto party_loop_ctx = account_ctx.party_loop_context(e);
+  emplace<IsParty>(e, party_loop_ctx, e, std::move(name), account);
 
   return e;
 }
@@ -109,7 +111,7 @@ void GrandCentral::create_initial_accounts() {
       if (selected_party_ == entt::null) {
         selected_party_ = party;
         set_unique_tag<fairlanes::ecs::components::SelectedParty>(
-            ctx_.reg_, selected_party_);
+            ctx_.reg_, selected_party_, ctx_);
       }
       // Log the join (and optionally account/party creation)
       is_account.ctx_.log_.get()->append_markup(fmt::format(
@@ -132,7 +134,7 @@ void GrandCentral::create_initial_accounts() {
   }
   ctx_.log_.get()->append_markup(
       "[name](Snail) uses [ability](Slime Blast) [bravo](🔥)");
-  fairlanes::ecs::components::install_encounter_hooks(ctx_.reg_);
+  fairlanes::ecs::components::install_encounter_hooks(*ctx_.reg_);
   root_component()->change_body_component(ctx_, selected_party_);
 }
 

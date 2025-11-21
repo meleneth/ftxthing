@@ -18,14 +18,11 @@ namespace fairlanes::ecs::components {
 using fairlanes::widgets::FancyLog;
 // Marks an entity as an Account
 struct IsAccount {
-  entt::entity self_;
-
   std::string account_name_;
   std::vector<entt::entity> parties_;
   fairlanes::context::AccountCtx ctx_;
 
-  IsAccount(fairlanes::context::AccountCtx context, entt::entity self,
-            std::string name);
+  IsAccount(fairlanes::context::AccountCtx context, std::string name);
 
   // Call `fn(entt::handle)` for each member of `party_e`
   template <typename IP = fairlanes::ecs::components::IsParty, typename Fn>

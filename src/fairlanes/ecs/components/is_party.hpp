@@ -25,7 +25,7 @@ struct IsParty : BE_REGISTRY(IsParty) {
   int level_ = 1;
   std::vector<entt::entity> party_members_;
 
-  IsParty(fairlanes::fsm::PartyLoopCtx &context, entt::entity party,
+  IsParty(fairlanes::fsm::PartyLoopCtx context, entt::entity party,
           std::string name, entt::entity account);
 
   void next();
@@ -35,10 +35,11 @@ struct IsParty : BE_REGISTRY(IsParty) {
   // Call `fn(entt::handle)` for each member of `party_e`
   template <typename PM = PartyMember, typename Fn>
   inline void for_each_member(Fn &&fn) {
-    auto view = ctx_.reg_->view<PM>();         // entities with PartyMember
-    for (auto e : view) {                      // iterate entities
-      if (view.get(e).party_ == ctx_.party_) { // match party
-        fn(entt::handle{ctx_.reg_, e});        // yield handle
+    auto view = ctx_.reg_->view<PM>(); // entities with PartyMember
+    for (auto e : view) {              // iterate entities
+      auto &pm = ctx_.reg_->get<PM>(e);
+      if (pm.party_ == ctx_.party_) {    // match party
+        fn(entt::handle{*ctx_.reg_, e}); // yield handle
       }
     }
   }

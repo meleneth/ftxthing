@@ -3,7 +3,7 @@
 #include <string>
 
 namespace fairlanes::context {
-class AppCtx;
+struct AppCtx;
 }
 
 namespace fairlanes::ecs::components {

@@ -2,7 +2,7 @@
 #include <entt/entt.hpp>
 
 namespace fairlanes::context {
-class AppCtx;
+struct AppCtx;
 }
 
 namespace fairlanes::ecs {

@@ -4,6 +4,7 @@
 
 #include "app/move_only.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
+#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::context {
@@ -22,6 +23,10 @@ struct AccountCtx {
 
   EntityCtx entity_context(entt::entity e) {
     return EntityCtx{reg_, log_.get(), rng_, e};
+  }
+
+  fairlanes::fsm::PartyLoopCtx party_loop_context(entt::entity e) {
+    return fairlanes::fsm::PartyLoopCtx{reg_, e, log_.get(), rng_};
   }
   /* MA RK_CLASS_MOVEONLY(AccountCtx); */
 };

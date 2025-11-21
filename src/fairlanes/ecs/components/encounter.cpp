@@ -12,7 +12,7 @@ std::vector<entt::entity> Encounter::players() {
   auto &reg = *ctx_.reg_;
   auto view = reg.view<PartyMember, Stats>();
   for (auto &&[entity, member, stats] : view.each()) {
-    if (member.party_ == ctx_.party_ && stats.hp_ > 0) {
+    if (member.party_ == ctx_.self_ && stats.hp_ > 0) {
       players_.push_back(entity);
     }
   }
@@ -26,7 +26,7 @@ entt::entity Encounter::random_alive_player() {
   return players_[0]; // TODO you're a bad man
 }
 
-Encounter::Encounter(fairlanes::context::EncounterCtx &ctx)
+Encounter::Encounter(fairlanes::context::EncounterCtx ctx)
     : ctx_(ctx) {
 
       };
