@@ -9,6 +9,7 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 
+#include "app/move_only.hpp"
 #include "systems/log.hpp"
 
 /// FancyLog: styled append-only log for FTXUI with lightweight markup.
@@ -32,8 +33,9 @@ public:
   FancyLog();
   explicit FancyLog(Options opt);
 
-  // ---- append --------------------------------------------------------------
-  // Parses "[tag](text)" markup; unknown tags become plain text.
+  /* MARK_CLASS_MOVEONLY(FancyLog); */
+  //  ---- append --------------------------------------------------------------
+  //  Parses "[tag](text)" markup; unknown tags become plain text.
   void append_markup(std::string_view utf8_line);
 
   // Adds plain text with optional decorators (folded left->right).

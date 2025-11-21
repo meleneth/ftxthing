@@ -19,7 +19,7 @@ using fairlanes::ecs::components::Stats;
 
 // ---- Specializations ----
 template <> struct ComponentBuilder<Stats> {
-  static Stats defaults() { return Stats{}; } // no designated inits
+  static Stats defaults() { return Stats{"some name"}; }
   static void apply(Stats &s, const json &j) {
     if (auto it = j.find("hp"); it != j.end())
       s.hp_ = it->get<int>();

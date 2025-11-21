@@ -1,13 +1,13 @@
 #include "fairlanes/ecs/fwd.hpp"
 #include <string>
 
-#include "app/app_context.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "party_business.hpp"
 
 namespace fairlanes::ecs::components {
-using fairlanes::AppContext;
+using fairlanes::context::AppCtx;
 
-PartyBusiness::PartyBusiness(AppContext &context, std::string initial)
+PartyBusiness::PartyBusiness(AppCtx &context, std::string initial)
     : doing(initial) {
   (void)context;
   // spdlog::debug("PartyBusiness ctor: registry={}, doing={}",

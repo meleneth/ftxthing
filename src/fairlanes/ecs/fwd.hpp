@@ -1,8 +1,8 @@
 #pragma once
 #include <entt/entt.hpp>
 
-namespace fairlanes {
-class AppContext;
+namespace fairlanes::context {
+struct AppCtx;
 }
 
 namespace fairlanes::ecs {

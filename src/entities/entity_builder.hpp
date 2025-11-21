@@ -12,7 +12,7 @@ public:
   explicit EntityBuilder(entt::registry &r) : reg_(r) { e_ = reg_.create(); }
 
   template <typename C> EntityBuilder &with(C c) {
-    reg_.emplace_or_replace<C>(e_, std::move(c));
+    reg_.emplace_or_replace<C>(e_, c);
     return *this;
   }
 

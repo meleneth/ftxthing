@@ -114,4 +114,4 @@ please generate the documentation and refer to fairlanes::ecs::components
 
 We currently have a god object, GrandCentral. Nothing else is allowed to know about GrandCentral, it's just the owner for all the things.
 
-AppContext has log*, registry*, and rng\_.
+AppCtx has log*, registry*, and rng\_.

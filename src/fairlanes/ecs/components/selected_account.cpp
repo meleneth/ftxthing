@@ -1,11 +1,10 @@
 #include "selected_account.hpp"
-#include "app/app_context.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::ecs::components {
 
-SelectedAccount::SelectedAccount(fairlanes::AppContext &context) {
-  (void)context;
+SelectedAccount::SelectedAccount() {
   // spdlog::debug("SelectedAccount ctor: registry={}",
   // fmt::ptr(&context.registry()));
 }

@@ -4,6 +4,8 @@
 #include <entt/entt.hpp>
 #include <spdlog/spdlog.h>
 
+#include "fairlanes/context/encounter_ctx.hpp"
+#include "fairlanes/context/entity_ctx.hpp"
 #include "systems/random_hub.hpp"
 
 namespace fairlanes::widgets {
@@ -12,10 +14,18 @@ class FancyLog;
 namespace fairlanes::fsm {
 
 struct PartyLoopCtx {
-  entt::registry *reg_{nullptr};
-  entt::entity party_{entt::null};
-  std::shared_ptr<fairlanes::widgets::FancyLog> log_;
-  RandomHub &rng;
+  entt::registry *reg_;
+  entt::entity party_;
+  fairlanes::widgets::FancyLog *log_;
+  fairlanes::RandomHub *rng_;
+
+  fairlanes::context::EntityCtx entity_context(entt::entity e) {
+    return fairlanes::context::EntityCtx{reg_, log_, rng_, e};
+  }
+
+  fairlanes::context::EncounterCtx encounter_context(entt::entity e) {
+    return fairlanes::context::EncounterCtx{reg_, log_, rng_, e};
+  }
 };
 
 } // namespace fairlanes::fsm

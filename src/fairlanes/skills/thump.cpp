@@ -5,6 +5,7 @@
 #include "fairlanes/concepts/damage.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
+#include "fairlanes/systems/take_damage.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "thump.hpp"
 
@@ -96,7 +97,9 @@ int Thump::thump(PartyLoopCtx &ctx, entt::entity attacker,
   ctx.log_->append_markup(fmt::format("{} thumped {} for [error]({}) damage",
                                       ctx.log_->name_tag_for(attacker_h),
                                       ctx.log_->name_tag_for(defender_h), dmg));
-  dst.take_damage(ctx, attacker, defender, {.physical = dmg});
+
+  fairlanes::systems::TakeDamage::commit(attacker, ctx.entity_context(defender),
+                                         {.physical = dmg});
 
   return dmg;
 }

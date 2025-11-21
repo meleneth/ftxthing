@@ -5,6 +5,7 @@
 
 #include "fairlanes/concepts/encounter_builder.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
+#include "fairlanes/ecs/components/track_xp.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/systems/grant_xp_to_party.hpp"
 

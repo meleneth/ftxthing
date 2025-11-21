@@ -1,4 +1,4 @@
-#include "party_loop.hpp"
+#include <tracy/Tracy.hpp>
 
 #include "fairlanes/concepts/encounter_builder.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
@@ -9,7 +9,9 @@
 #include "fairlanes/systems/grant_xp_to_party.hpp"
 #include "fairlanes/systems/replenish_party.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
+#include "party_loop.hpp"
 #include <spdlog/spdlog.h>
+
 
 namespace fairlanes::fsm {
 void PartyLoop::enter_idle(PartyLoopCtx &ctx) {
@@ -19,7 +21,7 @@ void PartyLoop::enter_idle(PartyLoopCtx &ctx) {
 
 void PartyLoop::enter_farming(PartyLoopCtx &ctx) {
   // Also set the label for the party tied to this FSM (nice for local UI)
-
+  ZoneScoped;
   using fairlanes::concepts::EncounterBuilder;
   using fairlanes::ecs::components::Encounter;
   EncounterBuilder::thump_it_out(ctx);
@@ -43,12 +45,12 @@ void PartyLoop::combat_tick(PartyLoopCtx &ctx) {
   using fairlanes::ecs::components::Encounter;
   using fairlanes::ecs::components::Stats;
   auto &encounter = ctx.reg_->get<Encounter>(ctx.party_);
-  for (auto player : encounter.players(ctx)) {
-    auto defender = encounter.random_alive_enemy(ctx);
+  for (auto player : encounter.players()) {
+    auto defender = encounter.random_alive_enemy();
     in_the_night.thump(ctx, player, defender);
   }
   for (auto enemy : encounter.enemies_) {
-    auto defender = encounter.random_alive_player(ctx);
+    auto defender = encounter.random_alive_player();
     in_the_night.thump(ctx, enemy, defender);
   }
 };

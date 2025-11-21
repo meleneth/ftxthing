@@ -2,9 +2,9 @@
 #include <memory>
 #include <string>
 
-namespace fairlanes {
-class AppContext;
-} // namespace fairlanes
+namespace fairlanes::context {
+struct AppCtx;
+} // namespace fairlanes::context
 namespace fairlanes::widgets {
 class FancyLog;
 }
@@ -17,7 +17,7 @@ namespace fairlanes::ecs::components {
 using fairlanes::widgets::FancyLog;
 // Marks an entity as an Account
 struct SelectedCharacter {
-  SelectedCharacter(fairlanes::AppContext &context);
+  SelectedCharacter(fairlanes::context::AppCtx &context);
 };
 
 } // namespace fairlanes::ecs::components

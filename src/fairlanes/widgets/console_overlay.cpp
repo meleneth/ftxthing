@@ -11,8 +11,7 @@
 
 using namespace fairlanes::widgets;
 
-ConsoleOverlay::ConsoleOverlay(std::shared_ptr<FancyLog> console)
-    : console_(console) {
+ConsoleOverlay::ConsoleOverlay(FancyLog *console) : console_(console) {
   input_ = ftxui::Input(&line_);
   Add(input_);
 }
@@ -50,9 +49,7 @@ void ConsoleOverlay::tick() {
 // Simple fake command hook
 std::function<void(std::string_view)> on_command = [](std::string_view) {};
 
-void ConsoleOverlay::change_console(std::shared_ptr<FancyLog> console) {
-  console_ = console;
-}
+void ConsoleOverlay::change_console(FancyLog *console) { console_ = console; }
 
 bool ConsoleOverlay::OnEvent(ftxui::Event e) {
   if (!open_) {
