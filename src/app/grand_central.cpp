@@ -72,15 +72,17 @@ entt::entity GrandCentral::create_party_in_account(std::string name,
   (void)business;
   auto account_ctx = ctx_.account_context(account);
   auto party_loop_ctx = account_ctx.party_loop_context(e);
-  emplace<IsParty>(e, party_loop_ctx, e, std::move(name), account);
+  emplace<IsParty>(e, party_loop_ctx, e, move(name), account);
 
   return e;
 }
 
 GrandCentral::GrandCentral(const AppConfig &cfg)
-    : root_component_(ftxui::Make<RootComponent>(ctx_)),
-      seed_(cfg.seed.value_or(static_cast<uint64_t>(std::random_device{}()))),
-      random_(seed_, cfg.stream) {
+    : seed_(cfg.seed.value_or(static_cast<uint64_t>(std::random_device{}()))),
+      random_(seed_, cfg.stream), ctx_{&reg_, &random_},
+      root_component_(ftxui::Make<RootComponent>(ctx_))
+
+{
   using namespace ftxui;
   ZoneScopedN("Startup");
 
@@ -120,9 +122,10 @@ void GrandCentral::create_initial_accounts() {
 
         const auto member_name =
             fmt::format("Player{}.{}.{}", i, party_no, party_member_no);
-
+        auto &is_party =
+            ctx_.reg_->get<fairlanes::ecs::components::IsParty>(party);
         // Create a single member in that party
-        auto character = create_member_in_party(member_name, party);
+        auto character = is_party.create_member(member_name);
         if (selected_character_ == entt::null) {
           selected_character_ = character;
           set_unique_tag<fairlanes::ecs::components::SelectedCharacter>(

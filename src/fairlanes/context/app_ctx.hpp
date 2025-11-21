@@ -15,8 +15,6 @@ struct AppCtx {
   fairlanes::RandomHub *rng_;
   std::shared_ptr<FancyLog> log_;
 
-  AppCtx() = default;
-
   AppCtx(entt::registry *reg, RandomHub *rng)
       : reg_(reg), rng_{rng}, log_(std::make_shared<FancyLog>()) {}
 

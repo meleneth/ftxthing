@@ -2,7 +2,7 @@
 
 void Animator::Add(Animation anim) {
   std::lock_guard lock(mutex);
-  animations.push_back(std::move(anim));
+  animations.push_back(anim);
 }
 
 void Animator::Update(std::chrono::milliseconds dt) {

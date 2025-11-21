@@ -17,14 +17,12 @@ using fairlanes::widgets::FancyLog;
 using fairlanes::widgets::RootComponent;
 class GrandCentral {
 public:
-  fairlanes::context::AppCtx ctx_;
-
   GrandCentral(const AppConfig &cfg);
   void main_loop();
   entt::entity create_account(std::string name);
   entt::entity create_party_in_account(std::string name, entt::entity account);
-  entt::entity create_member_in_party(std::string name, entt::entity party);
-
+  // entt::entity create_member_in_party(std::string name, entt::entity party);
+  // removed for IsParty#create_member
   void switch_account(std::size_t idx);
   void create_initial_accounts();
 
@@ -51,7 +49,6 @@ public:
 
 private:
   std::size_t active_idx_ = 0;
-  ftxui::Component root_component_;
   std::vector<entt::entity> account_ids;
   entt::entity selected_account_{entt::null};
   entt::entity selected_party_{entt::null};
@@ -59,5 +56,11 @@ private:
   entt::registry reg_;
   uint64_t seed_;
   RandomHub random_;
+
+public:
+  fairlanes::context::AppCtx ctx_;
+
+private:
+  ftxui::Component root_component_;
 };
 } // namespace fairlanes

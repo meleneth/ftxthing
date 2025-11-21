@@ -14,7 +14,7 @@ using fairlanes::fsm::PartyLoop;
 IsParty::IsParty(fairlanes::fsm::PartyLoopCtx context, entt::entity party,
                  std::string name, entt::entity account)
     : ctx_{context}, sm_{PartyLoop{}, ctx_}, account_{account}, self_(party),
-      name_{std::move(name)} {}
+      name_{name} {}
 
 void IsParty::next() { sm_.process_event(NextEvent{}); }
 
