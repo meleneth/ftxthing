@@ -5,6 +5,7 @@
 
 #include "app/app_config.hpp"
 #include "app/app_context.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 
 #include "systems/random_hub.hpp"
 
@@ -50,5 +51,6 @@ private:
   uint64_t seed_;
   std::shared_ptr<RandomHub> random_;
   AppContext app_context_;
+  fairlanes::context::AppCtx ctx_;
 };
 } // namespace fairlanes

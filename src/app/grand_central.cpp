@@ -8,6 +8,7 @@
 
 #include "app/app_context.hpp"
 #include "entities/entities.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/ecs/components/is_account.hpp"
 #include "fairlanes/ecs/components/is_party.hpp"
@@ -36,7 +37,7 @@ entt::entity GrandCentral::create_account(AppContext &ctx, std::string name) {
   auto e = reg_.create();
   using fairlanes::ecs::components::IsAccount;
 
-  reg_.emplace<IsAccount>(e, ctx, std::move(name));
+  reg_.emplace<IsAccount>(e, ctx, std::move(name), e);
   account_ids.push_back(e);
   if (selected_account_ == entt::null) {
     selected_account_ = e;
@@ -53,7 +54,6 @@ void GrandCentral::switch_account(std::size_t idx) {
  */
   console_ = is_account.log_;
   root_component()->change_body_component(app_context(), selected_party_);
-
   root_component()->change_console(console_);
 }
 
@@ -82,7 +82,6 @@ entt::entity GrandCentral::create_member_in_party(AppContext &ctx,
   reg_.emplace<fairlanes::ecs::components::PartyMember>(e, ctx, name, party);
   reg_.emplace<fairlanes::ecs::components::TrackXP>(e, ctx, 0);
   reg_.emplace<fairlanes::ecs::components::Stats>(e, ctx, name);
-  (void)name;
   return e;
 }
 
@@ -91,7 +90,8 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
       root_component_(Make<RootComponent>(console_)),
       seed_(cfg.seed.value_or(static_cast<uint64_t>(std::random_device{}()))),
       random_(std::make_shared<RandomHub>(seed_, cfg.stream)),
-      app_context_(AppContext{console_, reg_, *random_}) {
+      app_context_(AppContext{console_, reg_, *random_}),
+      ctx_(fairlanes::context::AppCtx{reg_, *random_}) {
   using namespace ftxui;
   ZoneScopedN("Startup");
 
