@@ -3,14 +3,15 @@
 #include <ranges>
 #include <string>
 
+#include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/fwd.hpp"
 
 namespace fairlanes::ecs::components {
 
 struct PartyMember {
-  fairlanes::ecs::Entity party_{entt::null};
+  fairlanes::ecs::Entity party_;
 
-  PartyMember(fairlanes::AppContext &context, std::string /*name*/,
+  PartyMember(fairlanes::context::EntityCtx ctx, std::string /*name*/,
               entt::entity party);
 };
 

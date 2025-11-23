@@ -79,8 +79,10 @@ entt::entity GrandCentral::create_party_in_account(AppContext &ctx,
 entt::entity GrandCentral::create_member_in_party(AppContext &ctx,
                                                   std::string name,
                                                   entt::entity party) {
+  auto &p = reg_.get<fairlanes::ecs::components::IsParty>(party);
   auto e = reg_.create();
-  reg_.emplace<fairlanes::ecs::components::PartyMember>(e, ctx, name, party);
+  reg_.emplace<fairlanes::ecs::components::PartyMember>(
+      e, p.ctx2_.entity_context(e), name, party);
   reg_.emplace<fairlanes::ecs::components::TrackXP>(e, ctx, 0);
   reg_.emplace<fairlanes::ecs::components::Stats>(e, ctx, name);
   return e;

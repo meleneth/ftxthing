@@ -8,8 +8,8 @@
 
 namespace fairlanes::ecs::components {
 
-PartyMember::PartyMember(fairlanes::AppContext &context, std::string name,
-                         entt::entity party)
+PartyMember::PartyMember(fairlanes::context::EntityCtx context,
+                         std::string name, entt::entity party)
     : party_(party) {
   (void)context;
   (void)name;
