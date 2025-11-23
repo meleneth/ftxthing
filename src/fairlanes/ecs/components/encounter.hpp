@@ -11,7 +11,7 @@ struct Encounter {
 
   entt::entity party_{entt::null};    // the single party in this encounter
   std::vector<entt::entity> enemies_; // enemy entities participating
-  std::shared_ptr<fairlanes::FancyLog> log_;
+  std::shared_ptr<fairlanes::widgets::FancyLog> log_;
 
   std::vector<entt::entity> players(PartyLoopCtx &ctx_);
   entt::entity random_alive_enemy(PartyLoopCtx &ctx_);

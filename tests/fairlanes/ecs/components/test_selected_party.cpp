@@ -25,9 +25,8 @@ TEST_CASE("SelectedParty", "[entity][builder]") {
     auto &reg = gc.registry();
     gc.create_initial_accounts();
     auto view = reg.view<SelectedParty>();
-    REQUIRE(view.size() ==
-            1); // integration contract: exactly one selected party
-    auto party = *view.begin(); // the entity that has SelectedParty
+    REQUIRE(view.size() == 1);
+    auto party = *view.begin();
     auto &selected_party = reg.get<SelectedParty>(party);
 
     selected_party.for_each_party_member(
