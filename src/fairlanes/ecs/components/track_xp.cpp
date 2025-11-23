@@ -1,10 +1,9 @@
 #include <fmt/core.h>
 
-#include "app/app_context.hpp"
+#include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "track_xp.hpp"
-
 
 using fairlanes::ecs::components::TrackXP;
 
@@ -17,9 +16,9 @@ int TrackXP::xp_for_level(int level_calc) {
   return BASE_XP_VALUE * (level_calc * (level_calc + 1)) / 2;
 }
 
-TrackXP::TrackXP(AppContext &context, int starting_xp)
+TrackXP::TrackXP(fairlanes::context::EntityCtx ctx, int starting_xp)
     : xp_(starting_xp), next_level_at(xp_for_level(level_ + 1)),
-      log_(context.log()) {}
+      ctx_(std::move(ctx)) {}
 
 void TrackXP::add_xp(entt::handle self, int amount) {
   xp_ += amount;
@@ -28,7 +27,7 @@ void TrackXP::add_xp(entt::handle self, int amount) {
     ++level_;
     next_level_at = xp_for_level(level_ + 1);
     if (auto info = self.try_get<Stats>()) {
-      log_->append_markup(fmt::format(
+      ctx_.log_.append_markup(fmt::format(
           "[name]({}) Level up! level=[level]({}) in next=[xp]({}) XP",
           info->name_, level_, next_level_at));
     } // spdlog::debug("Level up! level={} next={}", level, next_level_at);

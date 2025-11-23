@@ -51,6 +51,8 @@ private:
   uint64_t seed_;
   std::shared_ptr<RandomHub> random_;
   AppContext app_context_;
+
+public:
   fairlanes::context::AppCtx ctx_;
 };
 } // namespace fairlanes

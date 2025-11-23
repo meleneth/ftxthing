@@ -11,9 +11,11 @@ TEST_CASE("TrackXP basic leveling", "[ecs][xp]") {
   fairlanes::AppConfig app_config;
   fairlanes::GrandCentral gc{app_config};
 
-  auto e = gc.registry().create();
-  auto &xp = gc.registry().emplace<TrackXP>(e, gc.app_context(), 0);
-  entt::handle handle{gc.registry(), e};
+  auto entity = gc.registry().create();
+  auto account = gc.registry().create();
+  auto &xp = gc.registry().emplace<TrackXP>(
+      entity, gc.ctx_.account_context(account).entity_context(entity), 0);
+  entt::handle handle{gc.registry(), entity};
 
   SECTION("Starts at level 1 with 0 xp") {
     REQUIRE(xp.level_ == 1);
