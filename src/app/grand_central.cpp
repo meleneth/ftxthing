@@ -70,7 +70,8 @@ entt::entity GrandCentral::create_party_in_account(AppContext &ctx,
   reg_.emplace<PartyBusiness>(e, ctx, "idle");
   auto &business = reg_.get<PartyBusiness>(e);
   (void)business;
-  reg_.emplace<IsParty>(e, ctx, e, std::move(name), account);
+  reg_.emplace<IsParty>(e, ctx, e, std::move(name), account,
+                        ctx_.entity_context(e));
 
   return e;
 }

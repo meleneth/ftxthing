@@ -2,6 +2,7 @@
 #include <boost/sml.hpp>
 #include <string>
 
+#include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/fwd.hpp"
 #include "fairlanes/fsm/party_loop.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
@@ -21,9 +22,10 @@ struct IsParty {
   std::string name_;
   int level_ = 1;
   std::vector<entt::entity> party_members_;
+  fairlanes::context::EntityCtx ctx2_;
 
   IsParty(AppContext &context, entt::entity party, std::string name,
-          entt::entity account);
+          entt::entity account, fairlanes::context::EntityCtx ctx2);
 
   void next();
   bool needs_town();
