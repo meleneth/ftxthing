@@ -21,7 +21,6 @@ using fairlanes::widgets::FancyLog;
 // Marks an entity as an Account
 struct IsAccount {
   std::string account_name_;
-  std::shared_ptr<fairlanes::widgets::FancyLog> log_;
   std::vector<entt::entity> parties_;
   fairlanes::context::AccountCtx ctx_;
 

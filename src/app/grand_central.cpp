@@ -52,9 +52,9 @@ void GrandCentral::switch_account(std::size_t idx) {
   /* spdlog::debug("console_ was {} and becomes {}", fmt::ptr(console_),
                  fmt::ptr(is_account.log_));
  */
-  console_ = is_account.log_;
+  selected_console_ = is_account.ctx_.log_.get();
   root_component()->change_body_component(ctx_, selected_party_);
-  root_component()->change_console(console_);
+  root_component()->change_console(selected_console_);
 }
 
 entt::entity GrandCentral::create_party_in_account(std::string name,
@@ -92,8 +92,8 @@ entt::entity GrandCentral::create_member_in_party(std::string name,
 }
 
 GrandCentral::GrandCentral(const AppConfig &cfg)
-    : console_(std::make_shared<FancyLog>()),
-      root_component_(Make<RootComponent>(console_)),
+    : console_(std::make_unique<FancyLog>()), selected_console_(console_.get()),
+      root_component_(Make<RootComponent>(console_.get())),
       seed_(cfg.seed.value_or(static_cast<uint64_t>(std::random_device{}()))),
       random_(std::make_shared<RandomHub>(seed_, cfg.stream)),
       ctx_(fairlanes::context::AppCtx{reg_, *random_}) {
@@ -130,7 +130,7 @@ void GrandCentral::create_initial_accounts() {
             reg_, selected_party_);
       }
       // Log the join (and optionally account/party creation)
-      is_account.log_->append_markup(fmt::format(
+      is_account.ctx_.log_->append_markup(fmt::format(
           "Created [info]({}) with [emphasis]({}).", acc_name, party_name));
       for (int party_member_no = 1; party_member_no <= 5; ++party_member_no) {
 

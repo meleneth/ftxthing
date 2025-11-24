@@ -7,9 +7,8 @@ namespace fairlanes::ecs::components {
 
 IsAccount::IsAccount(fairlanes::context::AppCtx &context, std::string name,
                      entt::entity account)
-    : account_name_(name), log_(std::make_shared<FancyLog>()),
-      ctx_(
-          fairlanes::context::AccountCtx{context.reg_, context.rng_, account}) {
+    : account_name_(name), ctx_(fairlanes::context::AccountCtx{
+                               context.reg_, context.rng_, account}) {
   (void)context;
   // spdlog::debug("IsAccount ctor: registry={}",
   // fmt::ptr(&context.registry()));

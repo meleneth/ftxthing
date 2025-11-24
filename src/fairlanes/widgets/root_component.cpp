@@ -31,8 +31,7 @@ void RootComponent::change_body_component(fairlanes::context::AppCtx &ctx,
   body_ = row;
 }
 
-RootComponent::RootComponent(std::shared_ptr<FancyLog> console)
-    : console_(std::move(console)) {
+RootComponent::RootComponent(FancyLog *console) : console_(std::move(console)) {
   using namespace ftxui;
   header_ = Renderer([this] { return console_->Render() | border; });
   body_ = Make<BodyComponent>();
@@ -86,8 +85,7 @@ ftxui::Element RootComponent::Render() {
   return content;
 }
 
-void RootComponent::change_console(
-    std::shared_ptr<fairlanes::widgets::FancyLog> console) {
+void RootComponent::change_console(fairlanes::widgets::FancyLog *console) {
   console_ = console;
   console_overlay()->change_console(console);
 }

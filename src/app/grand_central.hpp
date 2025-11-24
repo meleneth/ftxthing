@@ -37,7 +37,8 @@ public:
 private:
   entt::registry reg_;
   std::size_t active_idx_ = 0;
-  std::shared_ptr<FancyLog> console_;
+  std::unique_ptr<fairlanes::widgets::FancyLog> console_;
+  fairlanes::widgets::FancyLog *selected_console_;
   ftxui::Component root_component_;
   std::vector<entt::entity> account_ids;
   entt::entity selected_account_{entt::null};
