@@ -4,10 +4,6 @@
 namespace fairlanes::widgets {
 class FancyLog;
 }
-namespace fairlanes {
-class AppContext;
-} // namespace fairlanes
-
 namespace fairlanes::fsm {
 class PartyLoopCtx;
 }

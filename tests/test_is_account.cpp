@@ -14,7 +14,7 @@ TEST_CASE("IsAccount basic usage", "[ecs][account]") {
     fairlanes::GrandCentral gc{app_config};
     auto e = gc.registry().create();
 
-    gc.registry().emplace<IsAccount>(e, gc.app_context(), "Acme", e);
+    gc.registry().emplace<IsAccount>(e, gc.ctx_, "Acme", e);
     auto &acct = gc.registry().get<IsAccount>(e);
     REQUIRE(acct.account_name_ == "Acme");
   }
@@ -23,7 +23,7 @@ TEST_CASE("IsAccount basic usage", "[ecs][account]") {
     fairlanes::AppConfig app_config;
     fairlanes::GrandCentral gc{app_config};
     auto e = gc.registry().create();
-    gc.registry().emplace<IsAccount>(e, gc.app_context(), "some value", e);
+    gc.registry().emplace<IsAccount>(e, gc.ctx_, "some value", e);
 
     auto &acct = gc.registry().get<IsAccount>(e);
     acct.account_name_ = "Umbrella";

@@ -2,7 +2,6 @@
 #include <entt/entt.hpp>
 #include <vector>
 
-#include "app/app_context.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
 
 namespace fairlanes::ecs::components {

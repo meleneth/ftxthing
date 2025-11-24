@@ -4,7 +4,6 @@
 #include <ftxui/component/event.hpp>
 
 #include "app/app_config.hpp"
-#include "app/app_context.hpp"
 #include "fairlanes/context/app_ctx.hpp"
 
 #include "systems/random_hub.hpp"
@@ -20,16 +19,12 @@ class GrandCentral {
 public:
   GrandCentral(const AppConfig &cfg);
   void main_loop();
-  entt::entity create_account(AppContext &ctx, std::string name);
-  entt::entity create_party_in_account(AppContext &ctx, std::string name,
-                                       entt::entity account);
-  entt::entity create_member_in_party(AppContext &ctx, std::string name,
-                                      entt::entity party);
+  entt::entity create_account(std::string name);
+  entt::entity create_party_in_account(std::string name, entt::entity account);
+  entt::entity create_member_in_party(std::string name, entt::entity party);
 
   void switch_account(std::size_t idx);
   void create_initial_accounts();
-
-  AppContext &app_context();
 
   // Map F1..F8 → accounts[0..7]
   bool handle_event(const ftxui::Event &e);
@@ -50,7 +45,6 @@ private:
   entt::entity selected_character_{entt::null};
   uint64_t seed_;
   std::shared_ptr<RandomHub> random_;
-  AppContext app_context_;
 
 public:
   fairlanes::context::AppCtx ctx_;

@@ -6,7 +6,6 @@
 
 #include <tracy/Tracy.hpp>
 
-#include "app/app_context.hpp"
 #include "entities/entities.hpp"
 #include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
@@ -34,11 +33,11 @@
 
 using namespace fairlanes;
 
-entt::entity GrandCentral::create_account(AppContext &ctx, std::string name) {
+entt::entity GrandCentral::create_account(std::string name) {
   auto e = reg_.create();
   using fairlanes::ecs::components::IsAccount;
 
-  reg_.emplace<IsAccount>(e, ctx, std::move(name), e);
+  reg_.emplace<IsAccount>(e, ctx_, std::move(name), e);
   account_ids.push_back(e);
   if (selected_account_ == entt::null) {
     selected_account_ = e;
@@ -54,13 +53,15 @@ void GrandCentral::switch_account(std::size_t idx) {
                  fmt::ptr(is_account.log_));
  */
   console_ = is_account.log_;
-  root_component()->change_body_component(app_context(), selected_party_);
+  root_component()->change_body_component(ctx_, selected_party_);
   root_component()->change_console(console_);
 }
 
-entt::entity GrandCentral::create_party_in_account(AppContext &ctx,
-                                                   std::string name,
+entt::entity GrandCentral::create_party_in_account(std::string name,
                                                    entt::entity account) {
+  auto &account_component =
+      reg_.get<fairlanes::ecs::components::IsAccount>(account);
+
   auto e = reg_.create();
   using IsParty = fairlanes::ecs::components::IsParty;
   using PartyBusiness = fairlanes::ecs::components::PartyBusiness;
@@ -68,18 +69,18 @@ entt::entity GrandCentral::create_party_in_account(AppContext &ctx,
   // spdlog::debug("create: reg={}, party={}", fmt::ptr(&reg_),
   // (uint32_t)entt::to_integral(e));
 
-  reg_.emplace<PartyBusiness>(e, ctx, "idle");
+  reg_.emplace<PartyBusiness>(e, "idle");
   auto &business = reg_.get<PartyBusiness>(e);
   (void)business;
-  reg_.emplace<IsParty>(e, ctx_.entity_context(e), std::move(name), account);
+  reg_.emplace<IsParty>(e, account_component.ctx_.entity_context(e),
+                        std::move(name), account);
 
   return e;
 }
 
-entt::entity GrandCentral::create_member_in_party(AppContext &ctx,
-                                                  std::string name,
+entt::entity GrandCentral::create_member_in_party(std::string name,
                                                   entt::entity party) {
-  (void)ctx;
+
   auto &p = reg_.get<fairlanes::ecs::components::IsParty>(party);
   auto e = reg_.create();
   reg_.emplace<fairlanes::ecs::components::PartyMember>(
@@ -95,7 +96,6 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
       root_component_(Make<RootComponent>(console_)),
       seed_(cfg.seed.value_or(static_cast<uint64_t>(std::random_device{}()))),
       random_(std::make_shared<RandomHub>(seed_, cfg.stream)),
-      app_context_(AppContext{console_, reg_, *random_}),
       ctx_(fairlanes::context::AppCtx{reg_, *random_}) {
   using namespace ftxui;
   ZoneScopedN("Startup");
@@ -110,27 +110,24 @@ void GrandCentral::create_initial_accounts() {
     const auto acc_name = fmt::format("Account {}", i);
 
     // Create account i
-    auto account = create_account(app_context(), acc_name);
+    auto account = create_account(acc_name);
     if (selected_account_ == entt::null) {
       selected_account_ = account;
-      set_unique_tag<fairlanes::ecs::components::SelectedAccount>(
-          app_context().registry_, account, app_context_);
+      set_unique_tag<fairlanes::ecs::components::SelectedAccount>(reg_, account,
+                                                                  ctx_);
     }
-    auto &reg = app_context().registry();
-    auto &is_account = reg.get<fairlanes::ecs::components::IsAccount>(account);
-    auto account_specific_app_context =
-        AppContext{is_account.log_, reg, app_context().rng()};
+    auto &is_account =
+        ctx_.reg_.get<fairlanes::ecs::components::IsAccount>(account);
 
     for (int party_no = 1; party_no <= 5; ++party_no) {
       const auto party_name = fmt::format("Party {}.{}", i, party_no);
 
       // Create party i in account i
-      auto party = create_party_in_account(account_specific_app_context,
-                                           party_name, account);
+      auto party = create_party_in_account(party_name, account);
       if (selected_party_ == entt::null) {
         selected_party_ = party;
         set_unique_tag<fairlanes::ecs::components::SelectedParty>(
-            app_context().registry_, selected_party_, app_context_);
+            reg_, selected_party_);
       }
       // Log the join (and optionally account/party creation)
       is_account.log_->append_markup(fmt::format(
@@ -141,12 +138,11 @@ void GrandCentral::create_initial_accounts() {
             fmt::format("Player{}.{}.{}", i, party_no, party_member_no);
 
         // Create a single member in that party
-        auto character = create_member_in_party(account_specific_app_context,
-                                                member_name, party);
+        auto character = create_member_in_party(member_name, party);
         if (selected_character_ == entt::null) {
           selected_character_ = character;
           set_unique_tag<fairlanes::ecs::components::SelectedCharacter>(
-              app_context().registry_, selected_character_);
+              reg_, selected_character_);
         }
         (void)character;
       }
@@ -155,10 +151,8 @@ void GrandCentral::create_initial_accounts() {
   console_->append_markup(
       "[name](Snail) uses [ability](Slime Blast) [bravo](🔥)");
   fairlanes::ecs::components::install_encounter_hooks(reg_);
-  root_component()->change_body_component(app_context(), selected_party_);
+  root_component()->change_body_component(ctx_, selected_party_);
 }
-
-AppContext &GrandCentral::app_context() { return app_context_; }
 
 inline void GrandCentral::tick_party_fsms(float dt) {
   (void)dt;

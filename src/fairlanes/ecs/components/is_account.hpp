@@ -7,15 +7,12 @@
 
 #include "fairlanes/context/account_ctx.hpp"
 
-namespace fairlanes {
-class AppContext;
-} // namespace fairlanes
+namespace fairlanes::context {
+struct AppCtx;
+} // namespace fairlanes::context
 
 namespace fairlanes::widgets {
 class FancyLog;
-}
-namespace fairlanes::fsm {
-struct PartyLoopCtx;
 }
 
 namespace fairlanes::ecs::components {
@@ -28,7 +25,7 @@ struct IsAccount {
   std::vector<entt::entity> parties_;
   fairlanes::context::AccountCtx ctx_;
 
-  IsAccount(fairlanes::AppContext &context, std::string name,
+  IsAccount(fairlanes::context::AppCtx &ctx, std::string name,
             entt::entity account);
 };
 

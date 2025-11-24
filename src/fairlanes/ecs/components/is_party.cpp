@@ -1,5 +1,4 @@
 #include "is_party.hpp"
-#include "app/app_context.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"

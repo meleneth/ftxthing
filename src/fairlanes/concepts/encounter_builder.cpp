@@ -1,5 +1,4 @@
 #include "encounter_builder.hpp"
-#include "app/app_context.hpp"
 #include "entities/entity_builder.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"

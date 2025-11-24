@@ -1,5 +1,4 @@
 #include "encounter.hpp"
-#include "app/app_context.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"

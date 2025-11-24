@@ -6,27 +6,26 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 
-#include "app/app_context.hpp"
 #include "body_component.hpp"
 #include "combatant.hpp"
 #include "console_overlay.hpp"
+#include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/selected_party.hpp"
 #include "fancy_log.hpp"
 #include "footer_component.hpp"
 
 using namespace fairlanes::widgets;
-void RootComponent::change_body_component(fairlanes::AppContext &ctx,
+void RootComponent::change_body_component(fairlanes::context::AppCtx &ctx,
                                           entt::entity party) {
 
   auto &selected_party =
-      ctx.registry().get<fairlanes::ecs::components::SelectedParty>(party);
+      ctx.reg_.get<fairlanes::ecs::components::SelectedParty>(party);
 
   auto row = ftxui::Container::Horizontal({});
 
   selected_party.for_each_party_member(
-      ctx.registry_, party, [&](entt::entity member) {
-        row->Add(
-            ftxui::Make<fairlanes::widgets::Combatant>(ctx.registry(), member));
+      ctx.reg_, party, [&](entt::entity member) {
+        row->Add(ftxui::Make<fairlanes::widgets::Combatant>(ctx.reg_, member));
       });
 
   body_ = row;

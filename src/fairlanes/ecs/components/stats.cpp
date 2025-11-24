@@ -1,6 +1,5 @@
 #include <fmt/core.h>
 
-#include "app/app_context.hpp"
 #include "fairlanes/concepts/damage.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"

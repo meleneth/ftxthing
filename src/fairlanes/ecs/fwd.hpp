@@ -1,10 +1,6 @@
 #pragma once
 #include <entt/entt.hpp>
 
-namespace fairlanes {
-class AppContext;
-}
-
 namespace fairlanes::ecs {
 using Registry = entt::registry;
 using Entity = entt::entity;
