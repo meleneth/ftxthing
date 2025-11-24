@@ -1,10 +1,11 @@
 #include "party_loop.hpp"
 
 #include "fairlanes/concepts/encounter_builder.hpp"
+#include "fairlanes/context/attack_ctx.hpp"
+#include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
-#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/skills/thump.hpp"
 #include "fairlanes/systems/grant_xp_to_party.hpp"
 #include "fairlanes/systems/replenish_party.hpp"
@@ -12,12 +13,12 @@
 #include <spdlog/spdlog.h>
 
 namespace fairlanes::fsm {
-void PartyLoop::enter_idle(PartyLoopCtx &ctx) {
+void PartyLoop::enter_idle(fairlanes::context::EntityCtx &ctx) {
   // Mark the party attached to this FSM as idle.
   (void)ctx;
 };
 
-void PartyLoop::enter_farming(PartyLoopCtx &ctx) {
+void PartyLoop::enter_farming(fairlanes::context::EntityCtx &ctx) {
   // Also set the label for the party tied to this FSM (nice for local UI)
 
   using fairlanes::concepts::EncounterBuilder;
@@ -25,46 +26,49 @@ void PartyLoop::enter_farming(PartyLoopCtx &ctx) {
   EncounterBuilder::thump_it_out(ctx);
 };
 
-void PartyLoop::exit_farming(PartyLoopCtx &ctx) {
+void PartyLoop::exit_farming(fairlanes::context::EntityCtx &ctx) {
   using fairlanes::ecs::components::Encounter;
-  ctx.reg_->remove<Encounter>(ctx.party_);
-  ctx.log_->append_plain("Returned to town.");
-  entt::handle h{*ctx.reg_, ctx.party_};
+  ctx.reg_.remove<Encounter>(ctx.self_);
+  ctx.log_.append_plain("Returned to town.");
+  entt::handle h{ctx.reg_, ctx.self_};
   using fairlanes::systems::ReplenishParty;
   ReplenishParty::commit(h);
 };
 
-void PartyLoop::enter_fixing(PartyLoopCtx &ctx) { (void)ctx; };
+void PartyLoop::enter_fixing(fairlanes::context::EntityCtx &ctx) { (void)ctx; };
 
-void PartyLoop::combat_tick(PartyLoopCtx &ctx) {
+void PartyLoop::combat_tick(fairlanes::context::EntityCtx &ctx) {
   using fairlanes::skills::Thump;
   Thump in_the_night;
 
   using fairlanes::ecs::components::Encounter;
   using fairlanes::ecs::components::Stats;
-  auto &encounter = ctx.reg_->get<Encounter>(ctx.party_);
+  auto &encounter = ctx.reg_.get<Encounter>(ctx.self_);
   for (auto player : encounter.players(ctx)) {
     auto defender = encounter.random_alive_enemy(ctx);
-    in_the_night.thump(ctx, player, defender);
+
+    in_the_night.thump(
+        fairlanes::context::AttackCtx::make_attack(ctx, player, defender));
   }
   for (auto enemy : encounter.enemies_) {
     auto defender = encounter.random_alive_player(ctx);
-    in_the_night.thump(ctx, enemy, defender);
+    in_the_night.thump(
+        fairlanes::context::AttackCtx::make_attack(ctx, enemy, defender));
   }
 };
 
-bool PartyLoop::needs_town(PartyLoopCtx &ctx) {
+bool PartyLoop::needs_town(fairlanes::context::EntityCtx &ctx) {
   using fairlanes::ecs::components::IsParty;
-  auto &party = ctx.reg_->get<IsParty>(ctx.party_);
+  auto &party = ctx.reg_.get<IsParty>(ctx.self_);
   return party.needs_town();
 };
 
-bool PartyLoop::in_combat(PartyLoopCtx &ctx) {
+bool PartyLoop::in_combat(fairlanes::context::EntityCtx &ctx) {
   using fairlanes::ecs::components::Encounter;
   using fairlanes::ecs::components::Stats;
-  auto &encounter = ctx.reg_->get<Encounter>(ctx.party_);
+  auto &encounter = ctx.reg_.get<Encounter>(ctx.self_);
   for (auto e : encounter.enemies_) {
-    auto &enemy = ctx.reg_->get<Stats>(e);
+    auto &enemy = ctx.reg_.get<Stats>(e);
     if (enemy.hp_ >= 1) {
       return true;
     }

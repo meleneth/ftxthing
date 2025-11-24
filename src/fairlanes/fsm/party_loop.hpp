@@ -4,8 +4,8 @@
 #include <spdlog/spdlog.h>
 
 #include "fairlanes/concepts/encounter_builder.hpp"
+#include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
-#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/systems/grant_xp_to_party.hpp"
 
 namespace fairlanes::fsm {
@@ -14,15 +14,15 @@ namespace sml = boost::sml;
 struct NextEvent {};
 
 struct PartyLoop {
-  void enter_idle(PartyLoopCtx &ctx);
-  void enter_farming(PartyLoopCtx &ctx);
-  void exit_farming(PartyLoopCtx &ctx);
-  void enter_fixing(PartyLoopCtx &ctx);
+  void enter_idle(fairlanes::context::EntityCtx &ctx);
+  void enter_farming(fairlanes::context::EntityCtx &ctx);
+  void exit_farming(fairlanes::context::EntityCtx &ctx);
+  void enter_fixing(fairlanes::context::EntityCtx &ctx);
 
-  bool needs_town(PartyLoopCtx &ctx);
-  bool in_combat(PartyLoopCtx &ctx);
+  bool needs_town(fairlanes::context::EntityCtx &ctx);
+  bool in_combat(fairlanes::context::EntityCtx &ctx);
 
-  void combat_tick(PartyLoopCtx &ctx);
+  void combat_tick(fairlanes::context::EntityCtx &ctx);
 
   auto operator()() const {
     using namespace sml;

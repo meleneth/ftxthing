@@ -5,30 +5,30 @@
 #include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::ecs::components {
-std::vector<entt::entity> Encounter::players(PartyLoopCtx &ctx_) {
+std::vector<entt::entity>
+Encounter::players(fairlanes::context::EntityCtx &ctx) {
   using fairlanes::ecs::components::PartyMember;
   using fairlanes::ecs::components::Stats;
   std::vector<entt::entity> players_;
-  auto &reg = *ctx_.reg_;
-  auto view = reg.view<PartyMember, Stats>();
+  auto view = ctx.reg_.view<PartyMember, Stats>();
   for (auto &&[entity, member, stats] : view.each()) {
-    if (member.party_ == ctx_.party_ && stats.hp_ > 0) {
+    if (member.party_ == ctx.self_ && stats.hp_ > 0) {
       players_.push_back(entity);
     }
   }
   return players_;
 }
-entt::entity Encounter::random_alive_enemy(PartyLoopCtx &ctx_) {
+entt::entity Encounter::random_alive_enemy(EntityCtx &ctx_) {
   (void)ctx_;
   return enemies_[0]; // TODO you're a bad man
 }
-entt::entity Encounter::random_alive_player(PartyLoopCtx &ctx_) {
+entt::entity Encounter::random_alive_player(EntityCtx &ctx_) {
   std::vector<entt::entity> players_ = players(ctx_);
   return players_[0]; // TODO you're a bad man
 }
 
-Encounter::Encounter(PartyLoopCtx &ctx_)
-    : party_(ctx_.party_), log_(ctx_.log_) {
+Encounter::Encounter(EntityCtx &ctx_)
+    : party_(ctx_.self_), log_(ctx_.log_) {
 
       };
 
@@ -46,7 +46,7 @@ void Encounter::finalize(entt::registry &reg, entt::entity e) const {
   for (auto enemy : enemies_) {
     reg.destroy(enemy);
   }
-  log_->append_markup(fmt::format("Encounter {} finalized and cleaned up",
-                                  int(entt::to_integral(e))));
+  log_.append_markup(fmt::format("Encounter {} finalized and cleaned up",
+                                 int(entt::to_integral(e))));
 }
 } // namespace fairlanes::ecs::components

@@ -7,6 +7,7 @@
 
 #include "entities/component_builder.hpp"
 #include "entities/entity_builder.hpp"
+#include "fairlanes/context/attack_ctx.hpp"
 #include "fairlanes/ecs/components/stats.hpp" // <-- needed
 #include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/skills/thump.hpp"
@@ -34,17 +35,16 @@ TEST_CASE("Skill: Thump", "[entity][builder]") {
     auto party_e = reg.create();
 
     // Log + RNG
-    auto log = std::make_shared<fairlanes::widgets::FancyLog>();
+    fairlanes::widgets::FancyLog log;
     fairlanes::RandomHub rng{/*seed=*/12345}; // make deterministic if supported
-
-    fairlanes::fsm::PartyLoopCtx ctx{&reg, party_e, log, rng};
 
     Thump thumper;
 
     const int hp_before = reg.get<Stats>(defender).hp_;
     bool damaged = false;
     for (int i = 0; i < 8 && !damaged; ++i) {
-      thumper.thump(ctx, attacker, defender);
+      thumper.thump(
+          fairlanes::context::AttackCtx{reg, log, rng, attacker, defender});
       damaged = (reg.get<Stats>(defender).hp_ < hp_before);
     }
 

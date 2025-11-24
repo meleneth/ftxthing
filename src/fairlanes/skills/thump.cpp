@@ -3,8 +3,10 @@
 #include <random>
 
 #include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/context/attack_ctx.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/fsm/party_loop_ctx.hpp"
+#include "fairlanes/systems/take_damage.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "thump.hpp"
 
@@ -64,10 +66,9 @@ Thump::Thump() : rng_(std::random_device{}()) {
   }
 }
 
-int Thump::thump(PartyLoopCtx &ctx, entt::entity attacker,
-                 entt::entity defender) {
+int Thump::thump(fairlanes::context::AttackCtx &&ctx) {
   using fairlanes::ecs::components::Stats;
-  auto &dst = ctx.reg_->get<Stats>(defender);
+  auto &dst = ctx.reg_.get<Stats>(ctx.defender_);
 
   // Weapon range (placeholder values; wire to your actual weapon data)
   wd_min_ = 1.0;
@@ -90,13 +91,15 @@ int Thump::thump(PartyLoopCtx &ctx, entt::entity attacker,
   int hp_now = dst.hp_;
   int dmg = static_cast<int>(std::floor(dealt + 0.5));
   dmg = std::clamp(dmg, 0, hp_now);
-  entt::handle attacker_h{*ctx.reg_, attacker};
-  entt::handle defender_h{*ctx.reg_, defender};
+  ctx.damage_.physical = dmg;
+  entt::handle attacker_h{ctx.reg_, ctx.attacker_};
+  entt::handle defender_h{ctx.reg_, ctx.defender_};
 
-  ctx.log_->append_markup(fmt::format("{} thumped {} for [error]({}) damage",
-                                      ctx.log_->name_tag_for(attacker_h),
-                                      ctx.log_->name_tag_for(defender_h), dmg));
-  dst.take_damage(ctx, attacker, defender, {.physical = dmg});
+  ctx.log_.append_markup(fmt::format("{} thumped {} for [error]({}) damage",
+                                     ctx.log_.name_tag_for(attacker_h),
+                                     ctx.log_.name_tag_for(defender_h), dmg));
+
+  fairlanes::systems::TakeDamage::commit(ctx);
 
   return dmg;
 }

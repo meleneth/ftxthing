@@ -10,7 +10,7 @@ namespace fairlanes::ecs::components {
 
 PartyMember::PartyMember(fairlanes::context::EntityCtx context,
                          std::string name, entt::entity party)
-    : party_(party) {
+    : party_(party), ctx_(std::move(context)) {
   (void)context;
   (void)name;
 }

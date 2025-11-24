@@ -19,6 +19,7 @@
 #include "fairlanes/ecs/components/selected_party.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
+#include "fairlanes/systems/take_damage.hpp"
 #include "fairlanes/systems/tick_party_fsms.hpp"
 #include "fairlanes/unique_tag.hpp"
 #include "fairlanes/widgets/body_component.hpp"
@@ -70,8 +71,7 @@ entt::entity GrandCentral::create_party_in_account(AppContext &ctx,
   reg_.emplace<PartyBusiness>(e, ctx, "idle");
   auto &business = reg_.get<PartyBusiness>(e);
   (void)business;
-  reg_.emplace<IsParty>(e, ctx, e, std::move(name), account,
-                        ctx_.entity_context(e));
+  reg_.emplace<IsParty>(e, ctx_.entity_context(e), std::move(name), account);
 
   return e;
 }
@@ -79,13 +79,14 @@ entt::entity GrandCentral::create_party_in_account(AppContext &ctx,
 entt::entity GrandCentral::create_member_in_party(AppContext &ctx,
                                                   std::string name,
                                                   entt::entity party) {
+  (void)ctx;
   auto &p = reg_.get<fairlanes::ecs::components::IsParty>(party);
   auto e = reg_.create();
   reg_.emplace<fairlanes::ecs::components::PartyMember>(
-      e, p.ctx2_.entity_context(e), name, party);
-  reg_.emplace<fairlanes::ecs::components::TrackXP>(
-      e, p.ctx2_.entity_context(e), 0);
-  reg_.emplace<fairlanes::ecs::components::Stats>(e, ctx, name);
+      e, p.ctx_.entity_context(e), name, party);
+  reg_.emplace<fairlanes::ecs::components::TrackXP>(e, p.ctx_.entity_context(e),
+                                                    0);
+  reg_.emplace<fairlanes::ecs::components::Stats>(e, name);
   return e;
 }
 

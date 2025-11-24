@@ -10,6 +10,7 @@ namespace fairlanes::ecs::components {
 
 struct PartyMember {
   fairlanes::ecs::Entity party_;
+  fairlanes::context::EntityCtx ctx_;
 
   PartyMember(fairlanes::context::EntityCtx ctx, std::string /*name*/,
               entt::entity party);

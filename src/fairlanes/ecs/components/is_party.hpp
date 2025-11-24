@@ -13,19 +13,16 @@ namespace sml = boost::sml;
 
 // Marks an entity as a Party (party itself is an entity)
 using fairlanes::fsm::PartyLoop;
-using fairlanes::fsm::PartyLoopCtx;
 
 struct IsParty {
-  PartyLoopCtx ctx_;
+  fairlanes::context::EntityCtx ctx_;
   sml::sm<PartyLoop> sm_;
   entt::entity account_;
   std::string name_;
   int level_ = 1;
   std::vector<entt::entity> party_members_;
-  fairlanes::context::EntityCtx ctx2_;
 
-  IsParty(AppContext &context, entt::entity party, std::string name,
-          entt::entity account, fairlanes::context::EntityCtx ctx2);
+  IsParty(EntityCtx context, std::string name, entt::entity account);
 
   void next();
   bool needs_town();

@@ -26,10 +26,8 @@ struct Stats {
   Resistances resistances_;
 
   Stats() = default;
-  explicit Stats(fairlanes::AppContext &context, std::string name_);
-  void take_damage(fairlanes::fsm::PartyLoopCtx &ctx, entt::entity attacker,
-                   entt::entity target, Damage damage);
-  bool is_alive(fairlanes::fsm::PartyLoopCtx &ctx);
+  explicit Stats(std::string name_);
+  bool is_alive();
 };
 
 } // namespace fairlanes::ecs::components
