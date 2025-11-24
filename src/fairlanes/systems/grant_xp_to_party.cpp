@@ -1,6 +1,5 @@
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
-#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 
 #include "grant_xp_to_party.hpp"

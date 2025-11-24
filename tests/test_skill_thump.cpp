@@ -9,7 +9,6 @@
 #include "entities/entity_builder.hpp"
 #include "fairlanes/context/attack_ctx.hpp"
 #include "fairlanes/ecs/components/stats.hpp" // <-- needed
-#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/skills/thump.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 

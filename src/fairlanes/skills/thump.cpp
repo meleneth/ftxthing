@@ -5,7 +5,6 @@
 #include "fairlanes/concepts/damage.hpp"
 #include "fairlanes/context/attack_ctx.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
-#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/systems/take_damage.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "thump.hpp"

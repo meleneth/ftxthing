@@ -4,7 +4,6 @@
 
 #include "app/move_only.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
-#include "fairlanes/fsm/party_loop_ctx.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 
 namespace fairlanes::context {
