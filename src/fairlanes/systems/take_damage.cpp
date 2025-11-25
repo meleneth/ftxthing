@@ -31,7 +31,7 @@ void TakeDamage::commit(fairlanes::context::AttackCtx &ctx) {
                                        defender_stats.name_));
     if (party) {
       fairlanes::systems::GrantXPToParty::commit(
-          ctx.entity_context(ctx.attacker_), 256);
+          ctx.entity_context(party->party_), 256);
     }
   }
   // spdlog::info("{} hits {} for {} damage ({} HP left)",
