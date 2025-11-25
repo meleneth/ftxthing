@@ -9,9 +9,13 @@ using fairlanes::context::EntityCtx;
 
 void GrantXPToParty::commit(const EntityCtx &ctx, int amount) {
   using namespace fairlanes::ecs::components;
-  auto view = ctx.reg_.view<PartyMember, TrackXP>();
   ctx.log_.append_markup(fmt::format("Party received [xp]({}) XP.", amount));
-  for (auto &&[entity, member, track] : view.each()) {
+
+  auto view = ctx.reg_.view<PartyMember, TrackXP>();
+  for (auto entity : view) {
+    auto &member = view.get<PartyMember>(entity);
+    auto &track = view.get<TrackXP>(entity);
+
     if (member.party_ == ctx.self_) {
       entt::handle h{ctx.reg_, entity};
       track.add_xp(h, amount);

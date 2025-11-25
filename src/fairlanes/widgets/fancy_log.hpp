@@ -9,6 +9,7 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 
+#include "app/immovable.hpp"
 #include "systems/log.hpp"
 
 /// FancyLog: styled append-only log for FTXUI with lightweight markup.
@@ -31,6 +32,7 @@ public:
   // ---- construction --------------------------------------------------------
   FancyLog();
   explicit FancyLog(Options opt);
+  MARK_IMMOVABLE(FancyLog);
 
   // ---- append --------------------------------------------------------------
   // Parses "[tag](text)" markup; unknown tags become plain text.
