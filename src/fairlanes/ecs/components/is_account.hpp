@@ -6,6 +6,7 @@
 #include <entt/entt.hpp>
 
 #include "fairlanes/context/account_ctx.hpp"
+#include "fairlanes/ecs/components/is_party.hpp"
 
 namespace fairlanes::context {
 struct AppCtx;
@@ -26,6 +27,27 @@ struct IsAccount {
 
   IsAccount(fairlanes::context::AppCtx &ctx, std::string name,
             entt::entity account);
+
+  // Call `fn(entt::handle)` for each member of this party
+  template <typename IP = fairlanes::ecs::components::IsParty, typename Fn>
+  inline void for_each_party(Fn &&fn) {
+    auto &reg = ctx_.reg_;
+
+    for (auto e : parties_) {
+      // Skip stale entries
+      /*
+      if (!reg.valid(e)) {
+        continue;
+      }*/
+
+      // Skip if the entity doesn't have the expected component
+      /*if (!reg.all_of<PM>(e)) {
+        continue;
+      }*/
+
+      fn(entt::handle{reg, e});
+    }
+  }
 };
 
 } // namespace fairlanes::ecs::components

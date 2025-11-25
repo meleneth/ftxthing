@@ -53,7 +53,7 @@ void GrandCentral::switch_account(std::size_t idx) {
                  fmt::ptr(is_account.log_));
  */
   selected_console_ = is_account.ctx_.log_.get();
-  root_component()->change_body_component(ctx_, selected_party_);
+  root_component()->change_body_component(ctx_, is_account);
   root_component()->change_console(selected_console_);
 }
 
@@ -74,7 +74,7 @@ entt::entity GrandCentral::create_party_in_account(std::string name,
   (void)business;
   reg_.emplace<IsParty>(e, account_component.ctx_.entity_context(e),
                         std::move(name), account);
-
+  account_component.parties_.push_back(e);
   return e;
 }
 
@@ -88,15 +88,17 @@ entt::entity GrandCentral::create_member_in_party(std::string name,
   reg_.emplace<fairlanes::ecs::components::TrackXP>(e, p.ctx_.entity_context(e),
                                                     0);
   reg_.emplace<fairlanes::ecs::components::Stats>(e, name);
+  p.party_members_.push_back(e);
   return e;
 }
 
 GrandCentral::GrandCentral(const AppConfig &cfg)
     : console_(std::make_unique<FancyLog>()), selected_console_(console_.get()),
-      root_component_(Make<RootComponent>(console_.get())),
       seed_(cfg.seed.value_or(static_cast<uint64_t>(std::random_device{}()))),
       random_(std::make_shared<RandomHub>(seed_, cfg.stream)),
-      ctx_(fairlanes::context::AppCtx{reg_, *random_}) {
+      ctx_(fairlanes::context::AppCtx{reg_, *random_}),
+      root_component_(ftxui::Make<fairlanes::widgets::RootComponent>(ctx_)) {
+
   using namespace ftxui;
   ZoneScopedN("Startup");
 
@@ -151,7 +153,8 @@ void GrandCentral::create_initial_accounts() {
   console_->append_markup(
       "[name](Snail) uses [ability](Slime Blast) [bravo](🔥)");
   fairlanes::ecs::components::install_encounter_hooks(reg_);
-  root_component()->change_body_component(ctx_, selected_party_);
+  // TODO
+  // root_component()->change_body_component(ctx_, is_account);
 }
 
 inline void GrandCentral::tick_party_fsms(float dt) {
@@ -259,3 +262,7 @@ void GrandCentral::main_loop() {
 }
 
 entt::entity GrandCentral::get_account(int id) { return account_ids[id]; }
+
+fairlanes::widgets::RootComponent *GrandCentral::root_component() {
+  return dynamic_cast<RootComponent *>(root_component_.get());
+}

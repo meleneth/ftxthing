@@ -5,6 +5,7 @@
 
 #include "app/app_config.hpp"
 #include "fairlanes/context/app_ctx.hpp"
+#include "fairlanes/widgets/root_component.hpp"
 
 #include "systems/random_hub.hpp"
 
@@ -30,16 +31,15 @@ public:
   bool handle_event(const ftxui::Event &e);
   inline void tick_party_fsms(float dt);
 
-  RootComponent *root_component();
   entt::registry &registry() { return reg_; }
   entt::entity get_account(int id);
+  fairlanes::widgets::RootComponent *root_component();
 
 private:
   entt::registry reg_;
   std::size_t active_idx_ = 0;
   std::unique_ptr<fairlanes::widgets::FancyLog> console_;
   fairlanes::widgets::FancyLog *selected_console_;
-  ftxui::Component root_component_;
   std::vector<entt::entity> account_ids;
   entt::entity selected_account_{entt::null};
   entt::entity selected_party_{entt::null};
@@ -49,5 +49,6 @@ private:
 
 public:
   fairlanes::context::AppCtx ctx_;
+  ftxui::Component root_component_;
 };
 } // namespace fairlanes

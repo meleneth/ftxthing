@@ -10,37 +10,35 @@
 #include "combatant.hpp"
 #include "console_overlay.hpp"
 #include "fairlanes/context/app_ctx.hpp"
+#include "fairlanes/ecs/components/is_account.hpp"
+#include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/selected_party.hpp"
+#include "fairlanes/widgets/account_battle_view.hpp"
 #include "fancy_log.hpp"
 #include "footer_component.hpp"
 
 using namespace fairlanes::widgets;
-void RootComponent::change_body_component(fairlanes::context::AppCtx &ctx,
-                                          entt::entity party) {
+void RootComponent::change_body_component(
+    fairlanes::context::AppCtx &ctx,
+    fairlanes::ecs::components::IsAccount &is_account) {
+  // is_account.for_each_account();
+  auto stack = ftxui::Container::Vertical({});
 
-  auto &selected_party =
-      ctx.reg_.get<fairlanes::ecs::components::SelectedParty>(party);
+  is_account.for_each_party([&](entt::entity party) {
+    auto row = ftxui::Container::Horizontal({});
+    stack->Add(row);
+    auto &is_party = ctx.reg_.get<fairlanes::ecs::components::IsParty>(party);
+    is_party.for_each_member([&](entt::entity member) {
+      row->Add(ftxui::Make<fairlanes::widgets::Combatant>(ctx.reg_, member));
+    });
+  });
 
-  auto row = ftxui::Container::Horizontal({});
-
-  selected_party.for_each_party_member(
-      ctx.reg_, party, [&](entt::entity member) {
-        row->Add(ftxui::Make<fairlanes::widgets::Combatant>(ctx.reg_, member));
-      });
-
-  body_ = row;
+  body_ = stack;
 }
 
-RootComponent::RootComponent(FancyLog *console) : console_(std::move(console)) {
+RootComponent::RootComponent(fairlanes::context::AppCtx &ctx_) {
   using namespace ftxui;
-  header_ = Renderer([this] { return console_->Render() | border; });
-  body_ = Make<BodyComponent>();
-  footer_ = Make<FooterComponent>();
-  console_overlay_ = Make<ConsoleOverlay>(console_);
-
-  container_ = Container::Vertical({header_, body_, footer_});
-  container_->SetActiveChild(body_);
-
+  console_overlay_ = Make<ConsoleOverlay>(ctx_.log_.get());
   Add(console_overlay_);
 }
 
@@ -48,7 +46,7 @@ void RootComponent::toggle_console() {
   auto overlay = console_overlay();
   overlay->toggle();
   if (overlay->should_show()) {
-    container_->SetActiveChild(console_overlay_);
+    // container_->SetActiveChild(console_overlay_);
     overlay->FocusInput(); // ensure cursor lands in Input
   } else {
     container_->SetActiveChild(body_);
@@ -74,15 +72,18 @@ ftxui::Element RootComponent::Render() {
   overlay
       ->tick(); // TODO make a lock here, mouse events are making ticks too fast
   ZoneScoped;
-  auto content = vbox({
-      header_->Render() | flex,
-      body_->Render(),
-      footer_->Render() | flex,
-  });
-  if (overlay->should_show()) {
-    return dbox({content, console_overlay_->Render()});
+  if (body_) {
+    auto content = vbox({body_->Render()});
+    if (overlay->should_show()) {
+      return dbox({content, console_overlay_->Render()});
+    }
+    return content;
+  } else {
+    if (overlay->should_show()) {
+      return dbox({ftxui::text("some other text"), console_overlay_->Render()});
+    }
+    return ftxui::text("some text");
   }
-  return content;
 }
 
 void RootComponent::change_console(fairlanes::widgets::FancyLog *console) {
@@ -90,6 +91,11 @@ void RootComponent::change_console(fairlanes::widgets::FancyLog *console) {
   console_overlay()->change_console(console);
 }
 
-void RootComponent::select_account(entt::entity account) {
+void RootComponent::select_account(fairlanes::context::AppCtx &ctx,
+                                   entt::entity account) {
   selected_account_ = account;
+  auto &is_account =
+      ctx.reg_.get<fairlanes::ecs::components::IsAccount>(account);
+  body_ = ftxui::Make<fairlanes::widgets::AccountBattleView>(
+      is_account.ctx_.entity_context(account));
 }
