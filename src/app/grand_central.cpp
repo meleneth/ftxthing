@@ -163,17 +163,13 @@ inline void GrandCentral::tick_party_fsms(float dt) {
   fairlanes::systems::TickPartyFSMs::commit(reg_);
 }
 
-RootComponent *GrandCentral::root_component() {
-  return dynamic_cast<RootComponent *>(root_component_.get());
-}
-
 void GrandCentral::main_loop() {
   using namespace ftxui;
 
   ScreenInteractive screen = ScreenInteractive::Fullscreen();
   screen.SetCursor(Screen::Cursor{.shape = Screen::Cursor::Hidden});
 
-  auto ui = Renderer(root_component_, [&] {
+  auto ui = Renderer((ftxui::Component)root_component_, [&] {
     using clock = std::chrono::steady_clock;
     static auto last = clock::now();
     const auto now = clock::now();

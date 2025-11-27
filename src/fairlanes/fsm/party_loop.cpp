@@ -44,35 +44,29 @@ void PartyLoop::combat_tick(fairlanes::context::EntityCtx &ctx) {
   using fairlanes::ecs::components::Encounter;
   using fairlanes::ecs::components::Stats;
   auto &encounter = ctx.reg_.get<Encounter>(ctx.self_);
-  for (auto player : encounter.players(ctx)) {
-    auto defender = encounter.random_alive_enemy(ctx);
+  encounter.attackers_->for_each_alive_member([&](entt::entity attacker) {
+    auto defender = encounter.defenders_->random_alive_member();
+    if (defender) {
+      in_the_night.thump(
+          fairlanes::context::AttackCtx::make_attack(ctx, attacker, *defender));
+    }
+  });
 
-    in_the_night.thump(
-        fairlanes::context::AttackCtx::make_attack(ctx, player, defender));
-  }
-  for (auto enemy : encounter.enemies_) {
-    auto defender = encounter.random_alive_player(ctx);
-    in_the_night.thump(
-        fairlanes::context::AttackCtx::make_attack(ctx, enemy, defender));
-  }
+  encounter.defenders_->for_each_alive_member([&](entt::entity attacker) {
+    auto defender = encounter.attackers_->random_alive_member();
+    if (defender) {
+      in_the_night.thump(
+          fairlanes::context::AttackCtx::make_attack(ctx, attacker, *defender));
+    }
+  });
 };
+bool PartyLoop::in_combat(fairlanes::context::EntityCtx &ctx) {
+  auto &is_party = ctx.reg_.get<fairlanes::ecs::components::IsParty>(ctx.self_);
+  return is_party.in_combat();
+}
 
 bool PartyLoop::needs_town(fairlanes::context::EntityCtx &ctx) {
-  using fairlanes::ecs::components::IsParty;
-  auto &party = ctx.reg_.get<IsParty>(ctx.self_);
-  return party.needs_town();
-};
-
-bool PartyLoop::in_combat(fairlanes::context::EntityCtx &ctx) {
-  using fairlanes::ecs::components::Encounter;
-  using fairlanes::ecs::components::Stats;
-  auto &encounter = ctx.reg_.get<Encounter>(ctx.self_);
-  for (auto e : encounter.enemies_) {
-    auto &enemy = ctx.reg_.get<Stats>(e);
-    if (enemy.hp_ >= 1) {
-      return true;
-    }
-  }
-  return false;
-};
+  auto &is_party = ctx.reg_.get<fairlanes::ecs::components::IsParty>(ctx.self_);
+  return is_party.needs_town();
+}
 } // namespace fairlanes::fsm

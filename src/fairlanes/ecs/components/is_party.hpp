@@ -2,7 +2,6 @@
 #include <boost/sml.hpp>
 #include <string>
 
-#include "app/registry_facade.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/fwd.hpp"
 #include "fairlanes/fsm/party_loop.hpp"
@@ -16,7 +15,7 @@ namespace sml = boost::sml;
 using fairlanes::context::EntityCtx;
 using fairlanes::fsm::PartyLoop;
 
-struct IsParty : BE_REGISTRY(IsParty) {
+struct IsParty {
   EntityCtx ctx_;
   sml::sm<PartyLoop> sm_;
   entt::entity account_;
@@ -29,8 +28,9 @@ struct IsParty : BE_REGISTRY(IsParty) {
           entt::entity account);
 
   void next();
-  bool needs_town();
   entt::entity create_member(std::string name);
+  bool needs_town();
+  bool in_combat();
 
   // Call `fn(entt::handle)` for each member of this party
   template <typename PM = PartyMember, typename Fn>

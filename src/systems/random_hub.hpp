@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <chrono>
 #include <cstdint>
 #include <optional>
@@ -12,7 +13,8 @@
 #include <pcg_random.hpp>
 
 namespace fairlanes {
-// Choose your engine here (pcg64_fast is good for games/sims).
+
+// Choose your engine here.
 using Engine = pcg64;
 
 // ------------------------------ Utilities ------------------------------
@@ -50,58 +52,34 @@ inline uint64_t time_seed_now() {
 class RandomStream {
 public:
   RandomStream() = default;
+
   RandomStream(uint64_t master_seed, uint64_t sequence, std::string key)
       : master_seed_(master_seed), sequence_(sequence), key_(std::move(key)) {}
 
   // Thread-local engine per (stream key). Deterministic (no thread salt).
   Engine &eng() const {
-    struct Slot {
-      bool init{false};
-      Engine e;
-    };
-    thread_local std::unordered_map<std::string, Slot> tls;
+    thread_local std::unordered_map<std::string, Engine> tls;
     auto it = tls.find(key_);
     if (it == tls.end()) {
-      Slot s;
-      // PCG constructor uses (initstate, initseq). initseq picks the stream.
-      s.e = Engine(master_seed_, sequence_);
-      s.init = true;
-      it = tls.emplace(key_, std::move(s)).first;
+      it = tls.emplace(key_, Engine(master_seed_, sequence_)).first;
     }
-    return it->second.e;
+    return it->second;
   }
 
   // Core draws
   uint64_t u64() { return std::uniform_int_distribution<uint64_t>()(eng()); }
   uint32_t u32() { return std::uniform_int_distribution<uint32_t>()(eng()); }
-  bool bernoulli(double p) { return std::bernoulli_distribution(p)(eng()); }
 
   template <typename Int> Int uniform_int(Int lo, Int hi_inclusive) {
     return std::uniform_int_distribution<Int>(lo, hi_inclusive)(eng());
   }
 
-  template <typename Real = double> Real uniform_real(Real lo, Real hi) {
-    return std::uniform_real_distribution<Real>(lo, hi)(eng());
-  }
-
-  template <typename Real = double> Real normal(Real mean, Real stddev) {
-    return std::normal_distribution<Real>(mean, stddev)(eng());
-  }
-
-  template <typename T> void shuffle(std::vector<T> &v) {
-    std::shuffle(v.begin(), v.end(), eng());
-  }
-
-  template <typename Range> const auto &pick(const Range &r) {
-    const auto n = static_cast<int>(r.size());
-    const int i = uniform_int<int>(0, n - 1);
-    return r[i];
-  }
-
-  // Burn n draws:
-  void advance(uint64_t n) {
-    for (uint64_t i = 0; i < n; ++i)
-      (void)u64();
+  // Index in [0, count)
+  int random_index(int count) {
+    assert(count > 0);
+    if (count == 1)
+      return 0;
+    return uniform_int<int>(0, count - 1);
   }
 
   uint64_t master_seed() const noexcept { return master_seed_; }
@@ -110,9 +88,8 @@ public:
 
 private:
   uint64_t master_seed_{0};
-  uint64_t sequence_{
-      1}; // pcg allows any; constructor handles odd increment internally
-  std::string key_{"<unset>"}; // used for TLS slot key
+  uint64_t sequence_{1};       // pcg handles increment internally
+  std::string key_{"<unset>"}; // TLS slot key
 };
 
 // ------------------------------ RandomHub ------------------------------
@@ -126,7 +103,6 @@ public:
       : master_seed_(seed.value_or(splitmix64_once(time_seed_now()))),
         base_sequence_(base_sequence) {}
 
-  // Stable master seed & base sequence
   uint64_t master_seed() const noexcept { return master_seed_; }
   uint64_t base_sequence() const noexcept { return base_sequence_; }
 
@@ -144,33 +120,9 @@ public:
     return RandomStream(master_seed_, seq, key_for("<num>", sub_seq));
   }
 
-  // Hierarchical namespaces (party/3/combat, etc.)
-  class NS {
-  public:
-    NS(const RandomHub &hub, std::string prefix)
-        : hub_(hub), prefix_(std::move(prefix)) {}
-    NS ns(std::string_view child) const {
-      return NS{hub_, prefix_ + "/" + std::string(child)};
-    }
-    NS ns(std::string_view child, uint64_t id) const {
-      return NS{hub_,
-                prefix_ + "/" + std::string(child) + "/" + std::to_string(id)};
-    }
-    RandomStream stream(uint64_t sub_seq = 0) const {
-      return hub_.stream(prefix_, sub_seq);
-    }
-    const std::string &prefix() const { return prefix_; }
-
-  private:
-    const RandomHub &hub_;
-    std::string prefix_;
-  };
-
-  NS ns(std::string_view root) const { return NS{*this, std::string(root)}; }
-
 private:
   static uint64_t mix_seq(uint64_t base, uint64_t name_hash, uint64_t sub) {
-    // Robust 3-way mix → stream selector
+    // 3-way mix → stream selector
     return splitmix64_once(base ^ (name_hash + 0x9E3779B97F4A7C15ULL) ^
                            (sub * 0xBF58476D1CE4E5B9ULL));
   }
@@ -184,4 +136,5 @@ private:
   uint64_t master_seed_;
   uint64_t base_sequence_;
 };
+
 } // namespace fairlanes

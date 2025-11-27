@@ -6,7 +6,6 @@
 #include "fairlanes/ecs/components/stats.hpp"
 
 namespace fairlanes::concepts {
-using fairlanes::fsm::PartyLoopCtx;
 
 void EncounterBuilder::thump_it_out(fairlanes::context::EntityCtx &ctx) {
   using namespace fairlanes::ecs::components;
@@ -29,10 +28,21 @@ void EncounterBuilder::thump_it_out(fairlanes::context::EntityCtx &ctx) {
     //  t.values = {"mouse", "precious"};
   };
   field_mouse(e);
-
   // Attach / ensure an Encounter on the party and add the enemy
-  auto &enc = ctx.reg_.emplace<Encounter>(ctx.self_, ctx); // <- ctx.reg_->
-  enc.enemies_.push_back(e);
+  auto &enc =
+      ctx.reg_.emplace<Encounter>(ctx.self_, ctx.entity_context(ctx.self_));
+  auto &is_party = ctx.reg_.get<IsParty>(ctx.self_);
+  enc.attackers_ = std::make_unique<fairlanes::concepts::Team>(
+      ctx.entity_context(ctx.self_));
+  enc.defenders_ = std::make_unique<fairlanes::concepts::Team>(
+      ctx.entity_context(ctx.self_));
+
+  // First strike wen?
+  enc.attackers_->members_.push_back(e);
+  enc.e_to_cleanup_.push_back(e);
+
+  is_party.for_each_member(
+      [&](entt::entity member) { enc.defenders_->members_.push_back(member); });
 }
 
 } // namespace fairlanes::concepts

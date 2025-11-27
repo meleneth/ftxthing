@@ -1,5 +1,6 @@
 #include "is_party.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
+#include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/fsm/party_loop.hpp"
@@ -15,15 +16,33 @@ IsParty::IsParty(fairlanes::context::EntityCtx ctx, std::string name,
     : ctx_{std::move(ctx)}, sm_{PartyLoop{}, ctx_}, account_{account},
       name_{std::move(name)} {}
 
-void IsParty::next() { sm_.process_event(NextEvent{}); }
+void IsParty::next() {
+  spdlog::info("IsParty :: NextEvent{}");
+  sm_.process_event(NextEvent{});
+}
 
 bool IsParty::needs_town() {
-  auto view = ctx_.reg_.view<PartyMember, Stats>();
-  for (auto &&[entity, member, stats] : view.each()) {
-    if (member.party_ == ctx_.self_ && stats.hp_ < 1) {
-      return true; // any downed member means “needs town”
+
+  bool does_need_town = false;
+  for_each_member([&](entt::entity member) {
+    // auto &party_member = ctx_.reg_.get<PartyMember>(member);
+    auto &stats = ctx_.reg_.get<fairlanes::ecs::components::Stats>(member);
+    if (!stats.is_alive()) {
+      does_need_town = true;
     }
-  }
-  return false;
+  });
+  return does_need_town;
 }
+
+bool IsParty::in_combat() {
+  using fairlanes::ecs::components::Encounter;
+
+  auto encounter = ctx_.reg_.try_get<Encounter>(ctx_.self_);
+  if (!encounter) {
+    return false;
+  }
+  // "in combat" is just "the encounter is not over yet"
+  return !encounter->is_over();
+}
+
 } // namespace fairlanes::ecs::components

@@ -5,7 +5,6 @@
 
 #include "fairlanes/concepts/encounter_builder.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
-#include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/systems/grant_xp_to_party.hpp"
 
 namespace fairlanes::fsm {
@@ -19,10 +18,11 @@ struct PartyLoop {
   void exit_farming(fairlanes::context::EntityCtx &ctx);
   void enter_fixing(fairlanes::context::EntityCtx &ctx);
 
+  void combat_tick(fairlanes::context::EntityCtx &ctx);
+  void next_event(fairlanes::context::EntityCtx &ctx);
+
   bool needs_town(fairlanes::context::EntityCtx &ctx);
   bool in_combat(fairlanes::context::EntityCtx &ctx);
-
-  void combat_tick(fairlanes::context::EntityCtx &ctx);
 
   auto operator()() const {
     using namespace sml;
@@ -31,16 +31,21 @@ struct PartyLoop {
     struct Idle {};
     struct Farming {};
     struct Fixing {};
+    struct CombatIdle {};
 
     return make_transition_table(
-        *state<Idle> + on_entry<_> / enter_idle,
-        state<Farming> + on_entry<_> / enter_farming,
-        state<Farming> + on_exit<_> / exit_farming,
-        state<Fixing> + on_entry<_> / enter_fixing,
+        *state<Idle> + on_entry<_> / &PartyLoop::enter_idle,
+        state<Farming> + on_entry<_> / &PartyLoop::enter_farming,
+        state<Farming> + on_exit<_> / &PartyLoop::exit_farming,
+        state<Fixing> + on_entry<_> / &PartyLoop::enter_fixing,
 
         state<Idle> + event<NextEvent> = state<Farming>,
-        state<Farming> + event<NextEvent>[needs_town] = state<Fixing>,
-        state<Farming> + event<NextEvent> / combat_tick,
+        state<Farming> + event<NextEvent>[&PartyLoop::needs_town] =
+            state<Fixing>,
+        state<Farming> +
+            event<NextEvent>[&PartyLoop::in_combat] / &PartyLoop::combat_tick,
+        state<Farming> + event<NextEvent> = state<CombatIdle>,
+        state<CombatIdle> + event<NextEvent> = state<Farming>,
         state<Fixing> + event<NextEvent> = state<Idle>);
   }
 };

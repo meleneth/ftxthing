@@ -2,21 +2,22 @@
 #include <entt/entt.hpp>
 #include <vector>
 
+#include "fairlanes/concepts/team.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
+#include "fairlanes/ecs/components/is_party.hpp"
 
 namespace fairlanes::ecs::components {
-using fairlanes::context::EntityCtx;
+
 struct Encounter {
+  fairlanes::context::EntityCtx ctx_;
+  std::unique_ptr<fairlanes::concepts::Team> attackers_ = nullptr;
+  std::unique_ptr<fairlanes::concepts::Team> defenders_ = nullptr;
+  std::vector<entt::entity> e_to_cleanup_;
+  bool has_alive_enemies();
+  bool is_over();
 
-  entt::entity party_{entt::null};    // the single party in this encounter
-  std::vector<entt::entity> enemies_; // enemy entities participating
-  fairlanes::widgets::FancyLog &log_;
-
-  std::vector<entt::entity> players(EntityCtx &ctx_);
-  entt::entity random_alive_enemy(EntityCtx &ctx_);
-  entt::entity random_alive_player(EntityCtx &ctx_);
-  Encounter(EntityCtx &context);
-  void finalize(entt::registry &reg, entt::entity self) const;
+  Encounter(EntityCtx context);
+  void finalize();
 };
 
 struct InEncounter {                   // attach to the party

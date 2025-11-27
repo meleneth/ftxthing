@@ -1,51 +1,55 @@
 #include "encounter.hpp"
+#include "fairlanes/concepts/team.hpp"
+#include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
+#include "systems/random_hub.hpp"
 
 namespace fairlanes::ecs::components {
-std::vector<entt::entity>
-Encounter::players(fairlanes::context::EntityCtx &ctx) {
-  using fairlanes::ecs::components::PartyMember;
-  using fairlanes::ecs::components::Stats;
-  std::vector<entt::entity> players_;
-  auto view = ctx.reg_.view<PartyMember, Stats>();
-  for (auto &&[entity, member, stats] : view.each()) {
-    if (member.party_ == ctx.self_ && stats.hp_ > 0) {
-      players_.push_back(entity);
-    }
-  }
-  return players_;
-}
-entt::entity Encounter::random_alive_enemy(EntityCtx &ctx_) {
-  (void)ctx_;
-  return enemies_[0]; // TODO you're a bad man
-}
-entt::entity Encounter::random_alive_player(EntityCtx &ctx_) {
-  std::vector<entt::entity> players_ = players(ctx_);
-  return players_[0]; // TODO you're a bad man
-}
 
-Encounter::Encounter(EntityCtx &ctx_)
-    : party_(ctx_.self_), log_(ctx_.log_) {
+Encounter::Encounter(EntityCtx context)
+    : ctx_(std::move(context)) {
 
       };
 
 void on_encounter_destroy(entt::registry &reg, entt::entity e) {
   auto &enc = reg.get<Encounter>(e); // valid: signal fires before removal
-  enc.finalize(reg, e);
+  enc.finalize();
 }
 
 void install_encounter_hooks(entt::registry &reg) {
   reg.on_destroy<Encounter>().connect<&on_encounter_destroy>();
 }
 
-void Encounter::finalize(entt::registry &reg, entt::entity e) const {
-  // Cleanup logic — maybe despawn enemies or notify parties
-  for (auto enemy : enemies_) {
-    reg.destroy(enemy);
+void Encounter::finalize() {
+  for (auto e_cleanup : e_to_cleanup_) {
+    ctx_.reg_.destroy(e_cleanup);
   }
-  log_.append_markup(fmt::format("Encounter {} finalized and cleaned up",
-                                 int(entt::to_integral(e))));
+
+  ctx_.log_.append_markup(fmt::format("Encounter {} finalized and cleaned up",
+                                      int(entt::to_integral(ctx_.self_))));
+}
+
+bool Encounter::has_alive_enemies() {
+  using fairlanes::ecs::components::Stats;
+
+  for (auto e : e_to_cleanup_) {
+    if (!ctx_.reg_.valid(e) || !ctx_.reg_.all_of<Stats>(e)) {
+      continue; // stale or already destroyed, ignore
+    }
+
+    auto &enemy = ctx_.reg_.get<Stats>(e);
+    if (enemy.is_alive()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool Encounter::is_over() {
+  // For now, "over" simply means there are no alive enemies.
+  return !has_alive_enemies();
 }
 } // namespace fairlanes::ecs::components
