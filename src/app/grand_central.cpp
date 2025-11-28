@@ -153,8 +153,7 @@ void GrandCentral::create_initial_accounts() {
   console_->append_markup(
       "[name](Snail) uses [ability](Slime Blast) [bravo](🔥)");
   fairlanes::ecs::components::install_encounter_hooks(reg_);
-  // TODO
-  // root_component()->change_body_component(ctx_, is_account);
+  switch_account(0);
 }
 
 inline void GrandCentral::tick_party_fsms(float dt) {
