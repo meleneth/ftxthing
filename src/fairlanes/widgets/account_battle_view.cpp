@@ -15,44 +15,44 @@ AccountBattleView::AccountBattleView(fairlanes::context::EntityCtx ctx)
     : ctx_(std::move(ctx)) {}
 
 ftxui::Element AccountBattleView::Render() {
-  auto stack = ftxui::Container::Vertical({});
+  std::vector<ftxui::Element> rows;
 
   auto &is_account =
       ctx_.reg_.get<fairlanes::ecs::components::IsAccount>(ctx_.self_);
-  stack->Add(ftxui::Renderer([] { return ftxui::text("Hello world!"); }));
   is_account.for_each_party([&](entt::entity party) {
     using fairlanes::ecs::components::Encounter;
     using fairlanes::ecs::components::IsParty;
-
     auto &is_party = ctx_.reg_.get<IsParty>(party);
     auto encounter = ctx_.reg_.try_get<Encounter>(party);
 
-    // ctx_.log_.append_markup("[red](rendering party == overall  ==)");
-
-    // Row for attackers (if any)
     if (encounter && encounter->attackers_) {
-      ctx_.log_.append_markup("rendering attackers");
-      auto attackers_row = ftxui::Container::Horizontal({});
-      stack->Add(attackers_row);
-
+      std::vector<ftxui::Element> attackers_row;
       encounter->attackers_->for_each_member([&](entt::entity member) {
-        attackers_row->Add(
-            ftxui::Make<fairlanes::widgets::Combatant>(ctx_.reg_, member));
+        fairlanes::widgets::Combatant combatant{ctx_.reg_, member};
+        attackers_row.push_back(combatant.Render());
       });
+      rows.push_back(ftxui::hbox(std::move(attackers_row)));
+
+    } else {
+      ftxui::Element blank = ftxui::vbox({
+                                 ftxui::filler(), // line 1
+                                 ftxui::filler(), // line 2
+                                 ftxui::filler(), // line 3
+                             }) |
+                             ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 1) |
+                             ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 3);
+      rows.push_back(blank);
     }
 
-    // Row for this party's members
-    auto party_row = ftxui::Container::Horizontal({});
-    stack->Add(party_row);
-    stack->Add(ftxui::Renderer([] { return ftxui::text("Hello world!"); }));
-
+    std::vector<ftxui::Element> party_row;
     is_party.for_each_member([&](entt::entity member) {
-      party_row->Add(
-          ftxui::Make<fairlanes::widgets::Combatant>(ctx_.reg_, member));
+      fairlanes::widgets::Combatant combatant{ctx_.reg_, member};
+      party_row.push_back(combatant.Render());
     });
+    rows.push_back(ftxui::hbox(std::move(party_row)));
   });
 
-  return stack->Render();
+  return ftxui::vbox(std::move(rows));
 }
 
 } // namespace fairlanes::widgets
