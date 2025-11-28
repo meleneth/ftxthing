@@ -17,9 +17,14 @@ TEST_CASE("Skill: Thump", "[entity][builder]") {
   using fairlanes::skills::Thump;
 
   entt::registry reg;
+  fairlanes::widgets::FancyLog log;
+  entt::entity some_entity = reg.create();
+  fairlanes::RandomHub rng;
+
+  fairlanes::context::EntityCtx ctx{reg, log, rng, some_entity};
 
   SECTION("Default stats for reference") {
-    auto e = EntityBuilder{reg}.with_default<Stats>().build();
+    auto e = EntityBuilder{ctx}.with_default<Stats>().build();
     const auto &s = reg.get<Stats>(e);
     REQUIRE(s.hp_ == 10);
     REQUIRE(s.mp_ == 0);
@@ -27,8 +32,8 @@ TEST_CASE("Skill: Thump", "[entity][builder]") {
 
   SECTION("Thump does damage (deterministic RNG)") {
     // One registry for everything:
-    auto attacker = EntityBuilder{reg}.with_default<Stats>().build();
-    auto defender = EntityBuilder{reg}.with_default<Stats>().build();
+    auto attacker = EntityBuilder{ctx}.with_default<Stats>().build();
+    auto defender = EntityBuilder{ctx}.with_default<Stats>().build();
 
     // Create a party entity (if ctx expects one)
     auto party_e = reg.create();

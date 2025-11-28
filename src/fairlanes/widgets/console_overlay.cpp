@@ -25,7 +25,7 @@ void ConsoleOverlay::set_open(bool v) {
     if (should_open_full_) {
       target_rows_ = ftxui::HEIGHT;
     } else {
-      target_rows_ = 22;
+      target_rows_ = 42;
     }
   } else {
     target_rows_ = 0;

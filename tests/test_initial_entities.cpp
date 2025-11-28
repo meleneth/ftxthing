@@ -5,21 +5,28 @@
 
 #include "entities/component_builder.hpp" // ComponentBuilder<Stats/Tags>
 #include "entities/entity_builder.hpp" // EntityBuilder with with_default<T>()
+#include "fairlanes/widgets/fancy_log.hpp"
+#include "systems/random_hub.hpp"
 
 using json = nlohmann::json;
 
 TEST_CASE("EntityBuilder + ComponentBuilder basics", "[entity][builder]") {
   entt::registry reg;
+  fairlanes::widgets::FancyLog log;
+  entt::entity some_entity = reg.create();
+  fairlanes::RandomHub rng;
+
+  fairlanes::context::EntityCtx ctx{reg, log, rng, some_entity};
 
   SECTION("Stats defaults are installed") {
-    auto e = EntityBuilder{reg}.with_default<Stats>().build();
+    auto e = EntityBuilder{ctx}.with_default<Stats>().build();
     const auto &s = reg.get<Stats>(e);
     REQUIRE(s.hp_ == 10);
     REQUIRE(s.mp_ == 0);
   }
 
   SECTION("Stats JSON overrides apply on top of defaults") {
-    auto e = EntityBuilder{reg}.with_default<Stats>().build();
+    auto e = EntityBuilder{ctx}.with_default<Stats>().build();
     auto &s = reg.get<Stats>(e);
 
     json j = R"({ "hp": 25, "mp": 3 })"_json;
@@ -30,7 +37,7 @@ TEST_CASE("EntityBuilder + ComponentBuilder basics", "[entity][builder]") {
   }
 
   SECTION("Tags default + JSON array assignment") {
-    auto e = EntityBuilder{reg}.with_default<Tags>().build();
+    auto e = EntityBuilder{ctx}.with_default<Tags>().build();
     auto &t = reg.get<Tags>(e);
 
     json j = R"({ "values": ["dps", "glass"] })"_json;
@@ -43,7 +50,7 @@ TEST_CASE("EntityBuilder + ComponentBuilder basics", "[entity][builder]") {
 
   SECTION("Preset/trait composition via a lambda") {
     auto e =
-        EntityBuilder{reg}.with_default<Stats>().with_default<Tags>().build();
+        EntityBuilder{ctx}.with_default<Stats>().with_default<Tags>().build();
 
     // a "trait": GlassCannon
     auto glass_cannon = [&](entt::entity x) {

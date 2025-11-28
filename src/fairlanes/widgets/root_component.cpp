@@ -21,19 +21,8 @@ using namespace fairlanes::widgets;
 void RootComponent::change_body_component(
     fairlanes::context::AppCtx &ctx,
     fairlanes::ecs::components::IsAccount &is_account) {
-  // is_account.for_each_account();
-  auto stack = ftxui::Container::Vertical({});
-
-  is_account.for_each_party([&](entt::entity party) {
-    auto row = ftxui::Container::Horizontal({});
-    stack->Add(row);
-    auto &is_party = ctx.reg_.get<fairlanes::ecs::components::IsParty>(party);
-    is_party.for_each_member([&](entt::entity member) {
-      row->Add(ftxui::Make<fairlanes::widgets::Combatant>(ctx.reg_, member));
-    });
-  });
-
-  body_ = stack;
+  body_ =
+      ftxui::Make<AccountBattleView>(ctx.entity_context(is_account.ctx_.self_));
 }
 
 RootComponent::RootComponent(fairlanes::context::AppCtx &ctx_) {

@@ -21,7 +21,18 @@ struct EntityCtx {
     return EntityCtx{reg_, log_, rng_, e};
   }
 
-  MARK_CLASS_MOVEONLY(EntityCtx);
+  EntityCtx &operator=(const EntityCtx &other) {
+    self_ = other.self_;
+    return *this;
+  }
+
+  EntityCtx &operator=(EntityCtx &&other) noexcept {
+    self_ = other.self_;
+    return *this;
+  }
+
+  EntityCtx(const EntityCtx &) = default;
+  EntityCtx(EntityCtx &&) noexcept = default;
 };
 
 } // namespace fairlanes::context

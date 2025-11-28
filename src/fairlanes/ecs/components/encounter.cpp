@@ -27,8 +27,9 @@ void Encounter::finalize() {
     ctx_.reg_.destroy(e_cleanup);
   }
 
-  ctx_.log_.append_markup(fmt::format("Encounter {} finalized and cleaned up",
-                                      int(entt::to_integral(ctx_.self_))));
+  // ctx_.log_.append_markup(fmt::format("Encounter {} finalized and cleaned
+  // up",
+  //                                     int(entt::to_integral(ctx_.self_))));
 }
 
 bool Encounter::has_alive_enemies() {

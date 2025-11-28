@@ -19,7 +19,7 @@ ftxui::Element AccountBattleView::Render() {
 
   auto &is_account =
       ctx_.reg_.get<fairlanes::ecs::components::IsAccount>(ctx_.self_);
-
+  stack->Add(ftxui::Renderer([] { return ftxui::text("Hello world!"); }));
   is_account.for_each_party([&](entt::entity party) {
     using fairlanes::ecs::components::Encounter;
     using fairlanes::ecs::components::IsParty;
@@ -27,8 +27,11 @@ ftxui::Element AccountBattleView::Render() {
     auto &is_party = ctx_.reg_.get<IsParty>(party);
     auto encounter = ctx_.reg_.try_get<Encounter>(party);
 
+    // ctx_.log_.append_markup("[red](rendering party == overall  ==)");
+
     // Row for attackers (if any)
     if (encounter && encounter->attackers_) {
+      ctx_.log_.append_markup("rendering attackers");
       auto attackers_row = ftxui::Container::Horizontal({});
       stack->Add(attackers_row);
 
@@ -41,6 +44,7 @@ ftxui::Element AccountBattleView::Render() {
     // Row for this party's members
     auto party_row = ftxui::Container::Horizontal({});
     stack->Add(party_row);
+    stack->Add(ftxui::Renderer([] { return ftxui::text("Hello world!"); }));
 
     is_party.for_each_member([&](entt::entity member) {
       party_row->Add(

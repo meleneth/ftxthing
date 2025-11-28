@@ -35,21 +35,8 @@ struct IsParty {
   // Call `fn(entt::handle)` for each member of this party
   template <typename PM = PartyMember, typename Fn>
   inline void for_each_member(Fn &&fn) {
-    auto &reg = ctx_.reg_;
-
     for (auto e : party_members_) {
-      // Skip stale entries
-      /*
-      if (!reg.valid(e)) {
-        continue;
-      }*/
-
-      // Skip if the entity doesn't have the expected component
-      /*if (!reg.all_of<PM>(e)) {
-        continue;
-      }*/
-
-      fn(entt::handle{reg, e});
+      fn(e);
     }
   }
 };

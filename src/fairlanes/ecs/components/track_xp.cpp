@@ -17,13 +17,12 @@ int TrackXP::xp_for_level(int level_calc) {
 }
 
 TrackXP::TrackXP(fairlanes::context::EntityCtx ctx, int starting_xp)
-    : xp_(starting_xp), next_level_at(xp_for_level(level_ + 1)),
-      ctx_(std::move(ctx)) {}
+    : xp_(starting_xp), next_level_at(xp_for_level(level_ + 1)), ctx_(ctx) {}
 
 void TrackXP::add_xp(entt::handle self, int amount) {
-  ctx_.log_.append_markup(
-      fmt::format("[yellow](xp-debug) e={} +{}xp => total={} level={} next={}",
-                  (int)self.entity(), amount, xp_, level_, next_level_at));
+  // ctx_.log_.append_markup(      fmt::format("[yellow](xp-debug) e={} +{}xp =>
+  // total={} level={} next={}",                  (int)self.entity(), amount,
+  // xp_, level_, next_level_at));
   xp_ += amount;
   using fairlanes::ecs::components::Stats;
   while (next_level_at && xp_ >= next_level_at) {

@@ -22,8 +22,8 @@ TEST_CASE("AppCtx basic usage", "[ecs][account]") {
     static_assert(!std::is_copy_assignable_v<fairlanes::context::AccountCtx>);
     static_assert(!std::is_copy_constructible_v<fairlanes::context::AppCtx>);
     static_assert(!std::is_copy_assignable_v<fairlanes::context::AppCtx>);
-    static_assert(!std::is_copy_constructible_v<fairlanes::context::EntityCtx>);
-    static_assert(!std::is_copy_assignable_v<fairlanes::context::EntityCtx>);
+    //  static_assert(std::is_copy_constructible_v<fairlanes::context::EntityCtx>);
+    static_assert(std::is_copy_assignable_v<fairlanes::context::EntityCtx>);
   }
   SECTION("#account_context") {
     REQUIRE(account_ctx.self_ == account);

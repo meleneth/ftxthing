@@ -22,12 +22,9 @@ TEST_CASE("TrackXP basic leveling", "[ecs][xp]") {
   auto account_ctx = gc.ctx_.account_context(account);
   spdlog::info("account_ctx created");
 
-  auto entity_ctx = account_ctx.entity_context(entity);
-  spdlog::info("entity_ctx created");
-
   // Attach TrackXP starting at 0 xp
   auto &xp = reg.emplace<fairlanes::ecs::components::TrackXP>(
-      entity, std::move(entity_ctx), 0);
+      entity, account_ctx.entity_context(entity), 0);
   entt::handle handle{reg, entity};
 
   SECTION("Starts at level 1 with 0 xp") {

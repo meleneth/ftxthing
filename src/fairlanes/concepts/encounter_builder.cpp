@@ -4,6 +4,7 @@
 #include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
+#include "fairlanes/ecs/components/track_xp.hpp"
 
 namespace fairlanes::concepts {
 
@@ -11,16 +12,17 @@ void EncounterBuilder::thump_it_out(fairlanes::context::EntityCtx &ctx) {
   using namespace fairlanes::ecs::components;
 
   // Build an enemy entity with default components
-  const entt::entity e = EntityBuilder(ctx.reg_)
+  const entt::entity e = EntityBuilder(ctx)
                              .with_default<Stats>()
                              .with_default<Tags>()
+                             .with_default<TrackXP>()
                              .build();
 
   // Configure the enemy
   auto field_mouse = [&](entt::entity x) {
     auto &s = ctx.reg_.get<Stats>(x); // <- ctx.reg_-> (pointer)
     s.name_ = "Field Mouse";
-    s.hp_ = 5;
+    s.hp_ = 5000;
     s.max_hp_ = std::max<int>(s.max_hp_, 5); // keep bars sane
     s.mp_ = 0;
 

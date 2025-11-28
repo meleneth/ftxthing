@@ -17,7 +17,6 @@ IsParty::IsParty(fairlanes::context::EntityCtx ctx, std::string name,
       name_{std::move(name)} {}
 
 void IsParty::next() {
-  spdlog::info("IsParty :: NextEvent{}");
   sm_.process_event(NextEvent{});
 }
 
