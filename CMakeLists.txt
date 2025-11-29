@@ -16,6 +16,18 @@ if(NOT CPM_SOURCE_CACHE)
   set(CPM_SOURCE_CACHE "${CMAKE_BINARY_DIR}/cpm-cache")
 endif()
 
+
+# Big object flag, only where it makes sense
+set(BIGOBJ_FLAG "")
+
+# MinGW / GCC on Windows
+if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(BIGOBJ_FLAG "-Wa,-mbig-obj")
+elseif (MSVC)
+    # MSVC equivalent if you ever need it
+    set(BIGOBJ_FLAG "/bigobj")
+endif()
+
 include(cmake/CPM.cmake)
 
 CPMAddPackage("gh:catchorg/Catch2@3.5.2")

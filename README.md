@@ -1,8 +1,22 @@
 FTXThing
 
-run it, then hit the quake console key, the grave quote (it's on the tilde)
+to build:
 
-with the console open, f1-f8 will switch between accounts
+    mkdir build
+    cd build
+    cmake ..
+
+windows
+    cmake --build .
+
+linux
+    cmake --build . -- -j16
+
+f1-f8 will switch between accounts
+
+Tracy is integrated, grab it from https://github.com/wolfpld/tracy/releases and you should be able to connect
+
+# Blather
 
 Playing around w/EnTT, FTX::UI, boost_ext / SML and <strike>turn based</strike> combat systems
 

@@ -28,7 +28,7 @@ target_include_directories(systems PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_compile_options(systems PRIVATE -O0 -g -Wa,-mbig-obj)
+target_compile_options(systems PRIVATE -O0 -g ${BIGOBJ_FLAG})
 
 # Warnings (portable)
 if(MSVC)
