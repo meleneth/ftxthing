@@ -6,7 +6,6 @@
 
 #include <tracy/Tracy.hpp>
 
-#include "entities/entities.hpp"
 #include "fairlanes/context/app_ctx.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/ecs/components/is_account.hpp"
@@ -18,6 +17,7 @@
 #include "fairlanes/ecs/components/selected_party.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
+#include "fairlanes/monsters/register_monsters.hpp"
 #include "fairlanes/systems/take_damage.hpp"
 #include "fairlanes/systems/tick_party_fsms.hpp"
 #include "fairlanes/unique_tag.hpp"
@@ -27,7 +27,6 @@
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "fairlanes/widgets/root_component.hpp"
 #include "grand_central.hpp"
-#include "screens/battle_screen.hpp"
 #include "systems/log.hpp"
 #include "systems/random_hub.hpp"
 
@@ -101,7 +100,7 @@ GrandCentral::GrandCentral(const AppConfig &cfg)
 
   using namespace ftxui;
   ZoneScopedN("Startup");
-
+  fairlanes::monster::register_all_monsters();
   // UI bits
   console_->append_markup("[name](Snail) uses [error](Slime Blast) "
                           "[yellow](🔥)[orange](🔥)[red](🔥)");

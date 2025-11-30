@@ -23,7 +23,7 @@ void PartyLoop::enter_farming(fairlanes::context::EntityCtx &ctx) {
 
   using fairlanes::concepts::EncounterBuilder;
   using fairlanes::ecs::components::Encounter;
-  EncounterBuilder::thump_it_out(ctx);
+  EncounterBuilder{ctx}.thump_it_out();
 };
 
 void PartyLoop::exit_farming(fairlanes::context::EntityCtx &ctx) {

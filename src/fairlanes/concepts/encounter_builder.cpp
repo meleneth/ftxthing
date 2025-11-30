@@ -5,46 +5,44 @@
 #include "fairlanes/ecs/components/is_party.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
+#include "fairlanes/monsters/monster_kind.hpp"
+#include "fairlanes/monsters/register_monsters.hpp" // brings all the monsters with it
 
 namespace fairlanes::concepts {
+EncounterBuilder::EncounterBuilder(fairlanes::context::EntityCtx is_party_ctx)
+    : ctx_(is_party_ctx) {}
 
-void EncounterBuilder::thump_it_out(fairlanes::context::EntityCtx &ctx) {
+void EncounterBuilder::thump_it_out() {
   using namespace fairlanes::ecs::components;
 
-  // Build an enemy entity with default components
-  const entt::entity e = EntityBuilder(ctx)
-                             .with_default<Stats>()
-                             .with_default<Tags>()
-                             .with_default<TrackXP>()
-                             .build();
-
-  // Configure the enemy
-  auto field_mouse = [&](entt::entity x) {
-    auto &s = ctx.reg_.get<Stats>(x); // <- ctx.reg_-> (pointer)
-    s.name_ = "Field Mouse";
-    s.hp_ = 5000;
-    s.max_hp_ = std::max<int>(s.max_hp_, 5); // keep bars sane
-    s.mp_ = 0;
-
-    //   auto &t = ctx.reg_->get<Tags>(x); // <- ctx.reg_->
-    //  t.values = {"mouse", "precious"};
-  };
-  field_mouse(e);
   // Attach / ensure an Encounter on the party and add the enemy
   auto &enc =
-      ctx.reg_.emplace<Encounter>(ctx.self_, ctx.entity_context(ctx.self_));
-  auto &is_party = ctx.reg_.get<IsParty>(ctx.self_);
+      ctx_.reg_.emplace<Encounter>(ctx_.self_, ctx_.entity_context(ctx_.self_));
+  auto &is_party = ctx_.reg_.get<IsParty>(ctx_.self_);
   enc.attackers_ = std::make_unique<fairlanes::concepts::Team>(
-      ctx.entity_context(ctx.self_));
+      ctx_.entity_context(ctx_.self_));
   enc.defenders_ = std::make_unique<fairlanes::concepts::Team>(
-      ctx.entity_context(ctx.self_));
-
-  // First strike wen?
-  enc.attackers_->members_.push_back(e);
-  enc.e_to_cleanup_.push_back(e);
-
+      ctx_.entity_context(ctx_.self_));
+  add_field_mouse();
   is_party.for_each_member(
       [&](entt::entity member) { enc.defenders_->members_.push_back(member); });
+}
+
+void EncounterBuilder::add_field_mouse() {
+  using namespace fairlanes::ecs::components;
+
+  entt::entity e = EntityBuilder(ctx_)
+                       .monster(fairlanes::monster::MonsterKind::FieldMouse)
+                       .build();
+  add_to_enemy_team(e);
+}
+
+void EncounterBuilder::add_to_enemy_team(entt::entity entity) {
+  // First strike wen?
+  auto &enc = ctx_.reg_.get<fairlanes::ecs::components::Encounter>(ctx_.self_);
+
+  enc.attackers_->members_.push_back(entity);
+  enc.e_to_cleanup_.push_back(entity);
 }
 
 } // namespace fairlanes::concepts

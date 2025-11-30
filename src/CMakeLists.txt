@@ -8,8 +8,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif()
 
 add_subdirectory(fairlanes)
-add_subdirectory(screens)
-add_subdirectory(entities)
 add_subdirectory(animation)
 add_subdirectory(systems)
 add_subdirectory(content)
@@ -17,9 +15,7 @@ add_subdirectory(app)
 
 add_executable(ftxthing ftxthing.cpp)
 
-target_link_libraries(ftxthing PRIVATE entities)
 target_link_libraries(ftxthing PRIVATE animation)
-target_link_libraries(ftxthing PRIVATE screens)
 target_link_libraries(ftxthing PRIVATE systems)
 target_link_libraries(ftxthing PRIVATE app)
 target_link_libraries(ftxthing PRIVATE content)

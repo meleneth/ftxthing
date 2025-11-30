@@ -70,4 +70,12 @@ TEST_CASE("EntityBuilder + ComponentBuilder basics", "[entity][builder]") {
     REQUIRE(s.mp_ == 50);
     REQUIRE(t.values.size() == 2);
   }
+  SECTION("Monster/Field Mouse") {
+    auto e = EntityBuilder{ctx}
+                 .monster(fairlanes::monster::MonsterKind::FieldMouse)
+                 .build();
+    const auto &stats = reg.get<Stats>(e);
+    REQUIRE(stats.hp_ == 5);
+    REQUIRE(stats.name_ == "Field Mouse");
+  }
 }

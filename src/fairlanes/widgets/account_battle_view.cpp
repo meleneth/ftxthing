@@ -4,6 +4,7 @@
 
 #include "account_battle_view.hpp"
 #include "combatant.hpp"
+#include "fairlanes/concepts/team.hpp"
 #include "fairlanes/context/account_ctx.hpp"
 #include "fairlanes/ecs/components/encounter.hpp"
 #include "fairlanes/ecs/components/is_account.hpp"
@@ -29,8 +30,11 @@ ftxui::Element AccountBattleView::Render() {
       std::vector<ftxui::Element> attackers_row;
       encounter->attackers_->for_each_member([&](entt::entity member) {
         fairlanes::widgets::Combatant combatant{ctx_.reg_, member};
-        attackers_row.push_back(combatant.Render());
+        attackers_row.push_back(combatant.Render() | ftxui::xflex);
       });
+      while (attackers_row.size() < 5) {
+        attackers_row.push_back(ftxui::filler() | ftxui::xflex);
+      }
       rows.push_back(ftxui::hbox(std::move(attackers_row)));
 
     } else {
@@ -47,7 +51,7 @@ ftxui::Element AccountBattleView::Render() {
     std::vector<ftxui::Element> party_row;
     is_party.for_each_member([&](entt::entity member) {
       fairlanes::widgets::Combatant combatant{ctx_.reg_, member};
-      party_row.push_back(combatant.Render());
+      party_row.push_back(combatant.Render() | ftxui::xflex);
     });
     rows.push_back(ftxui::hbox(std::move(party_row)));
   });

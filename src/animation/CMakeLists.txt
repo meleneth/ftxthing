@@ -9,8 +9,6 @@ target_include_directories(animation PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(animation PUBLIC entities)
-
 # Link FTXUI (required by battle_animation.cpp)
 target_link_libraries(animation PUBLIC
   ftxui::screen

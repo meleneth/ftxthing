@@ -4,15 +4,12 @@
 #include <vector>
 
 #include "fairlanes/ecs/components/stats.hpp"
+#include "fairlanes/ecs/components/tags.hpp"
 #include "fairlanes/ecs/components/track_xp.hpp"
 
 template <typename T> struct ComponentBuilder; // primary template
 
 // ---- Components ----
-
-struct Tags {
-  std::vector<std::string> values;
-};
 
 // Shorthand
 using json = nlohmann::json;
@@ -34,6 +31,7 @@ template <> struct ComponentBuilder<Stats> {
   }
 };
 
+using fairlanes::ecs::components::Tags;
 template <> struct ComponentBuilder<Tags> {
   static Tags defaults(fairlanes::context::EntityCtx &ctx) {
     (void)ctx;

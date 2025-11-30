@@ -13,8 +13,6 @@ ftxui::Element Combatant::Render() {
   auto &stats = reg.get<Stats>(entity);
   auto &level = reg.get<TrackXP>(entity);
 
-  constexpr int bar_width = 20;
-
   // Avoid div-by-zero and clamp [0, 1].
   float percent = 0.0f;
   if (stats.max_hp_ > 0) {
@@ -25,15 +23,14 @@ ftxui::Element Combatant::Render() {
       percent = 1.0f;
   }
 
+  // Keep your fixed-width bar for stability:
+  constexpr int bar_width = 20;
   int filled = static_cast<int>(bar_width * percent);
-  // Double-clamp for safety.
   if (filled < 0)
     filled = 0;
   if (filled > bar_width)
     filled = bar_width;
-
   int empty = bar_width - filled;
-  // Shouldn’t be needed, but makes it bulletproof:
   if (empty < 0)
     empty = 0;
 
@@ -43,25 +40,28 @@ ftxui::Element Combatant::Render() {
   bar.append(static_cast<std::size_t>(empty), '-');
 
   // Build the HP line element
+  auto hp_text = "HP: [" + bar + "] " + std::to_string(stats.hp_) + "/" +
+                 std::to_string(stats.max_hp_);
+
   ftxui::Element hp_line = ftxui::hbox({
-      ftxui::text("HP: "),
-      ftxui::text("[" + bar + "] " + std::to_string(stats.hp_) + "/" +
-                  std::to_string(stats.max_hp_)),
+      ftxui::text(hp_text),
+      ftxui::filler(), // <-- lets the line stretch if we have space
   });
 
-  // Add top border labels
+  // Top border labels
   // clang-format off
-    ftxui::Element border = ftxui::window(
-      ftxui::hbox({
-        ftxui::text(stats.name_) | ftxui::color(ftxui::Color::BlueLight),
-        ftxui::filler(),
-        ftxui::text("[" + std::to_string(level.level_) + "]") | ftxui::bold,
-      }),
-      hp_line
-    );
+  ftxui::Element border = ftxui::window(
+    ftxui::hbox({
+      ftxui::text(stats.name_) | ftxui::color(ftxui::Color::BlueLight),
+      ftxui::filler(),
+      ftxui::text("[" + std::to_string(level.level_) + "]") | ftxui::bold,
+    }),
+    hp_line
+  );
   // clang-format on
 
-  return border;
+  // <-- key: allow the whole Combatant box to flex horizontally
+  return border | ftxui::xflex;
 }
 
 } // namespace fairlanes::widgets

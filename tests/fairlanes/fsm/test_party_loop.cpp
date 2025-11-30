@@ -92,7 +92,8 @@ TEST_CASE("PartyLoop#in_combat", "[fsm][party][encounter][lifecycle]") {
   spdlog::info("player and is_party created");
 
   REQUIRE_FALSE(is_party.in_combat());
-  fairlanes::concepts::EncounterBuilder::thump_it_out(is_party.ctx_);
+  fairlanes::concepts::EncounterBuilder(gc.ctx_.entity_context(party))
+      .thump_it_out();
   REQUIRE(is_party.in_combat());
 }
 
@@ -115,7 +116,7 @@ TEST_CASE("PartyLoop#needs_town", "[fsm][party][encounter][lifecycle]") {
   spdlog::info("player and is_party created");
 
   REQUIRE_FALSE(is_party.needs_town());
-  fairlanes::concepts::EncounterBuilder::thump_it_out(is_party.ctx_);
+  fairlanes::concepts::EncounterBuilder{is_party.ctx_}.thump_it_out();
   auto &player_stats = reg.get<fairlanes::ecs::components::Stats>(player);
   player_stats.hp_ = 0;
   REQUIRE(is_party.needs_town());
