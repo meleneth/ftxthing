@@ -27,6 +27,7 @@ target_link_libraries(ftxthing_tests
   PRIVATE
     Catch2::Catch2WithMain
     ExprTk::exprtk
+    eventpp::eventpp
     nlohmann_json::nlohmann_json
   PUBLIC
   TracyClient

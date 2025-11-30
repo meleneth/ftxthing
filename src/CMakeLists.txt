@@ -35,6 +35,7 @@ target_link_libraries(ftxthing PRIVATE
   CLI11
   spdlog::spdlog
   fmt::fmt
+  eventpp::eventpp
   PUBLIC
   TracyClient
 )

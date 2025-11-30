@@ -143,6 +143,24 @@ if(exprtk_ADDED)
   add_library(ExprTk::exprtk ALIAS exprtk)
 endif()
 
+# eventpp via CPM
+CPMAddPackage(
+  NAME eventpp
+  GITHUB_REPOSITORY wqking/eventpp
+  GIT_TAG v0.1.3          # latest release as of now
+  DOWNLOAD_ONLY YES       # we'll make our own interface target
+)
+
+if(eventpp_ADDED)
+  add_library(eventpp INTERFACE)
+  target_include_directories(eventpp INTERFACE
+    "${eventpp_SOURCE_DIR}/include"
+  )
+
+  # Optional: provide the "official" namespace alias
+  add_library(eventpp::eventpp ALIAS eventpp)
+endif()
+
 CPMAddPackage(
   NAME nlohmann_json
   GITHUB_REPOSITORY nlohmann/json
