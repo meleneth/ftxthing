@@ -22,10 +22,10 @@ set(BIGOBJ_FLAG "")
 
 # MinGW / GCC on Windows
 if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(BIGOBJ_FLAG "-Wa,-mbig-obj")
+  set(BIGOBJ_FLAG "-Wa,-mbig-obj")
 elseif (MSVC)
-    # MSVC equivalent if you ever need it
-    set(BIGOBJ_FLAG "/bigobj")
+  # MSVC equivalent if you ever need it
+  set(BIGOBJ_FLAG "/bigobj")
 endif()
 
 include(cmake/CPM.cmake)
@@ -230,6 +230,10 @@ GIT_PROGRESS true
 )
 
 FetchContent_MakeAvailable(tracy)
+
+include(CTest)
+enable_testing()
+
 # --- Your code ---------------------------------------------------------------
 add_subdirectory(src)
 add_subdirectory(tests)

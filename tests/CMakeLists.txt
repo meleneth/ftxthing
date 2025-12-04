@@ -40,6 +40,5 @@ target_include_directories(ftxthing_tests
 
 
 # Test discovery integration
-include(CTest)
 include(Catch)
 catch_discover_tests(ftxthing_tests)
