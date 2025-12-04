@@ -2,6 +2,7 @@
 #include <entt/entt.hpp>
 #include <vector>
 
+#include "fairlanes/combat/combat_buses.hpp"
 #include "fairlanes/concepts/team.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/ecs/components/is_party.hpp"
@@ -13,6 +14,9 @@ struct Encounter {
   std::unique_ptr<fairlanes::concepts::Team> attackers_ = nullptr;
   std::unique_ptr<fairlanes::concepts::Team> defenders_ = nullptr;
   std::vector<entt::entity> e_to_cleanup_;
+
+  fairlanes::combat::CombatBus combat_bus_;
+
   bool has_alive_enemies();
   bool is_over();
 
