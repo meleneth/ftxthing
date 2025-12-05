@@ -13,16 +13,16 @@ namespace sml = boost::sml;
 struct NextEvent {};
 
 struct PartyLoop {
-  void enter_idle(fairlanes::context::EntityCtx &ctx);
-  void enter_farming(fairlanes::context::EntityCtx &ctx);
-  void exit_farming(fairlanes::context::EntityCtx &ctx);
-  void enter_fixing(fairlanes::context::EntityCtx &ctx);
+  void enter_idle(fairlanes::context::PartyCtx &ctx);
+  void enter_farming(fairlanes::context::PartyCtx &ctx);
+  void exit_farming(fairlanes::context::PartyCtx &ctx);
+  void enter_fixing(fairlanes::context::PartyCtx &ctx);
 
-  void combat_tick(fairlanes::context::EntityCtx &ctx);
-  void next_event(fairlanes::context::EntityCtx &ctx);
+  void combat_tick(fairlanes::context::PartyCtx &ctx);
+  void next_event(fairlanes::context::PartyCtx &ctx);
 
-  bool needs_town(fairlanes::context::EntityCtx &ctx);
-  bool in_combat(fairlanes::context::EntityCtx &ctx);
+  bool needs_town(fairlanes::context::PartyCtx &ctx);
+  bool in_combat(fairlanes::context::PartyCtx &ctx);
 
   auto operator()() const {
     using namespace sml;

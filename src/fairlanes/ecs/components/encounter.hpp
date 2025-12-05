@@ -10,7 +10,7 @@
 namespace fairlanes::ecs::components {
 
 struct Encounter {
-  fairlanes::context::EntityCtx ctx_;
+  fairlanes::context::EncounterCtx ctx_;
   std::unique_ptr<fairlanes::concepts::Team> attackers_ = nullptr;
   std::unique_ptr<fairlanes::concepts::Team> defenders_ = nullptr;
   std::vector<entt::entity> e_to_cleanup_;
@@ -20,7 +20,9 @@ struct Encounter {
   bool has_alive_enemies();
   bool is_over();
 
-  Encounter(EntityCtx context);
+  Encounter(EncounterCtx context);
+
+  void setup_combat_listeners();
   void finalize();
 };
 

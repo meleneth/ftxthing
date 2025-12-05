@@ -2,7 +2,7 @@
 #include <cmath>
 #include <random>
 
-#include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/combat/damage.hpp"
 #include "fairlanes/context/attack_ctx.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/systems/take_damage.hpp"
@@ -97,8 +97,17 @@ int Thump::thump(fairlanes::context::AttackCtx &&ctx) {
   ctx.log_.append_markup(fmt::format("{} thumped {} for [error]({}) damage",
                                      ctx.log_.name_tag_for(attacker_h),
                                      ctx.log_.name_tag_for(defender_h), dmg));
+  CombatEvent evt{
+      .type = CombatEventId::ApplyDamage,
+      .source = ctx.attacker,
+      .target = ctx.target,
+      .amount = result.damage,
+      // maybe tuck skill_id, crit flag, etc. into extra fields later
+  };
 
-  fairlanes::systems::TakeDamage::commit(ctx);
+  ctx.encounter.combat_bus().dispatch(evt.type, evt);
+}
+fairlanes::systems::TakeDamage::commit(ctx);
 
-  return dmg;
+return dmg;
 }

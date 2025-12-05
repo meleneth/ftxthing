@@ -2,6 +2,7 @@
 
 #include <entt/entt.hpp>
 
+#include "damage.hpp"
 namespace fairlanes::combat {
 
 enum class CombatEventId {
@@ -14,7 +15,7 @@ struct CombatEvent {
   CombatEventId type;
   entt::entity source{entt::null};
   entt::entity target{entt::null};
-  int amount{0};
+  Damage damage_;
 };
 
 struct CombatPolicies {

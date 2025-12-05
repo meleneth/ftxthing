@@ -1,6 +1,6 @@
 #include <fmt/core.h>
 
-#include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/combat/damage.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
 #include "fairlanes/systems/grant_xp_to_party.hpp"

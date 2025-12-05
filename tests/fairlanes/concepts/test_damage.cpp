@@ -3,11 +3,11 @@
 #include <entt/entt.hpp>
 #include <nlohmann/json.hpp>
 
-#include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/combat/damage.hpp"
 
 TEST_CASE("Damage") {
-  auto x = fairlanes::concepts::Damage{.lightning = 100};
-  auto y = fairlanes::concepts::Damage{.fire = 100};
+  auto x = fairlanes::combat::Damage{.lightning = 100};
+  auto y = fairlanes::combat::Damage{.fire = 100};
 
   x += y;
 

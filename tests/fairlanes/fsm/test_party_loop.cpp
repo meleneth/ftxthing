@@ -44,7 +44,7 @@ TEST_CASE("PartyLoop SML enters Farming and creates Encounter",
 
 TEST_CASE("PartyLoop enter/exit_farming create and clean up Encounter",
           "[fsm][party][encounter][lifecycle]") {
-  using fairlanes::context::EntityCtx;
+  using fairlanes::context::PartyCtx;
   using fairlanes::ecs::components::Encounter;
 
   fairlanes::AppConfig app_config;
@@ -58,8 +58,8 @@ TEST_CASE("PartyLoop enter/exit_farming create and clean up Encounter",
   auto &reg = gc.ctx_.reg_;
   REQUIRE_FALSE(reg.all_of<Encounter>(party));
 
-  // Build an EntityCtx for this party, like the rest of your code does.
-  EntityCtx ctx = gc.ctx_.entity_context(party);
+  // Build an PartyCtx for this party, like the rest of your code does.
+  PartyCtx ctx = gc.ctx_.party_context(party);
 
   fairlanes::fsm::PartyLoop loop;
 

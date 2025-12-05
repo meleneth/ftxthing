@@ -18,6 +18,8 @@ void FieldMouse::apply(EntityBuilder &b) {
   s.max_hp_ = 5;
   s.mp_ = 0;
 
+  // TODO grant skill Thump, then seal_skills()
+
   // Optional tags
   // auto &t = reg.get_or_emplace<Tags>(b.entity());
   // t.values = {"mouse", "precious"};
