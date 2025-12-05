@@ -6,17 +6,15 @@
 #include <exprtk.hpp>
 
 namespace fairlanes::context {
-struct AttackCtx;
+struct EntityCtx;
 };
 
 namespace fairlanes::skills {
 using fairlanes::fsm::PartyLoopCtx;
 class Thump {
 public:
-  Thump();
-
-  // Apply one Thump from attacker->defender, returns damage dealt (int).
-  int thump(fairlanes::context::AttackCtx &&ctx);
+  Thump(fairlanes::context::EntityCtx &ctx, entt::entity attacker,
+        entt::entity defender);
 
   // Tunables
   double hit_rate = 0.90;

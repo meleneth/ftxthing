@@ -1,5 +1,5 @@
 #include "take_damage.hpp"
-#include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/combat/damage.hpp"
 #include "fairlanes/context/attack_ctx.hpp"
 #include "fairlanes/ecs/components/party_member.hpp"
 #include "fairlanes/ecs/components/stats.hpp"
@@ -14,7 +14,7 @@ void TakeDamage::commit(fairlanes::context::AttackCtx &ctx) {
   using fairlanes::ecs::components::Stats;
   auto &defender_stats = ctx.reg_.get<Stats>(ctx.defender_);
 
-  auto adjusted = fairlanes::concepts::apply_resistance(
+  auto adjusted = fairlanes::combat::apply_resistance(
       ctx.damage_, defender_stats.resistances_);
   int total = adjusted.physical + adjusted.magical + adjusted.fire +
               adjusted.ice + adjusted.lightning;

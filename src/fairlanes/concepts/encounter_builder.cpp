@@ -16,8 +16,8 @@ void EncounterBuilder::thump_it_out() {
   using namespace fairlanes::ecs::components;
 
   // Attach / ensure an Encounter on the party and add the enemy
-  auto &enc =
-      ctx_.reg_.emplace<Encounter>(ctx_.self_, ctx_.entity_context(ctx_.self_));
+  auto &enc = ctx_.reg_.emplace<Encounter>(ctx_.self_,
+                                           ctx_.encounter_context(ctx_.self_));
   auto &is_party = ctx_.reg_.get<IsParty>(ctx_.self_);
   enc.attackers_ = std::make_unique<fairlanes::concepts::Team>(
       ctx_.entity_context(ctx_.self_));

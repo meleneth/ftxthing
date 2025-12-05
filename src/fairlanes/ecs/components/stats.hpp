@@ -1,5 +1,5 @@
 #pragma once
-#include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/combat/damage.hpp"
 #include <entt/entt.hpp>
 namespace fairlanes::widgets {
 class FancyLog;
@@ -10,8 +10,8 @@ class PartyLoopCtx;
 
 namespace fairlanes::ecs::components {
 
-using fairlanes::concepts::Damage;
-using fairlanes::concepts::Resistances;
+using fairlanes::combat::Damage;
+using fairlanes::combat::Resistances;
 
 struct Stats {
   std::string name_{"Unknown"};

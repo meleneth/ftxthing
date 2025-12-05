@@ -21,6 +21,7 @@ PUBLIC
   ftxui::screen
   ftxui::dom
   ftxui::component
+  eventpp::eventpp
   nlohmann_json::nlohmann_json
   TracyClient
 )

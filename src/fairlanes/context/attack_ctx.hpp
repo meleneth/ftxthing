@@ -2,7 +2,7 @@
 #include <entt/entt.hpp>
 
 #include "app/move_only.hpp"
-#include "fairlanes/concepts/damage.hpp"
+#include "fairlanes/combat/damage.hpp"
 #include "fairlanes/context/entity_ctx.hpp"
 #include "fairlanes/widgets/fancy_log.hpp"
 #include "systems/random_hub.hpp"
@@ -15,7 +15,7 @@ struct AttackCtx {
   fairlanes::RandomHub &rng_;
   entt::entity attacker_;
   entt::entity defender_;
-  fairlanes::concepts::Damage damage_;
+  fairlanes::combat::Damage damage_;
 
   AttackCtx(entt::registry &reg, fairlanes::widgets::FancyLog &log,
             fairlanes::RandomHub &rng, entt::entity attacker,

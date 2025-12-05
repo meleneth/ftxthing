@@ -13,12 +13,12 @@
 #include <spdlog/spdlog.h>
 
 namespace fairlanes::fsm {
-void PartyLoop::enter_idle(fairlanes::context::EntityCtx &ctx) {
+void PartyLoop::enter_idle(fairlanes::context::PartyCtx &ctx) {
   // Mark the party attached to this FSM as idle.
   (void)ctx;
 };
 
-void PartyLoop::enter_farming(fairlanes::context::EntityCtx &ctx) {
+void PartyLoop::enter_farming(fairlanes::context::PartyCtx &ctx) {
   // Also set the label for the party tied to this FSM (nice for local UI)
 
   using fairlanes::concepts::EncounterBuilder;
@@ -26,7 +26,7 @@ void PartyLoop::enter_farming(fairlanes::context::EntityCtx &ctx) {
   EncounterBuilder{ctx}.thump_it_out();
 };
 
-void PartyLoop::exit_farming(fairlanes::context::EntityCtx &ctx) {
+void PartyLoop::exit_farming(fairlanes::context::PartyCtx &ctx) {
   using fairlanes::ecs::components::Encounter;
   ctx.reg_.remove<Encounter>(ctx.self_);
   ctx.log_.append_plain("Returned to town.");
@@ -35,11 +35,10 @@ void PartyLoop::exit_farming(fairlanes::context::EntityCtx &ctx) {
   ReplenishParty::commit(h);
 };
 
-void PartyLoop::enter_fixing(fairlanes::context::EntityCtx &ctx) { (void)ctx; };
+void PartyLoop::enter_fixing(fairlanes::context::PartyCtx &ctx) { (void)ctx; };
 
-void PartyLoop::combat_tick(fairlanes::context::EntityCtx &ctx) {
+void PartyLoop::combat_tick(fairlanes::context::PartyCtx &ctx) {
   using fairlanes::skills::Thump;
-  Thump in_the_night;
 
   using fairlanes::ecs::components::Encounter;
   using fairlanes::ecs::components::Stats;
@@ -47,25 +46,23 @@ void PartyLoop::combat_tick(fairlanes::context::EntityCtx &ctx) {
   encounter.attackers_->for_each_alive_member([&](entt::entity attacker) {
     auto defender = encounter.defenders_->random_alive_member();
     if (defender) {
-      in_the_night.thump(
-          fairlanes::context::AttackCtx::make_attack(ctx, attacker, *defender));
+      Thump in_the_night{ctx, attacker, *defender};
     }
   });
 
   encounter.defenders_->for_each_alive_member([&](entt::entity attacker) {
     auto defender = encounter.attackers_->random_alive_member();
     if (defender) {
-      in_the_night.thump(
-          fairlanes::context::AttackCtx::make_attack(ctx, attacker, *defender));
+      Thump in_the_night{ctx, attacker, *defender};
     }
   });
 };
-bool PartyLoop::in_combat(fairlanes::context::EntityCtx &ctx) {
+bool PartyLoop::in_combat(fairlanes::context::PartyCtx &ctx) {
   auto &is_party = ctx.reg_.get<fairlanes::ecs::components::IsParty>(ctx.self_);
   return is_party.in_combat();
 }
 
-bool PartyLoop::needs_town(fairlanes::context::EntityCtx &ctx) {
+bool PartyLoop::needs_town(fairlanes::context::PartyCtx &ctx) {
   auto &is_party = ctx.reg_.get<fairlanes::ecs::components::IsParty>(ctx.self_);
   return is_party.needs_town();
 }
